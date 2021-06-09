@@ -5,3 +5,5 @@ rsconnect
 code/shiny/data
 Rplots.*
 data/raw
+\#*
+.\#*
