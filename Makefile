@@ -74,8 +74,12 @@ figures/rmse_n_auc.tiff figures/rmse_n_auc.png : code/NPatientsAucPlots.R\
 		                                 code/helpers/CreateManuscriptPlots.R
 	$<
 
+figures/gusto.tiff figures/gusto.png : code/GustoPlot.R\
+                                       data/raw/gusto.rda
+	$<
+
 data/raw/gusto.rda : code/GetGustoData.sh
-	code/GetGustoData.sh #@
+        $<
 
 data/processed/analysisIds.csv : code/WriteAnalysisIds.R
 	$<
@@ -100,7 +104,8 @@ submission/manuscript.pdf : submission/manuscript.rmd\
                             figures/rmse_base.png\
                             figures/rmse_interactions.png\
                             figures/calibration_base.png\
-                            figures/discrimination_base.png
+                            figures/discrimination_base.png\
+                            figures/gusto.png
 	R -e 'rmarkdown::render("submission/manuscript.rmd", output_format = "all")'
 .PHONY:
 data : $(EVALFILES)

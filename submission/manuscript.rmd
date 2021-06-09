@@ -311,7 +311,9 @@ knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 ## Real data
-
+```{r gusto, echo=FALSE, fig.cap="Caption", fig.show="hold", out.width = '100%'}
+knitr::include_graphics(here::here("figures/gusto.png"))
+```
 
 
 \newpage
