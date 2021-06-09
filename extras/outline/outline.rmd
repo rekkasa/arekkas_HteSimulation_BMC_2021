@@ -1,0 +1,91 @@
+---
+title: "Paper outline"
+output:
+    bookdown::pdf_document2: default
+geometry: margin=1.0in
+toc: false
+font-size: 12pt
+header-includes:
+  - \usepackage{amssymb}
+  - \usepackage{bm}
+  - \newcommand\given[1][]{\:#1\vert\:}
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(here)
+
+d <- function(x, decimals = 2) {
+  sprintf(paste0("%1.", decimals, "f"), x) 
+}
+knit_hooks$set(
+  inline = function(x) {
+    prettyNum(
+      x,
+      format = "f",
+      big.mark = ",",
+      decimal.mark = ".",
+      preserve.width = "individual"
+    )
+  }
+)
+```
+
+# Abstract (200 words)
+
+- Objective
+- Study Design and Setting
+- Results
+- Conclusion
+
+# Introduction
+
+  - Generalizing overall treatment effects estimated in RCTs to individuals
+    often is problematic (Rothwell, 1995; Kravitz, 2004; Rothwell, 2005;)
+  - Subgroup analyses (SGAs) play central role for the assessment of HTE,
+    despite well-known issues (references).
+  - Several guidelines have been proposed to outline the appropriate settings of
+    SGAs (references).
+  - Earlier work has provided framework separating predictive HTE approaches
+    from descriptive ones in an attempt to complement previous categorizations
+    of exploratory-confirmatory SGAs (Varadhan, 2013)
+  - More recent work (PATH, EnE) focuses on predictive HTE based on risk
+    prediction modeling and differentiates it from causal inference approaches
+      - Risk is a mathematical determinant of risk (explain that!!), so
+        focusing on risk-based approaches provides a viable option.
+      - There are earlier implementations, mainly assuming constant relative
+        treatment effect (Califf, 1997; Dorresteijn, 2011)
+  - In parallel, methods for the evaluation of predictive HTE have been
+    transported from the prediction modeling field (c for benefit, else?)
+  - Even though stratifying on risk is an improvement, as it is less prone to
+    overfitting compared to effect modeling approaches (van Klaveren, 2019), it
+    still may not be appropriate for individualizing benefit predictions. Jumps
+    at cut-offs are not realistic.
+  - This results in need for smoother types of analyses for HTE...
+
+
+# Methods
+
+  - Describe different approaches to individualize
+  - Describe base-case scenario
+  - Describe deviations from base-case scenario
+  - Evaluation methods
+      - Evaluation is performed on validation dataset
+      - Metrics description
+
+# Results
+
+## Simulation results
+
+## GUSTO trial results
+
+# Discussion
+
+# Figures and Tables
+
+- 6 in total (both figures **and** tables)

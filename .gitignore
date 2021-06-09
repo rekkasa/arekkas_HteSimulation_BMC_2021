@@ -1,0 +1,7 @@
+.Rhistory
+rsconnect
+.scratch
+.Rproj.user
+code/shiny/data
+Rplots.*
+data/raw

@@ -1,0 +1,283 @@
+---
+title: "Protocol"
+output:
+    bookdown::pdf_document2: default
+    bookdown::word_document2: default
+geometry: margin=1.0in
+toc: false
+font-size: 12pt
+header-includes:
+  - \usepackage{amssymb}
+  - \usepackage{bm}
+  - \usepackage{booktabs}
+  - \newcommand\given[1][]{\:#1\vert\:}
+editor_options: 
+  chunk_output_type: console
+bibliography: references.bib
+csl: jamia.csl
+---
+
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(here)
+
+d <- function(x, decimals = 2) {
+  sprintf(paste0("%1.", decimals, "f"), x) 
+}
+knit_hooks$set(
+  inline = function(x) {
+    prettyNum(
+      x,
+      format = "f",
+      big.mark = ",",
+      decimal.mark = ".",
+      preserve.width = "individual"
+    )
+  }
+)
+```
+
+# Introduction
+Risk-based HTE analyses typically result in risk stratum specific estimates of treatment effects. Different approaches to individualize treatment effects have been proposed, but it is unclear which approach performs best under different circumstances. We aim  to compare different approaches to  estimating individualized treatment effects.
+
+
+For all patients we observe covariates $x_1,\dots,x_8$, of which $4$ are continuous and $4$ are binary. More specifically,
+
+\begin{equation*}
+x_1,\dots,x_4 \sim N(0, 1)
+\end{equation*}
+\begin{equation*}
+x_5,\dots,x_8 \sim B(1, 0.2)
+\end{equation*}
+
+We first, generate the binary outcomes $y$ for the untreated patients ($t_x=0$), based on 
+
+\begin{equation} 
+P(y\given \bm{x}, t_x=0) = g(\beta_0 + \beta_1x_1+\dots+\beta_8x_8) = g(lp_0),
+(\#eq:p0)
+\end{equation}
+
+where $$g(x) = \frac{e^x}{1+e^x}$$
+
+For treated patients, outcomes are generated from:
+
+\begin{equation}
+P(y\given\bm{x}, t_x=1) = g(lp_1)
+(\#eq:p1)
+\end{equation}
+
+
+where $$lp_1 = \gamma_2(lp_0-c)^2+\gamma_1(lp_0-c)+\gamma_0$$
+
+# Settings
+## Base-case scenario
+The base-case scenario assumes a constant odds ratio of $0.8$ in favor of treatment. The simulated datasets are of size $n=4250$, where treatment is allocated at random using a 50/50 split (80% power for the detection of an unadjusted OR of 0.8, assuming an event rate of 20% in the untreated arm). Outcome incidence in the untreated population is set at $20\%$. For the development of the prediction model we use the model defined in \@ref(eq:p0) including a constant treatment effect. When doing predictions, $t_x$ is set to $0$. The value of the true $\bm{\beta}$ is such that the above prediction model has an AUC of $0.75$.
+
+
+The previously defined targets are achieved when $\bm{\beta}=(-2.08, 0.49,\dots,0.49)^t$. For the derivations in the treatment arm we use $\bm{\gamma}=(\log(0.8), 1, 0)^t$.
+
+## Deviations from base-case
+We deviate from the base-case scenario in two ways. First, we alter the overall target settings of sample size, overall treatment effect and prediction model AUC. In a second stage, we consider settings that violate the assumption of a constant relative treatment effect, using a model-based approach.
+
+For the first part, we consider:
+
+* Sample size:
+  + $n=1064$
+  + $n=17000$
+* Overall treatment effect:
+  + $OR=0.5$
+  + $OR=1$
+* Prediction performance:
+  + $AUC=0.65$
+  + $AUC=0.85$
+  
+We set the true risk model coefficients to be $\bm{\beta} = \big(-1.63, 0.26,\dots,0.26\big)^t$ for $AUC=0.65$ and $\bm{\beta} = \big(-2.7, 0.82,\dots,0.82\big)^t$ for $AUC=0.85$. In both cases, $\beta_0$ is selected so that an event rate of $20\%$ is maintained in the control arm.  
+
+For the second part linear and quadratic deviations from the assumption of
+constant relative effect are considered. We also consider different intensity
+levels of these deviations. The settings for these deviations are defined in
+supplementary Table \@ref(tab:tab1) and result in the effects of Figure
+\@ref(fig:fig1). 
+
+```{r fig1, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '50%'}
+knitr::include_graphics(here::here("figures/deviate_linear_08.png"))
+knitr::include_graphics(here::here("figures/deviate_quadratic_08.png"))
+```
+
+In Figure \@ref(fig:fig2) the absolute benefits observed based on different settings are presented. The base-case scenario is also presented as a reference.
+
+```{r fig2, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '50%'}
+knitr::include_graphics(here::here("figures/deviate_linear_absolute_08.png"))
+knitr::include_graphics(here::here("figures/deviate_quadratic_absolute_08.png"))
+```
+
+Finally, we consider 3 additional scenarios of interaction of individual covariates with treatment. These scenarios include a 4 weak interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82$), 4 strong interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$), and 2 weak and 2 strong interactions (Table \@ref(tab:tab2)).
+
+# Risk modeling
+Merging treatment arms, we develop prediction models including a constant relative treatment effect:
+
+\begin{equation}
+E\{y\given x,t_x\} = P(y\given x, t_x) = g(\beta_0+\beta_1x_1+\dots+\beta_8x_8+\gamma t_x)
+\end{equation}
+(\#eq:risk)
+Individualized predictions are derived setting $t_x=0$.
+
+# Approaches to individualize benefit predictions
+
+## Risk stratification
+Derive a prediction model using the same approach as above and divide the population in equally sized risk-based subgroups. Estimate subgroup-specific absolute benefit from the observed absolute differences. Subject-specific benefit predictions are made by attributing to individuals their corresponding subgroup-specific estimate.
+
+## Constant treatment effect
+Assuming a constant relative treatment effect, fit the adjusted model in \@ref(eq:risk). Then, an estimate of absolute benefit can be derived from $$\hat{f}_{\text{benefit}}(lp\given \bm{x}, \hat{\bm{\beta}}) = g(lp) - g(lp+\hat{\gamma}) $$
+
+## Linear interaction
+The assumption of constant relative treatment effect is relaxed modeling a linear interaction of treatment with the risk linear predictor: 
+$$E\{y\given \bm{x}, t_x, \hat{\bm{\beta}}\} = g\big(lp+(\delta_0+\delta_1lp)t_x\big)$$
+We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp\given\bm{x}, \hat{\bm{\beta}}) = g(lp) - g\big(\delta_0+(1+\delta_1)lp\big)$$
+
+## Non-linear interaction
+Finally, we drop the linearity assumption and predict absolute benefit by taking the difference between smooth fits, separately derived in each treatment arm:
+$$f_{\text{benefit}}(lp\given\bm{x},\hat{\bm{\beta}}) = \hat{f}_{\text{smooth}}(lp\given \bm{x}, \hat{\bm{\beta}}, t_x=0) - \hat{f}_{\text{smooth}}(lp\given \bm{x}, \hat{\bm{\beta}}, t_x=1)$$
+
+We consider three different approaches to smoothing:
+
+- Loess
+- Restricted cubic splines
+- Local likelihood
+
+# Evaluation
+Assuming that $\tau(\bm{x})=E\{y\given\bm{x}, t_x=0\} - E\{y\given\bm{x},t_x=1\}$ is the true benefit for each patient and $\hat{\tau}(x)$ is the estimated benefit from a method under study, the ideal loss function to use for the considered methods would be the unobservable root mean squared error $E\big\{(\hat{\tau} - \tau)^2\given \bm{x}\big\}$. However, in simulations the true patient-level benefit is available. Therefore, we will estimate the RMSE from
+$$\text{RMSE}=\frac{1}{n}\sum_{i=1}^n\big(\tau(\bm{x}_i) - \hat{\tau}(\bm{x}_i)\big)^2$$
+We also compare the predictive performance of the methods under study. We assess
+discrimination using the c-for-benefit statistic described in
+[@vanKlaveren2018]. Patients in each treatment arm are ranked based on their
+predicted benefit and then are matched 1:1, dropping patients in the larger
+treatment arm without a pair. We define *observed* pair-specific treatment
+benefit as the difference of observed outcomes between the untreated and the
+treated patient of each pair. Pair-specific *predicted* benefit is defined as
+the average of predicted benefits within each pair. Then, c-for-benefit is
+defined as the probability that from two randomly chosen matched patient pairs
+with unequal observed benefit, the pair with greater observed benefit also has a
+higher predicted benefit.
+
+We evaluate calibration in a similar manner, using the integrated calibration
+index (ICI) for benefit [@Austin2019]. After creating pairs based on predicted
+benefit, observed benefits are regressed on the predicted benefits using a
+locally weighted scatterplot smoother (loess). The ICI is the area between the
+loess fit and the diagonal, with values closer to $0$ indicating better
+calibration.
+
+In all cases, the evaluation metrics are calculated in a large simulated
+super-population of 500,000 patients.
+
+# References
+\setlength{\parindent}{-0.25in}
+\setlength{\leftskip}{0.25in}
+\noindent
+<div id="refs"></div>
+\setlength{\parindent}{0in}
+\setlength{\leftskip}{0in}
+\noindent
+
+
+\newpage
+# Supplement
+```{r paok, echo=FALSE, eval=TRUE, warning=FALSE}
+table <- read_csv(
+  here("data/processed/analysisIds.csv"),
+  col_types = "iffiiddddddddddddd"
+) %>%
+  select(-"type")
+
+kableExtra::kable(
+  table,
+  format = "latex",
+  escape = FALSE,
+  longtable   = TRUE,
+  align       = "r",
+  booktabs    = TRUE,
+  col.names   = c(
+    "Scenario",
+    "Effect",
+    "N",
+    "AUC",
+    paste0("b", 0:8),
+    paste0("g", 0:2),
+    "c"
+  ),
+  digits      = 2,
+  format.args = list(
+    big.mar      = ",",
+    decimal.mark = "."
+  )
+) %>%
+  kableExtra::group_rows(
+    group_label = "Constant treatment effect",
+    start_row   = 10,
+    italic      = TRUE,
+    end_row     = 27
+  ) %>%
+  kableExtra::group_rows(
+    group_label = "Linear deviation",
+    start_row   = 28,
+    italic      = TRUE,
+    end_row     = 45
+  ) %>%
+  kableExtra::group_rows(
+    group_label = "Quadratic deviation",
+    start_row   = 46,
+    italic      = TRUE,
+    end_row     = 63
+  ) %>%
+  kableExtra::landscape() %>%
+  kableExtra::add_header_above(
+    c(
+      "Analysis ID"           = 4,
+      "Baseline risk"         = 9,
+      "True treatment effect" = 4
+      )
+  )
+```
+
+\newpage
+```{r tab2, echo=FALSE, eval=TRUE, warning=FALSE}
+asd <- read_csv(
+  here("data/processed/analysisIdsInteractions.csv"),
+  col_types = "iffiidddddddddddddd"
+) %>%
+  select(-c("type", "g0"))
+
+  knitr::kable(
+    asd,
+    format      = "latex",
+    longtable   = TRUE,
+    align       = "r",
+    booktabs    = TRUE,
+    col.names   = c(
+      "Scenario",
+      "Effect",
+      "N",
+      "AUC",
+      paste0("b", 0:8),
+      "g1", "g2", "g5", "g6"
+    ),
+    digits      = 2,
+    format.args = list(
+      big.mar      = ",",
+      decimal.mark = "."
+    ),
+    caption    = ""
+  ) %>%
+  kableExtra::landscape() %>%
+  kableExtra::add_header_above(
+    c(
+      "Analysis ID"           = 4,
+      "Baseline risk"         = 9,
+      "Coefficient in\ntreatment arm" = 4
+      )
+  )
+```
+
