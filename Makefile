@@ -74,6 +74,9 @@ figures/rmse_n_auc.tiff figures/rmse_n_auc.png : code/NPatientsAucPlots.R\
 		                                 code/helpers/CreateManuscriptPlots.R
 	$<
 
+data/raw/gusto.rda : code/GetGustoData.sh
+	code/GetGustoData.sh #@
+
 data/processed/analysisIds.csv : code/WriteAnalysisIds.R
 	$<
 
