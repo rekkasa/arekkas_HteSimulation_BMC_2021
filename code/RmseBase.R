@@ -8,23 +8,14 @@ library(tidyverse)
 
 source("code/helpers/CreateManuscriptPlots.R")
 
-scenarios <- c(
-  28, 30, 34,
-  37, 39, 43,
-  55, 57, 61
-)
+scenarios <- c(10, 28, 37, 55)
 
 metric <- "rmse"
 titles <- c(
-  "**A.** Moderate linear deviation",
-  "**B.** AUC: 0.85; N: 4250",
-  "**C.** AUC: 0.75; N: 17000",
-  "**D.** Strong linear deviation",
-  "**E.** AUC: 0.85; N: 4250",
-  "**F.** AUC: 0.75; N: 17000",
-  "**G.** Strong quadratic deviation",
-  "**H.** AUC: 0.85; N: 4250",
-  "**I.** AUC: 0.75; N: 17000"
+  "**A.** Constant treatment effect",
+  "**B.** Moderate linear deviation",
+  "**C.** Strong linear deviation",
+  "**D.** Strong quadratic deviation"
 )
 
 metricFile <- paste(metric, "csv", sep = ".")
@@ -77,17 +68,12 @@ pp <- gridExtra::grid.arrange(
   plotList[[2]],
   plotList[[3]],
   plotList[[4]],
-  plotList[[5]],
-  plotList[[6]],
-  plotList[[7]],
-  plotList[[8]],
-  plotList[[9]],
-  nrow = 3,
-  ncol = 3,
+  nrow = 2,
+  ncol = 2,
   left = grid::textGrob(
     expression(
       paste(
-        "Root mean squared error (x ", 
+        "Root mean squared error (x", 
         10^-2, 
         ")"
       )
@@ -99,15 +85,15 @@ pp <- gridExtra::grid.arrange(
     file.path("figures", "rmse_base.tiff"), 
     plot = pp,
     dpi = 1200,
-    width = 11, 
-    height = 11,
+    width = 8.5, 
+    height = 7,
     compression = "lzw"
   )
   
   ggplot2::ggsave(
     file.path("figures", "rmse_base.png"), 
     plot = pp,
-    width = 11, 
-    height = 11
+    width = 8.5, 
+    height = 7
   )
   

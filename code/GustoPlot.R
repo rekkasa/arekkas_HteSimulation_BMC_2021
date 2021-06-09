@@ -5,7 +5,7 @@ library(rms)
 library(SmoothHte)
 
 load("data/raw/gusto.rda")
-maxRisk <- .4      # the maximum risk to be plotted
+maxRisk <- .3      # the maximum risk to be plotted
 
 gusto <- gusto %>%
   tibble() %>%
@@ -185,8 +185,8 @@ plot <- ggplot() +
     axis.text.x = ggplot2::element_text(size = 12),
     axis.text.y = ggplot2::element_text(size = 12),
     axis.title = ggplot2::element_text(size = 14),
-    legend.text = element_text(size = 10),
-    legend.position = c(.85, .2)
+    legend.text = element_text(size = 9),
+    legend.position = c(.2, .8)
   )
   
  ggplot2::ggsave(

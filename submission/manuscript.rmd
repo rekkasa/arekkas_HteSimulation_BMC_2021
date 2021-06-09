@@ -142,8 +142,8 @@ regression model including all baseline covariates. Coefficient values were
 such, so that the prediction model had an AUC of $0.75$ and an event rate of
 $20\%$ in the control arm was achieved. Outcomes in the treatment arm were
 created using the same logistic regression model, including a constant treatment
-effect odds ratio (OR) of $0.8$. The generated samples of the base-case scenario were
-of size $n=4,250$ ($80\%$ power for the detection of an unadjusted OR of
+effect odds ratio (OR) of $0.8$. The generated samples of the base-case scenario
+were of size $n=4,250$ ($80\%$ power for the detection of an unadjusted OR of
 $0.8$).
 
 We evaluated the effect of sample size considering additional scenarios with
@@ -219,15 +219,23 @@ rmse_scenarios_10_12_16 <- readr::read_csv(
 ```
 Under the base case of constant relative treatment effect, the model assuming a
 constant treatment effect had the lowest median RMSE, regardless of true
-prediction AUC and sample size (Figure \@ref(fig:rmseconstant)). Linear
-interaction models demonstrated comparable performance. Among the RCS smoothing
-methods, the one fitted with 3 knots always performed best, while the increased
-flexibility achieved when increasing the knots resulted in overfitting and worse
-performance. The adaptive approach under all scenarios performed similar to the
-model with smaller RMSE in all scenarios.
+prediction AUC and sample size. Linear interaction models demonstrated
+comparable performance. Among the RCS smoothing methods, the one fitted with 3
+knots always performed best, while the increased flexibility achieved when
+increasing the knots resulted in overfitting and worse performance. The adaptive
+approach under all scenarios performed similar to the model with smaller RMSE in
+all scenarios.
 
-```{r rmseconstant, echo=FALSE, fig.cap="Caption", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/rmse_constant.png"))
+```{r rmsebase, echo=FALSE, fig.cap="RMSE base case", fig.show="hold", out.width = '100%'}
+knitr::include_graphics(here::here("figures/rmse_base.png"))
+```
+
+```{r rmseauc, echo=FALSE, fig.cap="AUC 0.85", fig.show="hold", out.width = '100%'}
+knitr::include_graphics(here::here("figures/rmse_auc.png"))
+```
+
+```{r rmsesamplesize, echo=FALSE, fig.cap="Sample size 17000", fig.show="hold", out.width = '100%'}
+knitr::include_graphics(here::here("figures/rmse_sample_size.png"))
 ```
 
 When we introduced deviations from the base case of constant relative treatment
@@ -254,30 +262,21 @@ pronounced in the case of strong quadratic deviations. We observed similar
 results when we increased the sample size to 17000, while keeping the true
 prediction AUC constant at 0.75 (Figure \@ref(fig:rmsebase); Panels C, F, and I).
 
-```{r rmsebase, echo=FALSE, fig.cap="Caption", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/rmse_base.png"))
-```
-
-
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 rmse_scenarios_10_64_66_65 <- readr::read_csv(
   file = here::here(file.path("data/processed", "rmse.csv"))
 ) %>%
   dplyr::filter(scenarioId %in% c(10, 64, 66, 65))
 ```
+
 When focusing on the different scenarios where true treatment-covariate
-interactions were considered all methods had similar RMSE performance, (Figure
-\@ref(fig:rmseInteractions); Panels B, C and D). In case of strong
-treatment-covariate interactions the constant effect model had slightly
-increased RMSE
+interactions were considered all methods had similar RMSE performance. In case
+of strong treatment-covariate interactions the constant effect model had
+slightly increased RMSE
 (`r rmse_scenarios_10_64_66_65 %>% filter(scenarioId == 65) %>% select(constant_treatment_effect) %>% unlist() %>% median() %>% round(3)`; [`r rmse_scenarios_10_64_66_65 %>% filter(scenarioId == 65) %>% select(constant_treatment_effect) %>% unlist() %>% quantile(c(.025, .975)) %>% round(3) %>% paste(collapse = ", ")`])
 compared to the other methods. The linear interaction model with the risk linear
 predictor had the lowest RMSE
 (`r rmse_scenarios_10_64_66_65 %>% filter(scenarioId == 65) %>% select(linear_predictor) %>% unlist() %>% median() %>% round(3)`; [`r rmse_scenarios_10_64_66_65 %>% filter(scenarioId == 65) %>% select(linear_predictor) %>% unlist() %>% quantile(c(.025, .975)) %>% round(3) %>% paste(collapse = ", ")`]).
-
-```{r rmseInteractions, echo=FALSE, fig.cap="Root mean squared error of the different methods when focusing on the effect treatment-covariate interactions. In all scenarios sample size is fixed to 4250 and the true prediction AUC is 0.75. \\textit{Panel A} presents the results for the base case scenario, where no interactions are present. \\textit{Panel B} presents the results for the scenario with 4 weak interactions. \\textit{Panel C} presents the results for the scenario with mixed interactions (2 weak and 2 strong). \\textit{Panel D} presents the results for the scenario with 4 strong interactions.", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/rmse_interactions.png"))
-```
 
 All candidate methods demonstrated comparable discrimination for benefit in all
 scenarios where linear and quadratic deviations from the base case of constant
@@ -290,7 +289,7 @@ scenarios. This is evidence that the increased flexibility of these methods
 often led to overfitting.
 
 
-```{r discrimination, echo=FALSE, fig.cap="Discrimination for benefit of the different methods. \\textit{Panel A} presents the results when moderate linear deviations from the base case scenario of constant treatment effects are considered, sample size is 4250 and true prediction AUC is 0.75. \\textit{Panel B} presents the results when moderate linear deviations are considered and true prediction AUC is 0.85. Sample size is 4250. \\textit{Panel C} presents the results when moderate linear deviations are considered and the sample size is 0.75. \\textit{Panel D} presents the results when strong linear deviations from the base case are considered, sample size is 4250 and true prediction AUC is 0.85. \\textit{Panel E} presents results for true prediction AUC of 0.85 and \\textit{Panel F} for sample size of 17000 (assuming moderate linear deviations from base case). \\textit{Panel G} presents the results when strong quadratic deviations from the base case are considered, sample size is 4250 and true prediction AUC is 0.85. \\textit{Panel H} presents the results for true prediction AUC of 0.85 and \\textit{Panel I} for sample size of 17000 (assuming strong quadratic deviations from base case)", fig.show="hold", out.width = '100%'}
+```{r discrimination, echo=FALSE, fig.cap="Discrimination for benefit base case.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/discrimination_base.png"))
 ```
 
@@ -301,7 +300,7 @@ In that case constant treatment effect models demonstrated the best performance,
 very comparable to the linear interaction model's performance, nonetheless
 (Figure \@ref(fig:calibration); Panels A, B, and C).
 
-```{r calibration, echo=FALSE, fig.cap="Calibration for benefit of the different methods. \\textit{Panel A} presents the results when moderate linear deviations from the base case scenario of constant treatment effects are considered, sample size is 4250 and true prediction AUC is 0.75. \\textit{Panel B} presents the results when moderate linear deviations are considered and true prediction AUC is 0.85. Sample size is 4250. \\textit{Panel C} presents the results when moderate linear deviations are considered and the sample size is 0.75. \\textit{Panel D} presents the results when strong linear deviations from the base case are considered, sample size is 4250 and true prediction AUC is 0.85. \\textit{Panel E} presents results for true prediction AUC of 0.85 and \\textit{Panel F} for sample size of 17000 (assuming moderate linear deviations from base case). \\textit{Panel G} presents the results when strong quadratic deviations from the base case are considered, sample size is 4250 and true prediction AUC is 0.85. \\textit{Panel H} presents the results for true prediction AUC of 0.85 and \\textit{Panel I} for sample size of 17000 (assuming strong quadratic deviations from base case)", fig.show="hold", out.width = '100%'}
+```{r calibration, echo=FALSE, fig.cap="Calibration for benefit base case.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 

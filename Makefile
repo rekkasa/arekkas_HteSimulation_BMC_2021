@@ -98,9 +98,9 @@ submission/manuscript.pdf : submission/manuscript.rmd\
                             data/processed/rmse.csv\
                             data/processed/discrimination.csv\
                             data/processed/calibration.csv\
-                            figures/rmse_constant.png\
                             figures/rmse_base.png\
-                            figures/rmse_interactions.png\
+                            figures/rmse_auc.png\
+                            figures/rmse_sample_size.png\
                             figures/calibration_base.png\
                             figures/discrimination_base.png\
                             figures/gusto.png

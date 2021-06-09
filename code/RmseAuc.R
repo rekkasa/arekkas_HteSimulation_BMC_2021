@@ -20,10 +20,23 @@ titles <- c(
 
 metricFile <- paste(metric, "csv", sep = ".")
 
+f <- function(x) x * 100
+
 processed <- readr::read_csv(
   file = file.path("data/processed", metricFile)
-) 
-
+) %>% 
+  mutate_at(
+    c(
+      "constant_treatment_effect",
+      "stratified",
+      "linear_predictor",
+      "rcs_3_knots",
+      "rcs_4_knots",
+      "rcs_5_knots",
+      "adaptive"
+    ),
+    f
+  )
 plotList <- list()
 
 for (i in seq_along(scenarios)) {
@@ -34,7 +47,7 @@ for (i in seq_along(scenarios)) {
     data = tmp,
     metric = metric,
     title = titles[i],
-    limits = c(0, .11),
+    limits = c(0, 11),
     pointSize = .5
   ) +
     ggplot2::theme(
@@ -56,7 +69,16 @@ pp <- gridExtra::grid.arrange(
   plotList[[4]],
   nrow = 2,
   ncol = 2,
-  left = "Root mean squared error"
+  left = grid::textGrob(
+    expression(
+      paste(
+        "Root mean squared error (x", 
+        10^-2, 
+        ")"
+      )
+    ),
+    rot = 90
+  )
 )
   ggplot2::ggsave(
     file.path("figures", "rmse_auc.tiff"), 
