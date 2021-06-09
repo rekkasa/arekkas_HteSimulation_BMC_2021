@@ -159,12 +159,7 @@ We assessed the effect of stronger and absent relative treatment effects
 ($\text{OR}=0.5$ or $\text{OR}=1$). We also relaxed the assumption that the
 line should be parallel to the diagonal, considering moderate and stronger
 linear deviations. Finally, we dropped the assumption of linearity allowing for
-quadratic deviations (Figure \@ref(fig:fig1)).
-
-```{r fig1, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width='50%'}
-knitr::include_graphics(here::here("figures/deviationsManuscript.png"))
-knitr::include_graphics(here::here("figures/deviationsAbsoluteManuscript.png"))
-```
+quadratic deviations.
 
 We also considered scenarios with treatment-covariate interactions. These
 scenarios include 4 weak interactions

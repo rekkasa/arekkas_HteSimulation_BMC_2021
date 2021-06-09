@@ -67,7 +67,7 @@ plot <- ggplot() +
   stat_function(
     data = data.frame(
       x     = c(0, maxRisk), 
-      label = "constant"
+      label = "Constant treatment effect"
     ),
     aes(
       x     = x, 
@@ -85,14 +85,14 @@ plot <- ggplot() +
       y     = estimate, 
       ymin  = lower, 
       ymax  = upper,
-      color = "stratified"
+      color = "Stratified"
     ),
     key_glyph = "rect"
   ) +
   stat_function(
     data = data.frame(
       x = c(0, maxRisk), 
-      label = "linear predictor"
+      label = "Linear interaction"
     ),
     aes(
       x     = x,
@@ -169,9 +169,9 @@ plot <- ggplot() +
       "#ffd92f"
     ),
     breaks = c(
-      "constant",
-      "stratified",
-      "linear predictor",
+      "Constant treatment effect",
+      "Stratified",
+      "Linear interaction",
       "RCS 3 knots",
       "RCS 4 knots",
       "RCS 5 knots"
@@ -185,8 +185,8 @@ plot <- ggplot() +
     axis.text.x = ggplot2::element_text(size = 12),
     axis.text.y = ggplot2::element_text(size = 12),
     axis.title = ggplot2::element_text(size = 14),
-    legend.text = element_text(size = 12),
-    legend.position = c(.9, .2)
+    legend.text = element_text(size = 10),
+    legend.position = c(.85, .2)
   )
   
  ggplot2::ggsave(

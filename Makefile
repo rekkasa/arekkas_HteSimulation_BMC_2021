@@ -98,8 +98,6 @@ submission/manuscript.pdf : submission/manuscript.rmd\
                             data/processed/rmse.csv\
                             data/processed/discrimination.csv\
                             data/processed/calibration.csv\
-                            figures/deviationsManuscript.png\
-                            figures/deviationsAbsoluteManuscript.png\
                             figures/rmse_constant.png\
                             figures/rmse_base.png\
                             figures/rmse_interactions.png\
