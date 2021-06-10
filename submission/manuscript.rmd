@@ -24,6 +24,8 @@ csl: jce.csl
 library(tidyverse)
 library(knitr)
 library(kableExtra)
+library(SmoothHte)
+library(rms)
 
 d <- function(x, decimals = 2) {
   sprintf(paste0("%1.", decimals, "f"), x) 
@@ -211,72 +213,52 @@ flexibility to the methods considered.
 
 ## Simulations
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-rmse_scenarios_10_12_16 <- readr::read_csv(
-  file = here::here(file.path("data/processed", "rmse.csv"))
-) %>%
-  dplyr::filter(scenarioId %in% c(10, 12, 16))
-```
-Under the base case of constant relative treatment effect, the model assuming a
-constant treatment effect had the lowest median RMSE, regardless of true
-prediction AUC and sample size. Linear interaction models demonstrated
-comparable performance. Among the RCS smoothing methods, the one fitted with 3
-knots always performed best, while the increased flexibility achieved when
-increasing the knots resulted in overfitting and worse performance. The adaptive
-approach under all scenarios performed similar to the model with smaller RMSE in
-all scenarios.
+
+The model including a constant relative treatment effect had the lowest median
+RMSE in scenarios where the base case of true constant relative treatment effect
+(OR = 0.8, N = 4250 and AUC = 0.75) or moderate relative deviations were
+considered (Figure \@ref(fig:rmsebase); Panel A). However, when we considered
+strong linear and quadratic deviations from the base case the linear interaction
+model performed best (Figure \@ref(fig:rmsebase); Panels B and C). Only in the
+case of strong quadratic deviations models including RCS smoothing (3 knots)
+performed equally well to the linear interaction method. Increasing the number
+of knots in RCS smoothing resulted in higher error rates across all scenarios.
+The performance of the adaptive approach was quite comparable with the best
+performing model in all scenarios.
 
 ```{r rmsebase, echo=FALSE, fig.cap="RMSE base case", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_base.png"))
 ```
 
-```{r rmseauc, echo=FALSE, fig.cap="AUC 0.85", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/rmse_auc.png"))
-```
+When we increased the sample size (N = 17000), in all scenarios the model more
+in agreement with the underlying settings had the lowest error rates. Under the
+base case of constant relative treatment effects (OR = 0.8), the model including
+a constant relative treatment effect had the lowest RMSE (Figure
+\@ref(fig:rmsesamplesize); Panel A). When introducing moderate and strong linear
+deviations the linear interaction model performed best (Figure
+\@ref(fig:rmsesamplesize); Panels B and C). In the case of true strong quadratic
+deviations from the base case of constant relative effects, the more flexible
+RCS smoothing models (3 knots) had the lowest RMSE. Again, the increased
+flexibility of RCS smoothing with higher number of knots resulted in overfitting
+and worse performance (Figure \@ref(fig:rmsesamplesize); Panel D).
 
 ```{r rmsesamplesize, echo=FALSE, fig.cap="Sample size 17000", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_sample_size.png"))
 ```
 
-When we introduced deviations from the base case of constant relative treatment
-effects, while keeping fixed both the sample size (N = 4250) and the true
-prediction AUC (0.75) the linear interaction model had the lowest RMSE (Figure
-\@ref(fig:rmsebase); Panels A, D, and G). When these deviations were moderate
-(Figure \@ref(fig:rmsebase); Panel A) the constant treatment effect model had
-comparable performance to the linear interaction model. This can be attributed
-to the fact that such deviations are quite mild and absolute benefits maintain
-similar patterns across baseline risk. On the contrary, when strong quadratic
-deviations were considered the constant effect model's RMSE sharply increased,
-while the more flexible method of RCS smoothing (3 knots) preformed very well
-(Figure \@ref(fig:rmsebase); Panel G). Again, increasing the number of knots
-increased RMSE, indicating overfitting.
-
 When we increased the true prediction AUC to 0.85, models including RCS
 smoothing had the lowest RMSE when strong quadratic deviations from the base
-case of constant relative treatment effects were assumed (Figure
-\@ref(fig:rmsebase); Panel H). However, with milder deviations, the linear
+case of true constant relative treatment effects were assumed (Figure
+\@ref(fig:rmseauc); Panel D). However, with milder deviations, the linear
 interaction model had the lowest RMSE with the RCS smoothing methods (3 knots)
-being a close second (Figure \@ref(fig:rmsebase); Panels B and E). Increasing the
+being a close second (Figure \@ref(fig:rmseauc); Panels B and C). Increasing the
 number of knots of RCS smoothing resulted in increased RMSE, which was less
-pronounced in the case of strong quadratic deviations. We observed similar
-results when we increased the sample size to 17000, while keeping the true
-prediction AUC constant at 0.75 (Figure \@ref(fig:rmsebase); Panels C, F, and I).
+pronounced in the case of strong quadratic deviations.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-rmse_scenarios_10_64_66_65 <- readr::read_csv(
-  file = here::here(file.path("data/processed", "rmse.csv"))
-) %>%
-  dplyr::filter(scenarioId %in% c(10, 64, 66, 65))
+```{r rmseauc, echo=FALSE, fig.cap="AUC 0.85", fig.show="hold", out.width = '100%'}
+knitr::include_graphics(here::here("figures/rmse_auc.png"))
 ```
 
-When focusing on the different scenarios where true treatment-covariate
-interactions were considered all methods had similar RMSE performance. In case
-of strong treatment-covariate interactions the constant effect model had
-slightly increased RMSE
-(`r rmse_scenarios_10_64_66_65 %>% filter(scenarioId == 65) %>% select(constant_treatment_effect) %>% unlist() %>% median() %>% round(3)`; [`r rmse_scenarios_10_64_66_65 %>% filter(scenarioId == 65) %>% select(constant_treatment_effect) %>% unlist() %>% quantile(c(.025, .975)) %>% round(3) %>% paste(collapse = ", ")`])
-compared to the other methods. The linear interaction model with the risk linear
-predictor had the lowest RMSE
-(`r rmse_scenarios_10_64_66_65 %>% filter(scenarioId == 65) %>% select(linear_predictor) %>% unlist() %>% median() %>% round(3)`; [`r rmse_scenarios_10_64_66_65 %>% filter(scenarioId == 65) %>% select(linear_predictor) %>% unlist() %>% quantile(c(.025, .975)) %>% round(3) %>% paste(collapse = ", ")`]).
 
 All candidate methods demonstrated comparable discrimination for benefit in all
 scenarios where linear and quadratic deviations from the base case of constant
@@ -305,6 +287,186 @@ knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 ## Real data
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+load(here::here("data/raw/gusto.rda"))
+gusto <- gusto %>%
+  tibble() %>%
+  filter(!is.na(tpa))
+
+treatmentArms <- gusto %>%
+  group_by(tpa) %>%
+  summarise(n = n())
+```
+
+We demonstrate the different methods for individualizing treatment benefits
+using data from `r nrow(gusto)` patients with an acute myocardial infarction
+(MI) included in the GUSTO-I trial.
+`r treatmentArms %>% filter(tpa == 1) %>% select(n)` patients were randomized to
+tissue plasminogen activator (tPA) treatment and
+`r treatmentArms %>% filter(tpa == 0) %>% select(n)` were randomized to
+streptokinase. The outcome of interest was 30-day mortality, recorded for all
+patients.
+
+In line with (Califf 1997; Steyerberg 2000), we fitted a logistic regression
+model with 6 baseline covariates, i.e. age, Killip class, systolic blood
+pressure, heart rate, an indicator of previous MI, and the location of MI, to
+predict 30-day mortality risk. A constant effect of treatment was included in
+the model. When deriving risk predictions for individuals we set the treatment
+indicator to 0. More information on model development can be found in the
+supplement.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+gusto <- gusto %>%
+  tibble() %>%
+  rename(
+    "outcome" = "day30",
+    "treatment" = "tpa"
+  )
+
+prediction <- lrm(
+  outcome ~ treatment + age + Killip + pmin(sysbp, 120) + lsp(pulse, 50) + pmi + miloc,
+  data = gusto,
+  maxit = 99
+)
+
+riskLinearPredictor <- predict(
+  prediction,
+  newdata = gusto %>% mutate(treatment = 0) %>% data.frame()
+)
+
+gusto <- gusto %>%
+  mutate(
+    riskLinearPredictor = riskLinearPredictor
+  )
+
+constantModel <- fitModelBasedHte(
+  data     = gusto, 
+  settings = createModelBasedSettings(type = "treatment")
+)
+
+tmp <- gusto %>%
+  mutate(
+    predictedBenefit = predictBenefitModelBasedHte(
+      p             = plogis(.$riskLinearPredictor), 
+      modelBasedFit = constantModel
+    )
+  )
+
+constantC   <- calculateCForBenefit(tmp)
+constantIci <- calculateCalibrationForBenefit(tmp)
+
+stratified <- fitStratifiedHte(
+  data     = gusto,
+  settings = createStratifiedSettings()
+)
+
+linearModel <- fitModelBasedHte(
+  data     = gusto,
+  settings = createModelBasedSettings()
+)
+
+tmp <- gusto %>%
+  mutate(
+    predictedBenefit = predictBenefitModelBasedHte(
+      p             = plogis(.$riskLinearPredictor), 
+      modelBasedFit = linearModel
+    )
+  )
+
+linearC   <- calculateCForBenefit(tmp)
+linearIci <- calculateCalibrationForBenefit(tmp)
+
+rcs3Model <- fitRcsHte(
+  data     = gusto,
+  settings = createRcsSettings()
+)
+
+tmp <- gusto %>%
+  mutate(
+    predictedBenefit = predictSmoothBenefit(
+      p          = plogis(riskLinearPredictor), 
+      smoothFit  = rcs3Model
+    )
+  )
+
+rcs3C   <- calculateCForBenefit(tmp)
+rcs3Ici <- calculateCalibrationForBenefit(tmp)
+
+
+rcs4Model <- fitRcsHte(
+  data     = gusto,
+  settings = createRcsSettings(nKnots = 4)
+)
+
+tmp <- gusto %>%
+  mutate(
+    predictedBenefit = predictSmoothBenefit(
+      p          = plogis(riskLinearPredictor), 
+      smoothFit  = rcs4Model
+    )
+  )
+
+rcs4C   <- calculateCForBenefit(tmp)
+rcs4Ici <- calculateCalibrationForBenefit(tmp)
+
+rcs5Model <- fitRcsHte(
+  data     = gusto,
+  settings = createRcsSettings(nKnots = 5)
+)
+
+tmp <- gusto %>%
+  mutate(
+    predictedBenefit = predictSmoothBenefit(
+      p          = plogis(.$riskLinearPredictor), 
+      smoothFit  = rcs5Model
+    )
+  )
+
+rcs5C   <- calculateCForBenefit(tmp)
+rcs5Ici <- calculateCalibrationForBenefit(tmp)
+
+gustoPerformance <- tibble(
+  discrimination = c(
+    constantC, linearC, rcs3C,
+    rcs4C, rcs5C
+  ),
+  calibration = c(
+    constantIci$ici, linearIci$ici, rcs3Ici$ici,
+    rcs4Ici$ici, rcs5Ici$ici
+  ),
+  method = c(
+    "constant treatment effect",
+    "linear interaction",
+    "RCS smoothing with 3 knots",
+    "RCS smoothing with 4 knots",
+    "RCS smoothing with 5 knots"
+  )
+)
+
+cBenefit <- gustoPerformance %>% arrange(discrimination)
+
+```
+
+We used the risk linear predictor to fit the the proposed methods under study
+for individualizing absolute benefit predictions. All methods had quite
+comparable results, in the sense that we predicted increasing benefits for
+patients with higher baseline risk predictions. In terms of c-for benefit,
+validated internally, all models had quite comparable performance ranging from
+0.519 (RCS smoothing with 3 knots) to 0.542 (RCS smoothing with 4 knots).
+Similar conclusions could be drawn in terms of ICI-for-benefit which ranged
+from 0.0039 (linear interaction approach) to 0.0053 (RCS smoothing with 4
+knots).
+
+The adaptive approach picked the
+model with RCS smoothing with 4 knots, which had quite comparable performance to
+the smooth fit with 5 knots. However, for lower baseline risk these 2 models
+predicted implausible benefits and maybe should be avoided when applying such
+models in practice. The linear interaction model and the model with RCS
+smoothing (3 knots) made very similar predictions, while also followed quite
+closely the evolution of the stratified estimates. In this case, we observed
+that even using a simple model with a constant relative treatment effect can
+result in very similar benefit predictions as other more complex approaches.
+
 ```{r gusto, echo=FALSE, fig.cap="Caption", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/gusto.png"))
 ```
