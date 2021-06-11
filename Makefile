@@ -79,7 +79,7 @@ figures/gusto.tiff figures/gusto.png : code/GustoPlot.R\
 	$<
 
 data/raw/gusto.rda : code/GetGustoData.sh
-        $<
+	$<
 
 data/processed/analysisIds.csv : code/WriteAnalysisIds.R
 	$<
@@ -95,6 +95,7 @@ data/processed/analysisIdsInteractions.csv : code/WriteAnalysisIdsInteractions.R
 
 submission/manuscript.pdf : submission/manuscript.rmd\
                             submission/references.bib\
+			    data/raw/gusto.rda\
                             data/processed/rmse.csv\
                             data/processed/discrimination.csv\
                             data/processed/calibration.csv\
@@ -108,4 +109,4 @@ submission/manuscript.pdf : submission/manuscript.rmd\
 .PHONY:
 data : $(EVALFILES)
 clean:
-	rm -rf data/raw/scenario_* data/processed/*.csv figures/*.png figures/*.tiff
+	rm -rf data/raw/scenario_* data/processed/*.csv data/raw/gusto.rda figures/*.png figures/*.tiff
