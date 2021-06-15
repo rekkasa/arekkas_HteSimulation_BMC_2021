@@ -110,8 +110,14 @@
     "SimulateHte": {
       "Package": "SimulateHte",
       "Version": "0.1.0",
-      "Source": "unknown",
-      "Hash": "6d65a675d9ee01baf02542fefc1a89d7"
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "SimulateHte",
+      "RemoteUsername": "rekkasa",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "8d8eed26de974489409b02123134e42234a12396",
+      "Hash": "47d210663c2e73a565a6a2ac545af770"
     },
     "SimulationEvaluationHte": {
       "Package": "SimulationEvaluationHte",

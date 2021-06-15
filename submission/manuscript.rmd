@@ -475,8 +475,8 @@ cBenefit <- gustoPerformance %>% arrange(discrimination)
 We used the risk linear predictor to fit the the proposed methods under study
 for individualizing absolute benefit predictions. All methods had quite
 comparable results, in the sense that we predicted increasing benefits for
-patients with higher baseline risk predictions. In terms of c-for benefit,
-validated internally, all models had quite comparable performance ranging from
+patients with higher baseline risk predictions. In terms of c-for benefit 
+(validated internally) all models had quite comparable performance ranging from
 0.519 (RCS smoothing with 3 knots) to 0.542 (RCS smoothing with 4 knots).
 Similar conclusions could be drawn in terms of ICI-for-benefit which ranged
 from 0.0039 (linear interaction approach) to 0.0053 (RCS smoothing with 4
