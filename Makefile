@@ -32,46 +32,56 @@ figures/deviate_linear_08.png figures/deviate_quadratic_08.png figures/deviate_l
 	$<
 
 figures/rmse_constant.png figures/rmse_constant.tiff : code/RmseConstant.R\
-                                                       code/helpers/CreateManuscriptPlots.R
+                                                       code/helpers/CreateManuscriptPlots.R\
+						       data/processed/rmse.csv
 	$<
 
 figures/rmse_interactions.png figures/rmse_interactions.tiff : code/InteractionPlots.R\
-                                                               code/helpers/CreateManuscriptPlots.R
+                                                               code/helpers/CreateManuscriptPlots.R\
+						               data/processed/rmse.csv
 	$<
 
 figures/deviationsManuscript.png : code/PlotDeviationsManuscript.R\
                                    code/helpers/PlotGammas.R
 	$<
 figures/rmse_nl_auc.tiff figures/rmse_nl_auc.png : code/NlAucPlots.R\
-		                                   code/helpers/CreateManuscriptPlots.R
+		                                   code/helpers/CreateManuscriptPlots.R\
+					           data/processed/rmse.csv
 	$<
 
 figures/rmse_nl_n.tiff figures/rmse_nl_n.png : code/NonLinearityNPatientsPlots.R\
-		                               code/helpers/CreateManuscriptPlots.R
+		                               code/helpers/CreateManuscriptPlots.R\
+					       data/processed/rmse.csv
 	$<
 
 figures/rmse_base.tiff figures/rmse_base.png : code/RmseBase.R\
-		                               code/helpers/CreateManuscriptPlots.R
+		                               code/helpers/CreateManuscriptPlots.R\
+					       data/processed/rmse.csv
 	$<
 
 figures/rmse_sample_size.tiff figures/rmse_sample_size.png : code/RmseSampleSize.R\
-		                                             code/helpers/CreateManuscriptPlots.R
+		                                             code/helpers/CreateManuscriptPlots.R\
+						             data/processed/rmse.csv
 	$<
 
 figures/rmse_auc.tiff figures/rmse_auc.png : code/RmseAuc.R\
-		                             code/helpers/CreateManuscriptPlots.R
+		                             code/helpers/CreateManuscriptPlots.R\
+					     data/processed/rmse.csv
 	$<
 
 figures/calibration_base.tiff figures/calibration_base.png : code/CalibrationBase.R\
-		                                             code/helpers/CreateManuscriptPlots.R
+		                                             code/helpers/CreateManuscriptPlots.R\
+							     data/processed/calibration.csv
 	$<
 
 figures/discrimination_base.tiff figures/discrimination_base.png : code/DiscriminationBase.R\
-		                                                   code/helpers/CreateManuscriptPlots.R
+		                                                   code/helpers/CreateManuscriptPlots.R\
+								   data/processed/discrimination.csv
 	$<
 
 figures/rmse_n_auc.tiff figures/rmse_n_auc.png : code/NPatientsAucPlots.R\
-		                                 code/helpers/CreateManuscriptPlots.R
+		                                 code/helpers/CreateManuscriptPlots.R\
+						 data/processed/rmse.csv
 	$<
 
 figures/gusto.tiff figures/gusto.png : code/GustoPlot.R\
@@ -95,7 +105,6 @@ data/processed/analysisIdsInteractions.csv : code/WriteAnalysisIdsInteractions.R
 
 submission/manuscript.pdf : submission/manuscript.rmd\
                             submission/references.bib\
-			    data/raw/gusto.rda\
                             data/processed/rmse.csv\
                             data/processed/discrimination.csv\
                             data/processed/calibration.csv\
