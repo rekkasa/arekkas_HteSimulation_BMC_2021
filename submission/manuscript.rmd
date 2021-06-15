@@ -252,7 +252,7 @@ of knots in RCS smoothing resulted in higher error rates across all scenarios.
 The performance of the adaptive approach was quite comparable with the best
 performing model in each scenario.
 
-```{r rmsebase, echo=FALSE, fig.cap="RMSE base case", fig.show="hold", out.width = '100%'}
+```{r rmsebase, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \\textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \\textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_base.png"))
 ```
 
@@ -268,7 +268,7 @@ RCS smoothing models (3 knots) had the lowest RMSE. Again, the increased
 flexibility of RCS smoothing with higher number of knots resulted in overfitting
 and worse performance (Figure \@ref(fig:rmsesamplesize); Panel D).
 
-```{r rmsesamplesize, echo=FALSE, fig.cap="Sample size 17000", fig.show="hold", out.width = '100%'}
+```{r rmsesamplesize, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 17,000; \\textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \\textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_sample_size.png"))
 ```
 
@@ -281,7 +281,7 @@ being a close second (Figure \@ref(fig:rmseauc); Panels B and C). Increasing the
 number of knots of RCS smoothing resulted in increased RMSE, which was less
 pronounced in the case of strong quadratic deviations.
 
-```{r rmseauc, echo=FALSE, fig.cap="AUC 0.85", fig.show="hold", out.width = '100%'}
+```{r rmseauc, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.85 and sample size of 4,250; \\textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \\textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_auc.png"))
 ```
 
@@ -296,7 +296,7 @@ trend of discrimination for benefit variability with increasing number of
 restricted cubic spline knots in all scenarios.
 
 
-```{r discrimination, echo=FALSE, fig.cap="Discrimination for benefit base case.", fig.show="hold", out.width = '100%'}
+```{r discrimination, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \\textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \\textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/discrimination_base.png"))
 ```
 
@@ -307,7 +307,7 @@ In that case constant treatment effect models demonstrated the best performance,
 very comparable to the linear interaction model's performance, nonetheless
 (Figure \@ref(fig:calibration); Panels A, B, and C).
 
-```{r calibration, echo=FALSE, fig.cap="Calibration for benefit base case.", fig.show="hold", out.width = '100%'}
+```{r calibration, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \\textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \\textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
@@ -492,9 +492,11 @@ closely the evolution of the stratified estimates. In this case, we observed
 that even using a simple model with a constant relative treatment effect can
 result in very similar benefit predictions as other more complex approaches.
 
-```{r gusto, echo=FALSE, fig.cap="Caption", fig.show="hold", out.width = '100%'}
+```{r gusto, echo=FALSE, fig.cap="Individualized absolute benefit predictions based on baseline risk when using a constantn treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/gusto.png"))
 ```
+
+# Discussion
 
 
 \newpage
