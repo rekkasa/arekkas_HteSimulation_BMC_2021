@@ -103,17 +103,17 @@ data/processed/analysisIdsInteractions.csv : code/WriteAnalysisIdsInteractions.R
 	$<
 
 
-submission/manuscript.pdf : submission/manuscript.rmd\
-                            submission/references.bib\
-                            data/processed/rmse.csv\
-                            data/processed/discrimination.csv\
-                            data/processed/calibration.csv\
-                            figures/rmse_base.png\
-                            figures/rmse_auc.png\
-                            figures/rmse_sample_size.png\
-                            figures/calibration_base.png\
-                            figures/discrimination_base.png\
-                            figures/gusto.png
+submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd\
+                                                       submission/references.bib\
+                                                       data/processed/rmse.csv\
+                                                       data/processed/discrimination.csv\
+                                                       data/processed/calibration.csv\
+                                                       figures/rmse_base.png\
+                                                       figures/rmse_auc.png\
+                                                       figures/rmse_sample_size.png\
+                                                       figures/calibration_base.png\
+                                                       figures/discrimination_base.png\
+                                                       figures/gusto.png
 	R -e 'rmarkdown::render("submission/manuscript.rmd", output_format = "all")'
 .PHONY:
 data : $(EVALFILES)
