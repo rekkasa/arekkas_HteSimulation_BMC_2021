@@ -28,7 +28,9 @@ extras/outline/outline.pdf : extras/outline/outline.rmd\
 
 
 figures/deviate_linear_08.png figures/deviate_quadratic_08.png figures/deviate_linear_absolute_08.png figures/deviate_quadratic_absoltue_08.png : code/PlotDeviations.R\
-    code/helpers/PlotGammas.R
+                                                                                                                                                  code/helpers/PlotGammas.R\
+																		  data/processed/analysisIds.csv\
+																		  data/processed/analysisIdsInteractions.csv
 	$<
 
 figures/rmse_constant.png figures/rmse_constant.tiff : code/RmseConstant.R\
@@ -115,6 +117,14 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
                                                        figures/discrimination_base.png\
                                                        figures/gusto.png
 	R -e 'rmarkdown::render("submission/manuscript.rmd", output_format = "all")'
+
+submission/supplement.pdf : submission/supplement.rmd\
+	                    figures/deviate_linear_08.png\
+			    figures/deviate_quadratic_08.png\
+			    figures/deviate_linear_absolute_08.png\
+			    figures/deviate_quadratic_absolute_08.png
+	R -e 'rmarkdown::render("submission/supplement.rmd", output_format = "all")'
+
 .PHONY:
 data : $(EVALFILES)
 clean:
