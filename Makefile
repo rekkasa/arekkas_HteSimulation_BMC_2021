@@ -38,6 +38,17 @@ figures/rmse_constant.png figures/rmse_constant.tiff : code/RmseConstant.R\
 						       data/processed/rmse.csv
 	$<
 
+figures/discrimination_interactions.png figures/discrimination_interactions.tiff : code/DiscriminationInteractionPlots.R\
+                                                                                   code/helpers/CreateManuscriptPlots.R\
+						                                   data/processed/discrimination.csv
+	$<
+
+figures/calibration_interactions.png :code/CalibrationInteractionPlots.R\
+                                      code/helpers/CreateManuscriptPlots.R\
+                                      data/processed/discrimination.csv
+	$<
+
+
 figures/rmse_interactions.png figures/rmse_interactions.tiff : code/InteractionPlots.R\
                                                                code/helpers/CreateManuscriptPlots.R\
 						               data/processed/rmse.csv
@@ -122,7 +133,10 @@ submission/supplement.pdf : submission/supplement.rmd\
 	                    figures/deviate_linear_08.png\
 			    figures/deviate_quadratic_08.png\
 			    figures/deviate_linear_absolute_08.png\
-			    figures/deviate_quadratic_absolute_08.png
+			    figures/deviate_quadratic_absolute_08.png\
+			    figures/rmse_interactions.png\
+			    figures/discrimination_interactions.png\
+			    figures/calibration_interactions.png
 	R -e 'rmarkdown::render("submission/supplement.rmd", output_format = "all")'
 
 .PHONY:

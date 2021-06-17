@@ -94,7 +94,7 @@ We set the true risk model coefficients to be $\bm{\beta} = \big(-1.63, 0.26,\do
 For the second part linear and quadratic deviations from the assumption of
 constant relative effect are considered. We also consider different intensity
 levels of these deviations. The settings for these deviations are defined in
-supplementary Table \@ref(tab:tab1) and result in the effects of Figure
+Table \@ref(tab:tab1) and result in the effects of Figure
 \@ref(fig:fig1). 
 
 ```{r fig1, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '50%'}
@@ -137,26 +137,21 @@ We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp\given\bm{x}, \hat
 Finally, we drop the linearity assumption and predict absolute benefit by taking the difference between smooth fits, separately derived in each treatment arm:
 $$f_{\text{benefit}}(lp\given\bm{x},\hat{\bm{\beta}}) = \hat{f}_{\text{smooth}}(lp\given \bm{x}, \hat{\bm{\beta}}, t_x=0) - \hat{f}_{\text{smooth}}(lp\given \bm{x}, \hat{\bm{\beta}}, t_x=1)$$
 
-We consider three different approaches to smoothing:
-
-- Loess
-- Restricted cubic splines
-- Local likelihood
-
-```{r paok, echo=FALSE, eval=TRUE, warning=FALSE}
-table <- read_csv(
+```{r tab1, echo=FALSE, eval=TRUE, warning=FALSE}
+ asd <- read_csv(
   here("data/processed/analysisIds.csv"),
   col_types = "iffiiddddddddddddd"
 ) %>%
   select(-"type")
 
 kableExtra::kable(
-  table,
+  asd,
   format = "latex",
   escape = FALSE,
   longtable   = TRUE,
   align       = "r",
   booktabs    = TRUE,
+  caption     = "",
   col.names   = c(
     "Scenario",
     "Effect",
@@ -237,4 +232,18 @@ asd <- read_csv(
       "Coefficient in\ntreatment arm" = 4
       )
   )
+```
+
+# Results in scenarios with interactions
+
+```{r test, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
+knitr::include_graphics(here::here("figures/rmse_interactions.png"))
+```
+
+```{r test2, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
+knitr::include_graphics(here::here("figures/discrimination_interactions.png"))
+```
+
+```{r test4, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
+knitr::include_graphics(here::here("figures/calibration_interactions.png"))
 ```
