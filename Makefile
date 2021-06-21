@@ -102,8 +102,12 @@ data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibra
 data/processed/analysisIdsInteractions.csv : code/WriteAnalysisIdsInteractions.R
 	$<
 
+submission/arxiv.sty : code/GetArxivStyle.sh
+	$<
+
 
 submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd\
+	                                               submission/arxiv.sty\
                                                        submission/references.bib\
                                                        data/processed/rmse.csv\
                                                        data/processed/discrimination.csv\

@@ -1,10 +1,54 @@
 ---
 title: "Smooth risk-based predictive approaches to treatment effect heterogeneity: A simulation study"
-output:
-    bookdown::pdf_document2: default
-    bookdown::word_document2:
-        reference_docx: reference.docx
+abstract: |
+  **Objective:** Compare different risk-based approaches to estimating
+  individualized treatment effects with simulations of the RCT setting. **Study
+  Design and Setting:** We compared different methods for predicting absolute
+  benefit on the basis of an available prognostic index (PI) for risk: A model
+  with the PI and a constant relative treatment effect; models including an
+  interaction of treatment assignment with the PI; 4 quarters of the PI; nonlinear
+  transformations of the PI with increasing flexibility (restricted cubic splines
+  with 3, 4 and 5 knots, respectively); an adaptive method, selecting the optimal
+  model based on Akaike’s Information Criterion. Starting from a base case
+  scenario (sample size 4,250, average treatment effect odds ratio 0.8, AUC of the
+  PI 0.75), we considered diverse assumptions of the data generation process of
+  the “true” treatment effect, introducing linear and quadratic interactions of
+  the PI with treatment. We analyzed the effect of varying sample size and
+  discriminative ability of the PI. We evaluated performance using root mean
+  squared error, discrimination for benefit and calibration for benefit. **Results:**
+  The model including a linear interaction of the risk linear predictor with
+  treatment had adequate performance that was robust under the majority of the
+  simulation scenarios. Methods using restricted cubic splines required larger
+  sample sizes and higher AUC of the PI to achieve adequate performance. The
+  adaptive approach’s performance was comparable to the performance of the best
+  model in each scenario. **Conclusion:** In most cases using a model just
+  including a linear interaction of the PI with treatment
+  adequately predicts absolute benefit.
+authors:
+  - name: Alexandros Rekkas
+    department: Department of Medical Informatics
+    affiliation: Erasmus Medical Center
+    location: Rotterdam, The Netherlands
+  - name: Peter R. Rijnbeek
+    department: Department of Medical Informatics
+    affiliation: Erasmus Medical Center
+    location: Rotterdam, The Netherlands
+  - name: Ewout W. Steyerberg
+    department: Department of Biomedical Data Sciences
+    affiliation: Leiden University Medical Center
+    location: Leiden, The Netherlands
+  - name: David van Klaveren
+    department: Department of Public Health
+    affiliation: Erasmus Medical Center
+    location: Rotterdam, The Netherlands
+keywords:
+  - test
+  - test that
+output: 
+  rticles::arxiv_article:
+    keep_tex: true
 geometry: margin=1.0in
+date: false
 toc: false
 font-size: 11pt
 header-includes:
@@ -17,6 +61,7 @@ header-includes:
   - \usepackage{bm}
   - \usepackage{booktabs}
   - \newcommand\given[1][]{\:#1\vert\:}
+  - \date{}
 editor_options: 
   chunk_output_type: console
 bibliography: references.bib
@@ -46,58 +91,8 @@ knit_hooks$set(
   }
 )
 ```
-\thispagestyle{empty}
-\vspace{35mm}
-
-
-
-Alexandros Rekkas${^1}$, Peter R. Rijnbeek${^1}$, ..., Ewout W. Steyerberg${^2}$, 
-David van Klaveren${^3}$
-
-\vspace{40mm}
-
-$^1$ Department of Medical Informatics, Erasmus University Medical Center,
-Rotterdam, Netherlands
-
-$^2$ Department of Biomedical Data Sciences, Leiden University Medical Center,
-Leiden, Netherlands
-
-$^3$ Department of Public Health, Erasmus University Medical Center, Rotterdam,
-Netherlands
-
-\newpage
-\newpage
-\thispagestyle{empty}
-# Abstract {-}
-\singlespacing 
-**Objective:** Simulation study to compare different risk-based approaches to
-estimating individualized treatment effects within the RCT setting. **Study
-Design and Setting:** Starting from a base case scenario that assumes a true
-constant treatment effect, we considered a total of 66 scenarios for introducing
-non-constant effects and evaluating methods under different sample sizes and
-baseline risk prediction performance. We compared 7 methods for predicting
-absolute benefit: A constant treatment effect model, a risk stratified approach,
-a model including a linear interaction of the baseline risk linear predictor
-with treatment, 3 restricted cubic spline smoothing models of increasing
-flexibility (3, 4 and 5 knots) and an adaptive model selection method based on
-Akaike's Information Criterion. We evaluated performance using root mean squared
-error, discrimination for benefit and calibration for benefit (i.e., observed
-vs. predicted risk difference in treated vs. untreated). **Results:** The model
-including a linear interaction of the risk linear predictor with treatment had
-adequate performance that was robust under the majority of the simulation
-scenarios. Methods using restricted cubic spline smoothing required larger
-sample sizes and higher prediction AUC to achieve adequate performance. The
-adaptive approach's performance was comparable to the performance of the best
-model in each scenario. **Conclusion:** In most cases using a model just
-including a linear interaction of the risk linear predictor with treatment
-adequately predicts absolute benefit.
-
-\newpage 
-\doublespacing 
 
 \linenumbers
-
-
 # Introduction
 
 Within the setting of patient-centered outcomes research, predictive approaches
@@ -140,17 +135,17 @@ techniques.
 
 ## Simulation scenarios
 
-In the simulated datasets based on the base case scenario treatment was
-allocated at random using a 50/50 split. For each patient we simulated $8$
-baseline covariates, where $x_1,\dots,x_4\sim N(0, 1)$ and
-$x_5,\dots,x_8\sim B(1, 0.2)$. Outcomes for patients in the control arm were
-generated from a logistic regression model including all baseline covariates.
-Coefficient values were such, so that the prediction model had an AUC of $0.75$
-and an event rate of $20\%$ in the control arm was achieved. Outcomes in the
-treatment arm were created using the same logistic regression model, including a
-constant treatment effect odds ratio (OR) of $0.8$. The generated samples of the
-base case scenario were of size $n=4,250$ ($80\%$ power for the detection of an
-unadjusted OR of $0.8$).
+In the simulated datasets based treatment was allocated at random using a 50/50
+split. For each patient we simulated $8$ baseline covariates, where
+$x_1,\dots,x_4\sim N(0, 1)$ and $x_5,\dots,x_8\sim B(1, 0.2)$. Outcomes
+for patients in the control arm were generated from a logistic regression model
+including all baseline covariates. Coefficient values were such, so that the
+prediction model had an AUC of $0.75$ and an event rate of $20%$ in the control
+arm was achieved. Under the base case scenario, outcomes in the treatment arm
+were created using the same logistic regression model, including a constant
+treatment odds ratio (OR) of $0.8$. The generated samples of the base case
+scenario were 4,250 ($80\%$ power for the detection of an unadjusted OR of
+$0.8$).
 
 We evaluated the effect of sample size considering additional scenarios with
 sample sizes of `r 1064` and `r 17000`. We also evaluated the effect of prediction
@@ -158,17 +153,17 @@ performance, adjusting the baseline covariate coefficients, so that AUC values
 of $0.65$ and $0.80$ were achieved when validating in a simulated dataset of
 $500,000$ patients.
 
-A true logistic regression model with a constant treatment effect (constant OR)
-implies that outcome risk in the treatment arm is a straight line parallel to
-the first diagonal on the *log-odds* scale, with distance equal to $\log(\text{OR})$. 
-(See Figure XX of the supplementary material). We assessed the effect of
-stronger and absent relative treatment effects ($\text{OR}=0.5$ or
-$\text{OR}=1$). We also relaxed the assumption that the line should be parallel
-to the diagonal, considering moderate and stronger linear deviations. Finally,
-we dropped the assumption of linearity allowing for quadratic deviations.
-
-We also considered scenarios with treatment-covariate interactions. These
-scenarios include 4 weak interactions
+We simulated binary outcomes in the control arm based on 
+$\text{expit}(PI)$, where 
+$\text{expit}(x)= \frac{e^x}{1 + e^x}$. 
+In the treatment arm outcomes where generated from $\text{expit}(lp_1)$ with
+$$ lp_1 = \gamma_2(PI-c)^2 + \gamma_1(PI-c) + \gamma_0,$$
+where the coefficients $\gamma_0, \gamma_1$ and $\gamma_2$ along with the
+centering constant $c$ were set for each simulation scenario. In this way we
+were able to assess a wide variety of scenarios, ranging from true constant
+relative treatment effects to moderate and strong linear and quadratic
+deviations. We also considered scenarios with treatment-covariate interactions.
+These scenarios include 4 weak interactions
 ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82$), 
 4 strong interactions 
 ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$), 
@@ -220,7 +215,7 @@ assessed discrimination using the c-for-benefit statistic described in
 predicted benefit and then are matched 1:1, dropping patients in the larger
 treatment arm without a pair. We define *observed* pair-specific treatment
 benefit as the difference of observed outcomes between the untreated and the
-treated patient of each pair. Pair-specific *predicted* benefit is defined as
+treated patient of each pair. Pair-specifi *predicted* benefit is defined as
 the average of predicted benefits within each pair. Then, c-for-benefit is
 defined as the probability that from two randomly chosen matched patient pairs
 with unequal observed benefit, the pair with greater observed benefit also has a
@@ -243,9 +238,9 @@ calibration.
 The model including a constant relative treatment effect had the lowest median
 RMSE in scenarios where the base case of true constant relative treatment effect
 (OR = 0.8, N = `r 4250` and AUC = 0.75) or moderate relative deviations were
-considered (Figure \@ref(fig:rmsebase); Panel A). However, when we considered
+considered (Figure \ref{fig:rmsebase}; Panel A). However, when we considered
 strong linear and quadratic deviations from the base case the linear interaction
-model performed best (Figure \@ref(fig:rmsebase); Panels B and C). Only in the
+model performed best (Figure \ref{fig:rmsebase}; Panels B and C). Only in the
 case of strong quadratic deviations models including RCS smoothing (3 knots)
 performed equally well to the linear interaction method. Increasing the number
 of knots in RCS smoothing resulted in higher error rates across all scenarios.
@@ -260,13 +255,13 @@ When we increased the sample size (N = `r 17000`), in all scenarios the model mo
 in agreement with the underlying settings had the lowest error rates. Under the
 base case of constant relative treatment effects (OR = 0.8), the model including
 a constant relative treatment effect had the lowest RMSE (Figure
-\@ref(fig:rmsesamplesize); Panel A). When introducing moderate and strong linear
+\ref{fig:rmsesamplesize}; Panel A). When introducing moderate and strong linear
 deviations the linear interaction model performed best (Figure
-\@ref(fig:rmsesamplesize); Panels B and C). In the case of true strong quadratic
+\ref{fig:rmsesamplesize}; Panels B and C). In the case of true strong quadratic
 deviations from the base case of constant relative effects, the more flexible
 RCS smoothing models (3 knots) had the lowest RMSE. Again, the increased
 flexibility of RCS smoothing with higher number of knots resulted in overfitting
-and worse performance (Figure \@ref(fig:rmsesamplesize); Panel D).
+and worse performance (Figure \ref{fig:rmsesamplesize}; Panel D).
 
 ```{r rmsesamplesize, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 17,000; \\textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \\textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_sample_size.png"))
@@ -275,9 +270,9 @@ knitr::include_graphics(here::here("figures/rmse_sample_size.png"))
 When we increased the true prediction AUC to 0.85, models including RCS
 smoothing had the lowest RMSE in the presence of strong quadratic deviations
 from the base case of true constant relative treatment effects (Figure
-\@ref(fig:rmseauc); Panel D). However, with milder deviations, the linear
+\ref{fig:rmseauc}; Panel D). However, with milder deviations, the linear
 interaction model had the lowest RMSE with the RCS smoothing methods (3 knots)
-being a close second (Figure \@ref(fig:rmseauc); Panels B and C). Increasing the
+being a close second (Figure \ref{fig:rmseauc}; Panels B and C). Increasing the
 number of knots of RCS smoothing resulted in increased RMSE, which was less
 pronounced in the case of strong quadratic deviations.
 
@@ -291,7 +286,7 @@ scenarios where linear and quadratic deviations from the base case of constant
 treatment effect were considered (N=`r 4250`; AUC = `r 0.75`). However, models
 including a linear interaction with the risk linear predictor tended to present
 much lower variability compared to all other model-based and smoothing
-approaches (Figure \@ref(fig:discrimination)). We also observed an increasing
+approaches (Figure \ref{fig:discrimination}). We also observed an increasing
 trend of discrimination for benefit variability with increasing number of
 restricted cubic spline knots in all scenarios.
 
@@ -305,7 +300,7 @@ ICI for benefit in the majority of scenarios except for the scenarios where
 moderate linear deviations from the base case were considered. In that case
 constant treatment effect models demonstrated the best performance, very
 comparable to the linear interaction model's performance, nonetheless (Figure
-\@ref(fig:calibration); Panels A, B, and C).
+\ref{fig:calibration}; Panels A, B, and C).
 
 ```{r calibration, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \\textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \\textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/calibration_base.png"))
