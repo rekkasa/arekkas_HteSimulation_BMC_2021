@@ -314,16 +314,17 @@ scenario.
 \end{figure}
 
 When we increased the sample size (N = 17,000), the model including a
-constant relative treatment effect had the lowest RMSE under the base
-case scenario of constant relative treatment effects (Figure
-\ref{fig:rmsesamplesize}; Panel A). When introducing moderate and strong
-linear deviations the linear interaction model performed best (Figure
-\ref{fig:rmsesamplesize}; Panels B and C). In the case of true strong
-quadratic deviations from the base case of constant relative effects,
-the more flexible RCS smoothing models (3 knots) had the lowest RMSE.
-Again, the increased flexibility of RCS smoothing with higher number of
-knots resulted in overfitting and worse performance (Figure
-\textbackslash ref\{fig:rmsesamplesize\}; Panel D).
+constant relative treatment effect had the lowest RMSE under the
+assumption of true constant relative treatment effects (Figure
+\ref{fig:rmsesamplesize}; Panel A). Contrary to previous results with
+smaller sample sizes, when introducing moderate and strong linear
+deviations the linear interaction model performed best, outperforming
+the constant treatment effect model (Figure \ref{fig:rmsesamplesize};
+Panels B and C). However, the linear interaction model was outperformed
+by the more flexible RCS models (3 knots) in the case of strong
+quadratic deviations. Again, the increased flexibility of RCS smoothing
+with higher number of knots resulted in overfitting and worse
+performance (Figure \ref{fig:rmsesamplesize}; Panel D).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/rmse_sample_size} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 17,000; \textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.}\label{fig:rmsesamplesize}
@@ -343,15 +344,15 @@ the case of strong quadratic deviations.
 \includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/rmse_auc} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.85 and sample size of 4,250; \textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.}\label{fig:rmseauc}
 \end{figure}
 
-All candidate methods demonstrated comparable discrimination for benefit
-in all scenarios where linear and quadratic deviations from the base
-case of constant treatment effect were considered (N=4,250; AUC = 0.75).
-However, models including a linear interaction with the risk linear
-predictor tended to present much lower variability compared to all other
-model-based and smoothing approaches (Figure \ref{fig:discrimination}).
-We also observed an increasing trend of discrimination for benefit
-variability with increasing number of restricted cubic spline knots in
-all scenarios.
+The constant effects model, the linear interaction model and models with
+RCS smoothing (3 knots) had the highest median c-for-benefit in the base
+case scenario and the scenarios where linear and quadratic deviations
+were considered. However, constant treatment effects and linear
+interaction models tended to present much lower variability compared to
+all other model-based and smoothing approaches (Figure
+\ref{fig:discrimination}). We also observed an increasing trend of
+discrimination for benefit variability and decreasing median values with
+increasing number of restricted cubic spline knots in all scenarios.
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/discrimination_base} \caption{Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.}\label{fig:discrimination}
@@ -359,18 +360,20 @@ all scenarios.
 
 When focusing on calibration, the linear interaction model had the
 lowest median ICI for benefit in the majority of scenarios except for
-the scenarios where moderate linear deviations from the base case were
-considered. In that case constant treatment effect models demonstrated
-the best performance, very comparable to the linear interaction model's
-performance, nonetheless (Figure \ref{fig:calibration}; Panels A, B, and
-C).
+the scenarios where no or moderate linear deviations from the base case
+were considered. In that case constant treatment effect models
+demonstrated the best performance, very comparable to the linear
+interaction model's performance, nonetheless (Figure
+\ref{fig:calibration}). However, under strong linear or quadratic
+deviations, the constant treatment effect model was very poorly
+calibrated (Figure \ref{fig:calibration}; Panels C and D).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/calibration_base} \caption{Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.}\label{fig:calibration}
 \end{figure}
 
-\hypertarget{real-data}{%
-\subsection{Real data}\label{real-data}}
+\hypertarget{case-study}{%
+\subsection{Case study}\label{case-study}}
 
 We demonstrate the different methods for individualizing treatment
 benefits using data from 30,510 patients with an acute myocardial
@@ -415,22 +418,13 @@ approaches.
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-We have carried out a simulation study comparing different approaches
-for individualized benefit prediction using baseline risk as the
-reference. These methods included a constant treatment effect model, a
-model including a simple linear interaction of the risk linear predictor
-with treatment, and models using smoothing with restricted cubic splines
-with 3, 4, and 5 knots. Performance was assessed evaluating error rates
-using RMSE and benefit prediction performance using some novel methods
-for evaluating discrimination and calibration for benefit.
-
 The linear interaction model proved to be flexible enough to adequately
 predict benefit under a wide range of scenarios. It had lower error
 rates and usually the highest c-for-benefit with the lower variability
 across simulation replications. Its benefit predictions were also
 well-calibrated across the majority of the simulation settings. Models
 with RCS smoothing with 3 knots performed very similarly, only
-outperformig the linear interaction model in the presence of strong
+outperforming the linear interaction model in the presence of strong
 quadratic deviations from the base case scenario of constant relative
 treatment effects. These simpler methods proved to have quite robust
 performance across all scenarios, which was not the case for more
@@ -496,12 +490,12 @@ more recent literature {[}15--17{]}. Simulations are also needed to
 assess relative performance and define the settings where these break
 down or outperform each other.
 
-In conclusion, we carried out a simulation study comparing different
-risk-based approaches to individualizing benefit predictions. Simpler
-models including a linear interaction with the risk linear predictor or
-RCS smoothing with 3 knots had adequate performance under a wide range
-scenarios. An adaptive approach based on selecting among the considered
-methods using AIC had satisfactory performance.
+In conclusion, when comparing different risk-based approaches to
+individualizing benefit predictions simpler models including a linear
+interaction with the prognostic index or RCS smoothing with 3 knots had
+adequate performance under a wide range scenarios. An adaptive approach
+selecting among the considered methods with optimal AIC had satisfactory
+performance.
 
 \newpage
 
