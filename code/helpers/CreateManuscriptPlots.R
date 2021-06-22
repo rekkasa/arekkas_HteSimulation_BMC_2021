@@ -26,7 +26,7 @@ createPlot <- function(
     ) %>% 
     reshape2::melt()
   levels(tmp$variable) <- case_when(
-    levels(tmp$variable) == "linear_predictor"          ~ "Linear predictor",
+    levels(tmp$variable) == "linear_predictor"          ~ "Linear interaction",
     levels(tmp$variable) == "constant_treatment_effect" ~ "Constant\ntreatment effect",
     levels(tmp$variable) == "stratified"                ~ "Stratified",
     levels(tmp$variable) == "rcs_3_knots"               ~ "RCS\n(3 knots)",
@@ -60,7 +60,7 @@ createPlot <- function(
       breaks = c(
         "Constant\ntreatment effect", 
         "Stratified", 
-        "Linear predictor", 
+        "Linear interaction", 
         "RCS\n(3 knots)",
         "RCS\n(4 knots)",
         "RCS\n(5 knots)", 
