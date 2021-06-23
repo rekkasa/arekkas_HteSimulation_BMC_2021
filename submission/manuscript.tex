@@ -310,7 +310,7 @@ approach performed very similarly to the best performing model in each
 scenario.
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/rmse_base} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.}\label{fig:rmsebase}
+\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/rmse_base} \caption{RMSE of the considered methods across 500 replications calculated in a simulated superpopulation of size 500,000. \textit{Panel A} presents the results of the scenario with true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \textit{Panel B} presents the results under moderate linear deviations from constant treatment effects; \textit{Panel C} presents the results for strong linear deviations from constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from constant relative treatment effects.}\label{fig:rmsebase}
 \end{figure}
 
 When we increased the sample size (N = 17,000), the model including a
@@ -327,7 +327,7 @@ with higher number of knots resulted in overfitting and worse
 performance (Figure \ref{fig:rmsesamplesize}; Panel D).
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/rmse_sample_size} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 17,000; \textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.}\label{fig:rmsesamplesize}
+\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/rmse_sample_size} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 17,000; \textit{Panel B} presents the results under moderate linear deviations from constant treatment effects; \textit{Panel C} presents the results for strong linear deviations from constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations constant relative treatment effects.}\label{fig:rmsesamplesize}
 \end{figure}
 
 When we increased the true prediction AUC to 0.85, models including RCS
@@ -341,21 +341,21 @@ RCS smoothing resulted in increased RMSE, which was less pronounced in
 the case of strong quadratic deviations.
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/rmse_auc} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.85 and sample size of 4,250; \textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.}\label{fig:rmseauc}
+\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/rmse_auc} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.85 and sample size of 4,250; \textit{Panel B} presents the results under moderate linear deviations from constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from constant relative treatment effects.}\label{fig:rmseauc}
 \end{figure}
 
 The constant effects model, the linear interaction model and models with
 RCS smoothing (3 knots) had the highest median c-for-benefit in the base
 case scenario and the scenarios where linear and quadratic deviations
-were considered. However, constant treatment effects and linear
-interaction models tended to present much lower variability compared to
-all other model-based and smoothing approaches (Figure
-\ref{fig:discrimination}). We also observed an increasing trend of
-discrimination for benefit variability and decreasing median values with
-increasing number of restricted cubic spline knots in all scenarios.
+were considered. The constant treatment effect model and the linear
+interaction model tended to present much lower variability compared to
+all other approaches (Figure \ref{fig:discrimination}). We also observed
+an increasing trend of discrimination for benefit variability and
+decreasing median values with increasing number of restricted cubic
+spline knots in all scenarios.
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/discrimination_base} \caption{Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.}\label{fig:discrimination}
+\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/discrimination_base} \caption{Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \textit{Panel B} presents the results under moderate linear deviations from constant treatment effects; \textit{Panel C} presents the results for strong linear deviations from constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from constant relative treatment effects.}\label{fig:discrimination}
 \end{figure}
 
 When focusing on calibration, the linear interaction model had the
@@ -369,7 +369,7 @@ deviations, the constant treatment effect model was very poorly
 calibrated (Figure \ref{fig:calibration}; Panels C and D).
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/calibration_base} \caption{Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \textit{Panel B} presents the results under moderate linear deviations from the base case of constant treatment effects, while holding true prediction AUC and sample size constant; \textit{Panel C} presents the results for strong linear deviations from the base case scenario of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from the base case scenario of constant relative treatment effects.}\label{fig:calibration}
+\includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/calibration_base} \caption{Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \textit{Panel B} presents the results under moderate linear deviations from constant treatment effectst; \textit{Panel C} presents the results for strong linear deviations from of constant relative treatment effects; \textit{Panel D} presents the results for strong quadratic deviations from constant relative treatment effects.}\label{fig:calibration}
 \end{figure}
 
 \hypertarget{case-study}{%
