@@ -236,14 +236,41 @@ asd <- read_csv(
 
 # Results in scenarios with interactions
 
-```{r test, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
+When we considered a set of 4 true linear treatment-covariate interactions the
+model containing a linear interaction with the prognostic index had the lowest
+median RMSE. We observed an increasing trend in prediction errors with
+increasing interaction intensity (Figure \@ref(fig:rmseInteractions)). The
+model with restricted cubic spline smoothing (3 knots) had very comparable
+performance to the linear interaction model. Increasing the flexibility of the
+smooth methods resulted in increasing median RMSE. These results may be
+explained by the fact that the interactions considered were linear, thus
+favoring the linear interaction model. More flexible approaches may be better
+suited for higher-order treatment-covariate interactions. Finally, the adaptive
+approach had adequate performance under all scenarios, resembling the
+performance of the best-performing approach every time.
+
+```{r rmseInteractions, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_interactions.png"))
 ```
 
-```{r test2, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
+The constant treatment effects model, the linear interaction model and the model
+with RCS smoothing (3 knots) had the highest c-for-benefit across all scenarios
+(Figrue \@ref(fig:discriminationInteractions)). RCS smoothing with 4 or 5 knots
+did not improve performance. On the contrary, we observed an increasing trend in
+c-for-benefit variability, as was the case in the main text. The adaptive
+apprach again had statisfactory performance.
+
+```{r discriminationInteractions, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/discrimination_interactions.png"))
 ```
 
-```{r test4, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
+Despite the very similar performance in terms of prediction errors, the linear
+interaction model resulted in better-calibrated benefit predictions compared to
+the rest of the methods (Figure \@ref(fig:calibrationInteractions)). The constant
+treatment effects model had the highest median ICI-for-benefit across all
+scenario settings, which became more pornounced with increasing
+treatment-covariate interaction intensity.
+
+```{r calibrationInteractions, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/calibration_interactions.png"))
 ```
