@@ -3,7 +3,6 @@
 ![front](https://github.com/rekkasA/arekkas_HteSimulation_XXXX_2021/blob/master/extras/figures/front.png)
 
 ## Summary
-## 
 **Objective:** Compare risk-based methods for individualizing treatment effects
 with simulations in the RCT setting. **Study Design and Setting:** We predicted
 absolute benefit based on an available prognostic index (PI) using: a model with
