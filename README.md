@@ -29,6 +29,21 @@ To rerun the simulation study and regenerate the report run:
 ```bash
 git clone https://github.com/rekkasa/arekkas_HteSimulation_XXXX_2021.git
 cd arekkas_HteSimulation_XXXX_2021
+```
+
+Make sure that `renv` R-package is installed. If not, to install, run in R-console:
+```r
+install.packages("renv")
+```
+Restore the package versions running:
+```r
+renv::restore()
+```
+To start the replcation quit `R` and run from the terminal:
+```bash
 make clean
 make submission/manuscript.pdf
 ```
+This will start the entire simulation study from scratch and may take a while to complete.
+To adjust the settings of the simulation open `code/SimulationScript.R` and increase or reduce
+the resources allocated to the task.
