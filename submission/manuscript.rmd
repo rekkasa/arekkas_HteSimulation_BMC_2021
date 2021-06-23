@@ -44,7 +44,8 @@ keywords:
 output: 
   rticles::arxiv_article:
     keep_tex: true
-  bookdown::word_document2: default
+  bookdown::word_document2:
+    reference_docx: reference.docx
 geometry: margin=1.0in
 date: false
 toc: false
