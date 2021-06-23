@@ -128,10 +128,10 @@ simulationSettings <- list(
 )
 
 analysisSettings <- SimulationEvaluationHte::createAnalysisSettings(
-  threads        = 4,
+  threads        = 2,
   seed           = 19910930,
-  replications   = 100,
-  validationSize = 1e5,
+  replications   = 500,
+  validationSize = 5e5,
   analysisId     = paste(
     "scenario",
     idSettings$scenario,
