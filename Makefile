@@ -95,7 +95,8 @@ data/processed/analysisIds.csv : code/WriteAnalysisIds.R
 	$<
 
 
-data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibration.csv : code/MergeResults.R
+data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibration.csv : code/MergeResults.R\
+	                                                                                   $(EVALFILES)
 	$<
 
 
@@ -122,4 +123,4 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 .PHONY:
 data : $(EVALFILES)
 clean:
-	rm -rf data/raw/scenario_* data/processed/*.csv data/raw/gusto.rda figures/*.png figures/*.tiff
+	rm -rf data/raw/scenario_* data/processed/*.csv data/raw/gusto.rda figures/*.png figures/*.tiff; code/Clean.R
