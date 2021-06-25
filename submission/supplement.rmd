@@ -274,3 +274,91 @@ treatment-covariate interaction intensity.
 ```{r calibrationInteractions, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/calibration_interactions.png"))
 ```
+
+# Case study
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+load(here::here("data/raw/gusto.rda"))
+gusto <- gusto %>%
+  tibble() %>%
+  filter(!is.na(tpa))
+
+gustoTable1 <- gusto %>%
+  mutate(
+    tpa = factor(
+      tpa,
+      levels = c(0, 1),
+      labels = c(
+        "Tissue plasminogen activator",
+        "Streptokinase"
+      )
+    ),
+    Age = age,
+    Outcome = factor(
+      day30,
+      levels = c(0, 1),
+      labels = c(
+        "Alive",
+        "Dead"
+      )
+    )
+  )
+
+table1::table1(
+  ~ sex + Age + Killip + sysbp + + miloc + pulse + pmi + Outcome | tpa,
+  data = gustoTable1
+)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+gustoModelData <- gusto %>%
+  tibble() %>%
+  rename(
+    "outcome" = "day30",
+    "treatment" = "tpa"
+  )
+
+prediction <- rms::lrm(
+  outcome ~ treatment + age + Killip + pmin(sysbp, 120) + rms::lsp(pulse, 50) + pmi + miloc,
+  data = gustoModelData,
+  maxit = 99
+)
+
+predictionStats <- rms::val.prob(
+  y = gustoModelData$outcome, 
+  logit = prediction$linear.predictors,
+  logistic.cal = F,
+  statloc = FALSE
+)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+table <- tibble(
+  Metric = c(
+    "AUC",
+    "Brier score",
+    "Emax",
+    "E90",
+    "Eavg"
+  ),
+  Value = c(
+    predictionStats[2],
+    predictionStats["Brier"],
+    predictionStats["Emax"],
+    predictionStats["E90"],
+    predictionStats["Eavg"]
+  )
+)
+
+ knitr::kable(
+    table,
+    format      = "latex",
+    align       = "r",
+    booktabs    = TRUE,
+    digits      = 4,
+    format.args = list(
+      big.mar      = ",",
+      decimal.mark = "."
+    ),
+    caption    = "Evaluation statistics of the prediction model for 30-day mortality in GUSTO-I."
+  ) 
+```
