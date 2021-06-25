@@ -57,6 +57,7 @@ figures/rmse_interactions.png figures/rmse_interactions.tiff : code/InteractionP
 figures/deviationsManuscript.png : code/PlotDeviationsManuscript.R\
                                    code/helpers/PlotGammas.R
 	$<
+
 figures/rmse_nl_auc.tiff figures/rmse_nl_auc.png : code/NlAucPlots.R\
 		                                   code/helpers/CreateManuscriptPlots.R\
 					           data/processed/rmse.csv
@@ -135,6 +136,7 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 	R -e 'rmarkdown::render("submission/manuscript.rmd", output_format = "all")'
 
 submission/supplement.pdf : submission/supplement.rmd\
+	                    data/raw/gusto.rda\
 	                    figures/deviate_linear_08.png\
 			    figures/deviate_quadratic_08.png\
 			    figures/deviate_linear_absolute_08.png\
