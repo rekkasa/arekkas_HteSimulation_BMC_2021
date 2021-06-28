@@ -24,22 +24,13 @@ interaction of the PI with treatment adequately predict absolute benefit.
 
 ## Replication
 
-To rerun the simulation study and regenerate the report run:
-
+To download the code of the simulation study:
 ```bash
 git clone https://github.com/rekkasa/arekkas_HteSimulation_XXXX_2021.git
 cd arekkas_HteSimulation_XXXX_2021
 ```
 
-Make sure that `renv` R-package is installed. If not, to install, run in R-console:
-```r
-install.packages("renv")
-```
-Restore the package versions running:
-```r
-renv::restore()
-```
-To start the replcation quit `R` and run from the terminal:
+To start the replcation quit `R` and run:
 ```bash
 make clean
 make submission/manuscript.pdf
