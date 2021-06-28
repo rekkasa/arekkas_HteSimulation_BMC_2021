@@ -24,17 +24,19 @@ interaction of the PI with treatment adequately predict absolute benefit.
 
 ## Replication
 
-To download the code of the simulation study:
+To download the code of the simulation studyn and explore the our results run:
 ```bash
 git clone https://github.com/rekkasa/arekkas_HteSimulation_XXXX_2021.git
 cd arekkas_HteSimulation_XXXX_2021
 ```
 
-To start the replcation quit `R` and run:
+You can also replicate the study by running:
 ```bash
 make clean
 make submission/manuscript.pdf
 ```
 This will start the entire simulation study from scratch and may take a while to complete.
-To adjust the settings of the simulation open `code/SimulationScript.R` and increase or reduce
-the resources allocated to the task.
+R-package `renv` is used to recreate our R environment, to allow for reproducible research.
+To adjust the settings of the simulation edit `code/SimulationScript.R`. You can increase 
+or reduce the resources allocated to the task or alter the settings of the simulations
+altogether.
