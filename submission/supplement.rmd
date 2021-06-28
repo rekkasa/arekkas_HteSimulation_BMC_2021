@@ -276,7 +276,21 @@ knitr::include_graphics(here::here("figures/calibration_interactions.png"))
 ```
 
 # Case study
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+We fitted a logistic regression model to predict 30-day mortality after a
+myocardial infarction using data from the GUSTO-I trial. The risk factors
+modeled were age, Killip class, systolic blood pressure heart rate, primary MI
+and MI location. We restricted systolic blood pressure values to 120 mmHg and
+modeled heart rate using linear spline transformation with a knot at 50 beats
+per minute. A brief overview of the distribution of baseline characteristics is
+presented in Table \@ref(tab:table1). The coefficients of the model can be seen
+in Table \@ref(tab:modelCoefficients). We used this model in the manuscript to
+derive baseline risk predictions to all patients of the study. For all patients
+we set the treatment indicator to 0, assuming a constant relative treatment
+effect. The model displayed very good internal validity (Table
+\@ref(tab:internalValidity)).
+
+```{r table1, echo=FALSE, warning=FALSE, message=FALSE}
 load(here::here("data/raw/gusto.rda"))
 gusto <- gusto %>%
   tibble() %>%
@@ -303,35 +317,74 @@ gustoTable1 <- gusto %>%
     )
   )
 
-table1::table1(
+res <- table1::table1(
   ~ sex + Age + Killip + sysbp + + miloc + pulse + pmi + Outcome | tpa,
-  data = gustoTable1
+  data = gustoTable1,
+  caption = "Baseline characteristics of the patients included in GUSTO-I trial."
 )
+
+table1::t1kable(res)
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Smooth calibration of the derived prediction model."}
 gustoModelData <- gusto %>%
-  tibble() %>%
   rename(
     "outcome" = "day30",
     "treatment" = "tpa"
   )
 
-prediction <- rms::lrm(
+prediction <- glm(
   outcome ~ treatment + age + Killip + pmin(sysbp, 120) + rms::lsp(pulse, 50) + pmi + miloc,
   data = gustoModelData,
-  maxit = 99
+  maxit = 99,
+  family = "binomial"
 )
+
+
 
 predictionStats <- rms::val.prob(
   y = gustoModelData$outcome, 
   logit = prediction$linear.predictors,
-  logistic.cal = F,
+  logistic.cal = FALSE,
   statloc = FALSE
 )
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+```{r modelCoefficients, echo=FALSE, warning=FALSE, message=FALSE}
+
+predictionSummary <- summary(prediction)
+table <- predictionSummary$coefficients
+
+rownames(table)[2] <- "Treatment"
+rownames(table)[3] <- "Age"
+rownames(table)[4] <- "KILLIP (II)"
+rownames(table)[5] <- "KILLIP (III)"
+rownames(table)[6] <- "KILLIP (IV)"
+rownames(table)[7] <- "Systolic blood pressure"
+rownames(table)[8] <- "Pulse rate"
+rownames(table)[9] <- "Pulse rate'"
+rownames(table)[10] <- "Prior MI (yes)"
+rownames(table)[11] <- "MI location (other)"
+rownames(table)[12] <- "MI location (anterior)"
+
+
+ knitr::kable(
+    table,
+    format      = "latex",
+    align       = "r",
+    booktabs    = TRUE,
+    digits      = 4,
+    format.args = list(
+      big.mar      = ",",
+      decimal.mark = "."
+    ),
+    caption    = "Coefficients of the prediction model for 30-day mortality after myocardial infarction (MI)."
+  ) 
+
+```
+
+```{r internalValidity, echo=FALSE, warning=FALSE, message=FALSE}
 table <- tibble(
   Metric = c(
     "AUC",

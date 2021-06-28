@@ -1078,6 +1078,13 @@
       "Repository": "CRAN",
       "Hash": "f2e17ba09737e2e7e2ec40fc1f9b6e08"
     },
+    "table1": {
+      "Package": "table1",
+      "Version": "1.4.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d098cc323490c269c4315ed76eaf94a3"
+    },
     "tibble": {
       "Package": "tibble",
       "Version": "3.1.2",
