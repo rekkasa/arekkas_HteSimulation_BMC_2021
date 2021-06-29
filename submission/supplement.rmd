@@ -10,6 +10,8 @@ header-includes:
   - \usepackage{bm}
   - \usepackage{booktabs}
   - \newcommand\given[1][]{\:#1\vert\:}
+  - \newcommand{\beginsupplement}{\setcounter{table}{0}  \renewcommand{\thetable}{S\arabic{table}} \setcounter{figure}{0} \renewcommand{\thefigure}{S\arabic{figure}}}
+
 editor_options: 
   chunk_output_type: console
 bibliography: references.bib
@@ -37,6 +39,8 @@ knit_hooks$set(
   }
 )
 ```
+
+\beginsupplement
 
 # Simulation settings
 For all patients we observe covariates $x_1,\dots,x_8$, of which $4$ are
@@ -326,7 +330,7 @@ res <- table1::table1(
 table1::t1kable(res)
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Smooth calibration of the derived prediction model."}
+```{r modelCoefficients, echo=FALSE, warning=FALSE, message=FALSE}
 gustoModelData <- gusto %>%
   rename(
     "outcome" = "day30",
@@ -341,17 +345,6 @@ prediction <- glm(
 )
 
 
-
-predictionStats <- rms::val.prob(
-  y = gustoModelData$outcome, 
-  logit = prediction$linear.predictors,
-  logistic.cal = FALSE,
-  statloc = FALSE
-)
-```
-
-
-```{r modelCoefficients, echo=FALSE, warning=FALSE, message=FALSE}
 
 predictionSummary <- summary(prediction)
 table <- predictionSummary$coefficients
@@ -384,6 +377,15 @@ rownames(table)[12] <- "MI location (anterior)"
 
 ```
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Smooth calibration of the derived prediction model."}
+predictionStats <- rms::val.prob(
+  y = gustoModelData$outcome, 
+  logit = prediction$linear.predictors,
+  logistic.cal = FALSE,
+  statloc = FALSE
+)
+```
+
 ```{r internalValidity, echo=FALSE, warning=FALSE, message=FALSE}
 table <- tibble(
   Metric = c(
@@ -405,7 +407,7 @@ table <- tibble(
  knitr::kable(
     table,
     format      = "latex",
-    align       = "r",
+    align       = "l",
     booktabs    = TRUE,
     digits      = 4,
     format.args = list(
@@ -415,3 +417,41 @@ table <- tibble(
     caption    = "Evaluation statistics of the prediction model for 30-day mortality in GUSTO-I."
   ) 
 ```
+
+We used the derived prediction model to predict benefit of tPA to 30-day
+mortality using the data at hand. The models are presented in the main
+manuscript. All approaches displayed comaprable discrimination for benefit, with
+the constant treatment effect model, the linear interaction model and the RCS (5
+knots) model displaying the highest performance (Table
+\@ref(tab:gustoPerformanceMetrics)). However, the linear interaction model and
+the RCS (5 knots) model were worse calibrated. The constant treatment effect
+model also had the best performance among the considered methods in terms of
+calibration for benefit.
+
+
+```{r gustoPerformanceMetrics, echo=FALSE, warning=FALSE, message=FALSE}
+metrics <- readr::read_csv(
+  here::here("data/processed/gustoPerformanceMetrics.csv")
+)
+
+ knitr::kable(
+    metrics,
+    format      = "latex",
+    align       = "l",
+    booktabs    = TRUE,
+    digits      = 4,
+    format.args = list(
+      big.mar      = ",",
+      decimal.mark = "."
+    ),
+    col.names = c(
+      "Model",
+      "C",
+      "ICI"
+    ),
+    caption    = "Performance metrics of the different methods used to predict benefit of tPA on 30-day mortality using data from the GUSTO-I trial."
+  ) 
+```
+
+
+
