@@ -147,7 +147,9 @@ $$E\{y\given \bm{x}, t_x, \hat{\bm{\beta}}\} = g\big(lp+(\gamma_0+\gamma_1lp)t_x
 We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp\given\bm{x}, \hat{\bm{\beta}}) = g(lp) - g\big(\gamma_0+(1+\gamma_1)lp\big)$$
 
 ### Restricted cubic splines
-Finally, we drop the linearity assumption and predict absolute benefit using smoothing with restricted cubic splines with 3, 4, and 5 knots. More specifically, we fit the model:
+Finally, we drop the linearity assumption and predict absolute benefit using
+smoothing with restricted cubic splines with 3, 4, and 5 knots. More
+specifically, we fit the model:
 
 $$P(y=1\given lp, t_x) = g\big(\beta_0+\beta_{t_x}t_x+f_{RCS}(lp) + f_{RCS}(lp)\times t_x\big)$$
 where
