@@ -24,7 +24,7 @@ interaction of the PI with treatment adequately predict absolute benefit.
 
 ## Replication
 
-To download the code of the simulation studyn and explore the our results run:
+To download the code of the simulation study and explore the our results run:
 ```bash
 git clone https://github.com/rekkasa/arekkas_HteSimulation_XXXX_2021.git
 cd arekkas_HteSimulation_XXXX_2021
