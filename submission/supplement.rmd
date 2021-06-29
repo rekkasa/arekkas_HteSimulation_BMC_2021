@@ -102,14 +102,17 @@ knitr::include_graphics(here::here("figures/deviate_linear_08.png"))
 knitr::include_graphics(here::here("figures/deviate_quadratic_08.png"))
 ```
 
-In Figure \@ref(fig:fig2) the absolute benefits observed based on different settings are presented. The base-case scenario is also presented as a reference.
+In Figure \@ref(fig:fig2) the absolute benefits observed based on different
+settings are presented. The base-case scenario is also presented as a reference.
 
 ```{r fig2, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '50%'}
 knitr::include_graphics(here::here("figures/deviate_linear_absolute_08.png"))
 knitr::include_graphics(here::here("figures/deviate_quadratic_absolute_08.png"))
 ```
 
-Finally, we consider 3 additional scenarios of interaction of individual covariates with treatment. These scenarios include a 4 weak interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82$), 4 strong interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$), and 2 weak and 2 strong interactions (Table \@ref(tab:tab2)).
+Finally, we consider 3 additional scenarios of interaction of individual
+covariates with treatment. These scenarios include a 4 weak interactions
+($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82$), 4 strong interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$), and 2 weak and 2 strong interactions (Table \@ref(tab:tab2)).
 
 ## Risk modeling
 Merging treatment arms, we develop prediction models including a constant relative treatment effect:
@@ -123,19 +126,30 @@ Individualized predictions are derived setting $t_x=0$.
 ## Approaches to individualize benefit predictions
 
 ### Risk stratification
-Derive a prediction model using the same approach as above and divide the population in equally sized risk-based subgroups. Estimate subgroup-specific absolute benefit from the observed absolute differences. Subject-specific benefit predictions are made by attributing to individuals their corresponding subgroup-specific estimate.
+Derive a prediction model using the same approach as above and divide the
+population in equally sized risk-based subgroups. Estimate subgroup-specific
+absolute benefit from the observed absolute differences. Subject-specific
+benefit predictions are made by attributing to individuals their corresponding
+subgroup-specific estimate.
 
 ### Constant treatment effect
-Assuming a constant relative treatment effect, fit the adjusted model in \@ref(eq:risk). Then, an estimate of absolute benefit can be derived from $$\hat{f}_{\text{benefit}}(lp\given \bm{x}, \hat{\bm{\beta}}) = g(lp) - g(lp+\hat{\gamma}) $$
+Assuming a constant relative treatment effect, fit the adjusted model in
+\@ref(eq:risk). Then, an estimate of absolute benefit can be derived from$$\hat{f}_{\text{benefit}}(lp\given \bm{x}, \hat{\bm{\beta}}) = g(lp) - g(lp+\hat{\gamma}) $$
 
 ### Linear interaction
-The assumption of constant relative treatment effect is relaxed modeling a linear interaction of treatment with the risk linear predictor: 
-$$E\{y\given \bm{x}, t_x, \hat{\bm{\beta}}\} = g\big(lp+(\delta_0+\delta_1lp)t_x\big)$$
-We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp\given\bm{x}, \hat{\bm{\beta}}) = g(lp) - g\big(\delta_0+(1+\delta_1)lp\big)$$
+The assumption of constant relative treatment effect is relaxed modeling a
+linear interaction of treatment with the risk linear predictor:
+$$E\{y\given \bm{x}, t_x, \hat{\bm{\beta}}\} = g\big(lp+(\gamma_0+\gamma_1lp)t_x\big)$$
+We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp\given\bm{x}, \hat{\bm{\beta}}) = g(lp) - g\big(\gamma_0+(1+\gamma_1)lp\big)$$
 
-### Non-linear interaction
-Finally, we drop the linearity assumption and predict absolute benefit by taking the difference between smooth fits, separately derived in each treatment arm:
-$$f_{\text{benefit}}(lp\given\bm{x},\hat{\bm{\beta}}) = \hat{f}_{\text{smooth}}(lp\given \bm{x}, \hat{\bm{\beta}}, t_x=0) - \hat{f}_{\text{smooth}}(lp\given \bm{x}, \hat{\bm{\beta}}, t_x=1)$$
+### Restricted cubic splines
+Finally, we drop the linearity assumption and predict absolute benefit using smoothing with restricted cubic splines with 3, 4, and 5 knots. More specifically, we fit the model:
+
+$$P(y=1\given lp, t_x) = g\big(\beta_0+\beta_{t_x}t_x+f_{RCS}(lp) + f_{RCS}(lp)\times t_x\big)$$
+where
+$$f_{RCS}(x)=\alpha_0+\alpha_1h_1(x)+\alpha_2h_2(x)+\dots+\alpha_{k-1}h_{k-1}(x)$$ with
+$$h_{j+1}(x)= (x-t_j)^3-(x-t_{k-1})_+\frac{t_k-t_j}{t_k-t_{k-1}}+(x-t_k)^3_+\frac{t_{k-1}-t_j}{t_k-t_{k-   1}}$$
+and $t_1,\dots,t_k$ are the selected knots. We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp \given \bm{x},\hat{\bm{\beta}})=P(y=1\given lp, t_x=0)-P(y=1\given lp,t_x=1)$$.
 
 ```{r tab1, echo=FALSE, eval=TRUE, warning=FALSE}
  asd <- read_csv(
