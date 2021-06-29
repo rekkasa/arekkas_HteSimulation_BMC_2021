@@ -116,6 +116,10 @@ data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibra
 data/processed/analysisIdsInteractions.csv : code/WriteAnalysisIdsInteractions.R
 	$<
 
+data/processed/gustoPerformanceMetrics.csv : code/GustoPerformanceMetrics.R\
+	                                     data/raw/gusto.rda
+	$<
+
 submission/arxiv.sty : code/GetArxivStyle.sh
 	$<
 
@@ -136,6 +140,7 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 
 submission/supplement.pdf : submission/supplement.rmd\
 	                    data/raw/gusto.rda\
+			    data/processed/gustoPerformanceMetrics.csv\
 	                    figures/deviate_linear_08.png\
 			    figures/deviate_quadratic_08.png\
 			    figures/deviate_linear_absolute_08.png\
