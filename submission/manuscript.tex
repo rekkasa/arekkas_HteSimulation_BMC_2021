@@ -252,14 +252,14 @@ its objective is not individualized benefit prediction.
 
 Another approach would be to assume \emph{constant relative treatment
 effect} (OR) is constant. In that case, absolute benefit is estimated
-from \(\hat{\tau}(\bm{x}) = \text{expit}(PI +\log(\text{OR}))\), where
-\(\text{expit}(x)=\frac{e^x}{1+e^x}\) and \emph{lp} is the linear
-predictor of the prediction model.
+from \(\hat{\tau}(\bm{x}) = \text{expit}(PI +\log(\text{OR}))\). This is
+the method usually considered when performing risk-based assessment of
+treatment effect heterogeneity in RCT data.
 
 A different approach fits a logistic regression using treatment, the
 prognostic index and their interaction. In this case absolute benefit is
 estimated from
-\(\text{expit}(\beta_0+\beta_{PI}PI) - \text{expit}(\beta_0+\beta_{t_x}+(\beta_{PI}+\beta_*)PI)\).
+\(\hat{\tau}(\bm{x})=\text{expit}(\beta_0+\beta_{PI}PI) - \text{expit}(\beta_0+\beta_{t_x}+(\beta_{PI}+\beta_*)PI)\).
 We will refer to this method as the \emph{linear interaction} approach.
 
 Finally, we used \emph{restricted cubic splines} (RCS) to relax the
