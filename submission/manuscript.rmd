@@ -1,7 +1,7 @@
 ---
-title: "Continuous risk-based predictive approaches to treatment effect heterogeneity: A simulation study"
+title: "Models including an interaction of treatment with baseline risk were better able to predict absolute benefit in simulations"
 abstract: |
- **Objective:** Baseline risk is an important determinant of the absolute effect of a treatment for an individual patient. We aimed to compare different risk-based methods for predicting individualized treatment effects with simulations of the RCT setting. **Study Design** and Setting: We sampled patients from a superpopulation with diverse assumptions for a baseline prognostic index of risk (PI), and for the shape of the interaction between the PI and treatment (no, linear or quadratic interaction). In each sample, we fitted different models for predicting absolute benefit: a model with the PI and a constant relative treatment effect and models including an interaction of treatment assignment with the PI, with 4 quarters of the PI, and with nonlinear transformations of the PI (restricted cubic splines with 3, 4 and 5 knots). We also used an adaptive model selection approach based on Akaike’s Information Criterion. We evaluated predictive performance in the superpopulation using root mean squared error and measures of discrimination and calibration for benefit. Starting from a base case scenario (sample size 4,250, treatment odds ratio 0.8, AUC of the PI 0.75), we varied the sample size,  the strength of the treatment effect, and the discriminative ability of the PI. **Results:** Models including a linear interaction of the PI with treatment had (close to?) optimal performance under most simulation scenarios. More flexible models with restricted cubic splines required larger sample sizes and higher AUC of the PI to outperform the linear model. The adaptive approach performed similarly to the best-performing method in each scenario. **Conclusion:** Under most circumstances, a model with a linear interaction of the PI with treatment is better able to predict absolute treatment benefit.
+ **Objective:** To compare different risk-based methods predicting individualized treatment effects in RCT simulations. **Study Design and Setting:** We simulated data using diverse assumptions for a baseline prognostic index of risk (PI) and the shape of its intereraction with treatment (none, linear or quadratic). In each sample we predicted absolute benefit using: models with the PI and a constant relative treatment effect; models including an interaction of treatment with the PI; stratification in quarters of the PI; nonlinear transformations of the PI (restricted cubic splines with 3, 4 and 5 knots); an adaptive approach using Akaike’s Information Criterion. We evaluated predictive performance using root mean squared error and measures of discrimination and calibration for benefit. Starting from a base case scenario (sample size 4,250, treatment odds ratio 0.8, AUC of the PI 0.75), we varied the sample size, the treatment effect strength, and the PI's discriminative ability. **Results:** Models including a PI by treatment interaction performed better under most simulation settings. Flexible models required larger sample sizes and higher AUC of the PI to outperform the linear interaction model. The adaptive approach performed similarly to the best-performing method in most scenarios. **Conclusion:** Usually, a model with a linear interaction of the PI with treatment is better able to predict absolute treatment benefit.
 authors:
   - name: Alexandros Rekkas
     department: Department of Medical Informatics
@@ -497,25 +497,22 @@ The constant treatment effect model, despite having adequate performance in the
 presence of weak treatment effect heterogeneity on the relative scale, quickly
 broke down with stronger deviations from constant relative treatment effects. In
 these cases, the stratified approach generally had lower error rates compared to
-the constant treatment effect model. In concept, the stratified approach lies
-between the constant effects model and smoother approaches, only assuming
-constant treatment effects within strata of predicted risk and, therefore, is
-more sensitive to treatment effect heterogeneity. Stepwise treatment benefit
-estimates are very useful for demonstrating treatment effect heterogeneity –
-because estimating treatment effect requires groups of patients rather than
-individual patients –but are not helpful for making individualized absolute
-benefit predictions.
+the constant treatment effect model. Stepwise treatment benefit estimates are
+very useful for demonstrating treatment effect heterogeneity--because
+estimating treatment effect requires groups of patients rather than individual
+patients--but are not helpful for making individualized absolute benefit
+predictions.
 
 Increasing the discriminative ability of the risk model – by increasing the
-predictor coefficients of the true risk model – reduced RMSE for all methods,
-similar to increasing the sample size. This increase in discriminative ability
-translates in higher variability of predicted risks, which, in turn, allows the
-considered methods to better follow the evolution of treatment benefit. As
-expected, the increase in discriminative ability of the risk model also led to
-higher values of c-for-benefit. Even though risk model performance is very
-important for the ability of risk-based methods to predict treatment benefit,
-prediction model development was outside the scope of this work and has already
-been studied extensively [@vanKlaveren2019; @Burke2014; @Abadie2018].
+predictor coefficients of the true risk model – reduced RMSE for all methods.
+This increase in discriminative ability translates in higher variability of
+predicted risks, which, in turn, allows the considered methods to better capture
+absolute treatment benefits. As a consequence, the increase in discriminative
+ability of the risk model also led to higher values of c-for-benefit. Even
+though risk model performance is very important for the ability of risk-based
+methods to predict treatment benefit, prediction model development was outside
+the scope of this work and has already been studied extensively
+[@vanKlaveren2019; @Burke2014; @Abadie2018].
 
 Risk-based approaches to predictive HTE estimate treatment benefit as a function
 of baseline risk. A limitation of our study is that we assumed treatment benefit
@@ -539,7 +536,9 @@ individualizing benefit a models including a linear treatment interaction with
 the prognostic performed best in a wide range of scenarios. More flexible models
 with restricted cubic splines required larger sample sizes and higher AUC of the
 PI to outperform the linear model. An adaptive approach, selecting the model
-with optimal AIC, had satisfactory performance.
+with optimal AIC, had comparable performance to the best performing approach in
+most of the scenarios.
+
 
 \newpage
 # References
