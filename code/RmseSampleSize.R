@@ -54,11 +54,12 @@ for (i in seq_along(scenarios)) {
     ggplot2::theme(
       legend.position = "none",
       axis.title.x    = ggplot2::element_blank(),
-      axis.text.x     = ggplot2::element_text(size = 9, angle = 45, hjust = 1),
+      axis.text.x     = ggplot2::element_text(size = 10, angle = 45, hjust = 1),
       axis.title.y    = ggplot2::element_blank(),
-      axis.text.y     = ggplot2::element_text(size = 9),
-      plot.title      = ggtext::element_markdown(size = 12)
+      axis.text.y     = ggplot2::element_text(size = 9.5),
+      plot.title      = ggtext::element_markdown(size = 14)
     )
+  
   
   plotList[[i]] <- plot
 }

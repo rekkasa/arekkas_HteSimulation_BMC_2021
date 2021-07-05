@@ -85,15 +85,15 @@ pp <- gridExtra::grid.arrange(
     file.path("figures", "calibration_base.tiff"), 
     plot = pp,
     dpi = 1200,
-    width = 11, 
-    height = 10.5,
+    width = 8.5, 
+    height = 7,
     compression = "lzw"
   )
   
   ggplot2::ggsave(
     file.path("figures", "calibration_base.png"), 
     plot = pp,
-    width = 11, 
-    height = 10.5
+    width = 8.5, 
+    height = 7
   )
   
