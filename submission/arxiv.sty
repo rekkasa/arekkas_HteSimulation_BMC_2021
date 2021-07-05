@@ -27,8 +27,8 @@
 
 
 % \newcommand{\headeright}{A Preprint}
-\newcommand{\undertitle}{A Preprint}
-\newcommand{\shorttitle}{\@title}
+% \newcommand{\undertitle}{A Preprint}
+% \newcommand{\shorttitle}{\@title}
 
 \usepackage{fancyhdr}
 \fancyhf{}
@@ -36,7 +36,7 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \fancyheadoffset{0pt}
 \rhead{\scshape \footnotesize}
-\chead{\shorttitle}
+% \chead{\shorttitle}
 \cfoot{\thepage}
 
 
@@ -66,7 +66,7 @@
 \renewcommand{\scriptsize}{\@setfontsize\scriptsize\@viipt\@viiipt}
 \renewcommand{\tiny}{\@setfontsize\tiny\@vipt\@viipt}
 \renewcommand{\large}{\@setfontsize\large\@xiipt{14}}
-\renewcommand{\Large}{\@setfontsize\Large\@xivpt{16}}
+\renewcommand{\Large}{\@setfontsize\Large\@xivpt{15}}
 \renewcommand{\LARGE}{\@setfontsize\LARGE\@xviipt{20}}
 \renewcommand{\huge}{\@setfontsize\huge\@xxpt{23}}
 \renewcommand{\Huge}{\@setfontsize\Huge\@xxvpt{28}}
@@ -232,7 +232,8 @@
       \end{tabular}\hfil\linebreak[4]\hfil%
       \begin{tabular}[t]{c}\bf\rule{\z@}{24\p@}\ignorespaces%
     }
-    \begin{tabular}[t]{c}\bf\rule{\z@}{24\p@}\@author\end{tabular}%
+    \small
+    \begin{tabular}[t]{c}\bf\rule{\z@}{2\p@}\@author\end{tabular}%
   \vskip 0.04in \@minus 0.01in \center{\@date}   \vskip 0.02in
   }
 }

@@ -15,7 +15,7 @@
 \usepackage{graphicx}
 
 \title{Models including an interaction of treatment with baseline risk
-were better able to predict absolute benefit}
+were better able to predict absolute benefit in simulations}
 
 \author{
     Alexandros Rekkas
@@ -58,7 +58,7 @@ were better able to predict absolute benefit}
   {}%
   {\par}
 % For Pandoc 2.11+
-\newenvironment{CSLReferences}[3] % #1 hanging-ident, #2 entry spacing
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
  {% don't indent paragraphs
   \setlength{\parindent}{0pt}
   % turn on hanging indent if param 1 is 1
@@ -72,7 +72,7 @@ were better able to predict absolute benefit}
 \usepackage{calc} % for calculating minipage widths
 \newcommand{\CSLBlock}[1]{#1\hfill\break}
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \renewcommand*\familydefault{\sfdefault}
@@ -108,26 +108,25 @@ were better able to predict absolute benefit}
 
 
 \begin{abstract}
-\textbf{Objective:} To compare different risk-based methods for
-predicting individualized treatment effects using simulations of the RCT
-setting. \textbf{Study Design and Setting:} We sampled patients using
-diverse assumptions for a baseline prognostic index of risk (PI) and the
-shape of its intereraction with treatment (none, linear or quadratic).
-In each sample we predicted absolute benefit using: models with the PI
-and a constant relative treatment effect; models including an
-interaction of treatment with the PI; stratification in 4 quarters of
-the PI; nonlinear transformations of the PI (restricted cubic splines
-with 3, 4 and 5 knots); an adaptive model selection approach based on
-Akaike's Information Criterion. We evaluated predictive performance
-using root mean squared error and measures of discrimination and
-calibration for benefit. Starting from a base case scenario (sample size
-4,250, treatment odds ratio 0.8, AUC of the PI 0.75), we varied sample
-size, treatment effect strength, and the PI's discriminative ability.
-\textbf{Results:} Models including a PI by treatment interaction
-performed better under most simulation settings. Flexible models with
-restricted cubic splines required larger sample sizes and higher AUC of
-the PI to outperform the linear model. The adaptive approach performed
-similarly to the best-performing method in most scenarios.
+\textbf{Objective:} To compare different risk-based methods predicting
+individualized treatment effects in RCT simulations. \textbf{Study
+Design and Setting:} We simulated data using diverse assumptions for a
+baseline prognostic index of risk (PI) and the shape of its
+intereraction with treatment (none, linear or quadratic). In each sample
+we predicted absolute benefit using: models with the PI and a constant
+relative treatment effect; models including an interaction of treatment
+with the PI; stratification in quarters of the PI; nonlinear
+transformations of the PI (restricted cubic splines with 3, 4 and 5
+knots); an adaptive approach using Akaike's Information Criterion. We
+evaluated predictive performance using root mean squared error and
+measures of discrimination and calibration for benefit. Starting from a
+base case scenario (sample size 4,250, treatment odds ratio 0.8, AUC of
+the PI 0.75), we varied the sample size, the treatment effect strength,
+and the PI's discriminative ability. \textbf{Results:} Models including
+a PI by treatment interaction performed better under most simulation
+settings. Flexible models required larger sample sizes and higher AUC of
+the PI to outperform the linear interaction model. The adaptive approach
+performed similarly to the best-performing method in most scenarios.
 \textbf{Conclusion:} Usually, a model with a linear interaction of the
 PI with treatment is better able to predict absolute treatment benefit.
 \end{abstract}
