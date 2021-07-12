@@ -71,6 +71,7 @@ knit_hooks$set(
     )
   }
 )
+set.seed(19910930)
 ```
 
 \linenumbers
@@ -322,6 +323,8 @@ prediction <- lrm(
   maxit = 99
 )
 
+
+
 riskLinearPredictor <- predict(
   prediction,
   newdata = gusto %>% mutate(treatment = 0) %>% data.frame()
@@ -332,100 +335,148 @@ gusto <- gusto %>%
     riskLinearPredictor = riskLinearPredictor
   )
 
-constantModel <- fitModelBasedHte(
-  data     = gusto, 
+folds <- caret::createFolds(gusto$outcome, k = 4)
+
+evaluatePerformance <- function(data, testRows, settings) {
+  isStratified <- FALSE
+  if ("modelBased" %in% class(settings)) {
+    model <- fitModelBasedHte(data %>% dplyr::slice(-testRows), settings)
+    tmp <- data %>%
+      slice(testRows) %>%
+      dplyr::mutate(
+        predictedBenefit = predictBenefitModelBasedHte(
+          p             = plogis(.$riskLinearPredictor), 
+          modelBasedFit = model
+        )
+      )
+    
+  } else if ("rcs" %in% class(settings)) {
+    model <- fitRcsHte(data %>% dplyr::slice(-testRows), settings)
+    tmp <- gusto %>%
+      slice(testRows) %>%
+      dplyr::mutate(
+        predictedBenefit = predictSmoothBenefit(
+          p          = plogis(riskLinearPredictor), 
+          smoothFit  = model
+        )
+      )
+  } else if ("stratified" %in% class(settings)) {
+    isStratified <- TRUE
+    model <- fitStratifiedHte(data %>% dplyr::slice(-testRows), settings)
+    tmp <- gusto %>%
+      slice(testRows) %>%
+      dplyr::mutate(
+        predictedBenefit = predictStratifiedBenefit(
+          p          = plogis(riskLinearPredictor), 
+          stratifiedHte  = model
+        )
+      )
+  }
+  cForBenefit <- calculateCForBenefit(tmp)
+  iciForBenefit <- calculateCalibrationForBenefit(tmp)
+  aic <- ifelse(
+    isStratified,
+    NA,
+    model$aic
+  )
+  
+  return(
+    list(
+      c = cForBenefit,
+      ici = iciForBenefit$ici,
+      aic = aic
+    )
+  )
+}
+
+
+constant <- lapply(
+  folds,
+  evaluatePerformance,
+  data = gusto,
   settings = createModelBasedSettings(type = "treatment")
 )
 
-tmp <- gusto %>%
-  mutate(
-    predictedBenefit = predictBenefitModelBasedHte(
-      p             = plogis(.$riskLinearPredictor), 
-      modelBasedFit = constantModel
-    )
-  )
+constantData <- do.call(bind_rows, constant)
+cConstant <- mean(constantData$c)
+iciConstant <- mean(constantData$ici)
+aicConstnat <- mean(constantData$aic)
 
-constantC   <- calculateCForBenefit(tmp)
-constantIci <- calculateCalibrationForBenefit(tmp)
-
-stratified <- fitStratifiedHte(
-  data     = gusto,
+stratified <- lapply(
+  folds,
+  evaluatePerformance,
+  data = gusto,
   settings = createStratifiedSettings()
 )
 
-linearModel <- fitModelBasedHte(
-  data     = gusto,
+stratifiedData <- do.call(bind_rows, stratified)
+cStratified <- mean(stratifiedData$c)
+iciStratified <- mean(stratifiedData$ici)
+
+
+linear <- lapply(
+  folds,
+  evaluatePerformance,
+  data = gusto,
   settings = createModelBasedSettings()
 )
 
-tmp <- gusto %>%
-  mutate(
-    predictedBenefit = predictBenefitModelBasedHte(
-      p             = plogis(.$riskLinearPredictor), 
-      modelBasedFit = linearModel
-    )
-  )
+linearData <- do.call(bind_rows, linear)
+clinear <- mean(linearData$c)
+iciLinear <- mean(linearData$ici)
+aicLinear <- mean(linearData$aic)
 
-linearC   <- calculateCForBenefit(tmp)
-linearIci <- calculateCalibrationForBenefit(tmp)
 
-rcs3Model <- fitRcsHte(
-  data     = gusto,
-  settings = createRcsSettings()
+rcs3 <- lapply(
+  folds,
+  evaluatePerformance,
+  data = gusto,
+  settings = createRcsSettings(nKnots = 3)
 )
 
-tmp <- gusto %>%
-  mutate(
-    predictedBenefit = predictSmoothBenefit(
-      p          = plogis(riskLinearPredictor), 
-      smoothFit  = rcs3Model
-    )
-  )
-
-rcs3C   <- calculateCForBenefit(tmp)
-rcs3Ici <- calculateCalibrationForBenefit(tmp)
+rcs3Data <- do.call(bind_rows, rcs3)
+cRcs3    <- mean(rcs3Data$c)
+iciRcs3  <- mean(rcs3Data$ici)
+aicRcs3  <- mean(rcs3Data$aic)
 
 
-rcs4Model <- fitRcsHte(
-  data     = gusto,
+rcs4 <- lapply(
+  folds,
+  evaluatePerformance,
+  data = gusto,
   settings = createRcsSettings(nKnots = 4)
 )
 
-tmp <- gusto %>%
-  mutate(
-    predictedBenefit = predictSmoothBenefit(
-      p          = plogis(riskLinearPredictor), 
-      smoothFit  = rcs4Model
-    )
-  )
+rcs4Data <- do.call(bind_rows, rcs4)
+cRcs4    <- mean(rcs4Data$c)
+iciRcs4  <- mean(rcs4Data$ici)
+aicRcs4  <- mean(rcs4Data$aic)
 
-rcs4C   <- calculateCForBenefit(tmp)
-rcs4Ici <- calculateCalibrationForBenefit(tmp)
 
-rcs5Model <- fitRcsHte(
-  data     = gusto,
+rcs5 <- lapply(
+  folds,
+  evaluatePerformance,
+  data = gusto,
   settings = createRcsSettings(nKnots = 5)
 )
 
-tmp <- gusto %>%
-  mutate(
-    predictedBenefit = predictSmoothBenefit(
-      p          = plogis(.$riskLinearPredictor), 
-      smoothFit  = rcs5Model
-    )
-  )
-
-rcs5C   <- calculateCForBenefit(tmp)
-rcs5Ici <- calculateCalibrationForBenefit(tmp)
+rcs5Data <- do.call(bind_rows, rcs5)
+cRcs5    <- mean(rcs5Data$c)
+iciRcs5  <- mean(rcs5Data$ici)
+aicRcs5  <- mean(rcs5Data$aic)
 
 gustoPerformance <- tibble(
   discrimination = c(
-    constantC, linearC, rcs3C,
-    rcs4C, rcs5C
+    cConstant, clinear, cRcs3,
+    cRcs4, cRcs5
   ),
   calibration = c(
-    constantIci$ici, linearIci$ici, rcs3Ici$ici,
-    rcs4Ici$ici, rcs5Ici$ici
+    iciConstant, iciLinear, iciRcs3,
+    iciRcs4, iciRcs5
+  ),
+  aic = c(
+    aicConstnat, aicLinear, aicRcs3,
+    aicRcs4, aicRcs5
   ),
   method = c(
     "constant treatment effect",
@@ -436,7 +487,13 @@ gustoPerformance <- tibble(
   )
 )
 
-cBenefit <- gustoPerformance %>% arrange(discrimination)
+discriminationPerformance <- gustoPerformance %>%
+  slice(c(2, 3)) %>%
+  select(discrimination)
+
+calibrationPerformance <- gustoPerformance %>%
+  slice(c(2, 3)) %>%
+  select(calibration)
 
 ```
 
@@ -445,11 +502,17 @@ individualizing absolute benefit predictions. All methods predicted increasing
 benefits for patients with higher baseline risk predictions, but the fitted
 patterns were clearly different. The adaptive approach selected the model with
 RCS smoothing with 4 knots. However, for very low baseline risk this model
-predicted decreasing benefit with increasing risk maybe somewhat too flexible.
+predicted decreasing benefit with increasing risk may be somewhat too flexible.
 The more robust models, the linear interaction model or the model with RCS
 smoothing (3 knots), gave very similar benefit predictions, followed the
 evolution of the stratified estimates very closely and may therefore be
-preferable for use in clinical practice.
+preferable for use in clinical practice. The model with RCS smoothing (3 knots)
+had somewhat lower AIC compared to the linear interaction model, slightly better
+cross-validated discrimination (c-for-benefit
+`r round(discriminationPerformance[2, ], 3)` vs
+`r round(discriminationPerformance[1, ], 3)`) and quite similar cross-validated
+calibration (ICI-for benefit `r round(calibrationPerformance[2, ], 4)` vs
+`r round(calibrationPerformance[1, ], 4)`).
 
 
 ```{r gusto, echo=FALSE, fig.cap="Individualized absolute benefit predictions based on baseline risk when using a constantn treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.", fig.show="hold", out.width = '100%'}

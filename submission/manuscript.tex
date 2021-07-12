@@ -385,26 +385,21 @@ of treatment was included in the model. When deriving risk predictions
 for individuals we set the treatment indicator to 0. More information on
 model development can be found in the supplement.
 
-We used the risk linear predictor to fit the the proposed methods under
-study for individualizing absolute benefit predictions. All methods had
-quite comparable results, in the sense that we predicted increasing
-benefits for patients with higher baseline risk predictions. In terms of
-c-for-benefit (validated internally) all models had quite comparable
-performance ranging from 0.519 (RCS smoothing with 3 knots) to 0.542
-(RCS smoothing with 4 knots). Similar conclusions could be drawn in
-terms of ICI-for-benefit which ranged from 0.0039 (linear interaction
-approach) to 0.0053 (RCS smoothing with 4 knots).
-
-The adaptive approach picked the model with RCS smoothing with 4 knots,
-which had quite comparable performance to the smooth fit with 5 knots.
-However, for lower baseline risk these 2 models predicted implausible
-benefits and maybe should be avoided when applying such models in
-practice. The linear interaction model and the model with RCS smoothing
-(3 knots) made very similar predictions and also followed quite closely
-the evolution of the stratified estimates. In this case, we observed
-that even using a simple model with a constant relative treatment effect
-can result in very similar benefit predictions as other more complex
-approaches.
+We used the risk linear predictor to fit the proposed methods under
+study for individualizing absolute benefit predictions. All methods
+predicted increasing benefits for patients with higher baseline risk
+predictions, but the fitted patterns were clearly different. The
+adaptive approach selected the model with RCS smoothing with 4 knots.
+However, for very low baseline risk this model predicted decreasing
+benefit with increasing risk may be somewhat too flexible. The more
+robust models, the linear interaction model or the model with RCS
+smoothing (3 knots), gave very similar benefit predictions, followed the
+evolution of the stratified estimates very closely and may therefore be
+preferable for use in clinical practice. The model with RCS smoothing (3
+knots) had somewhat lower AIC compared to the linear interaction model,
+slightly better cross-validated discrimination (c-for-benefit 0.537 vs
+0.527) and quite similar cross-validated calibration (ICI-for benefit
+0.0114 vs 0.0116).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/gusto} \caption{Individualized absolute benefit predictions based on baseline risk when using a constantn treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.}\label{fig:gusto}
