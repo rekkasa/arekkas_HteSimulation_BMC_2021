@@ -310,191 +310,12 @@ indicator to 0. More information on model development can be found in the
 supplement.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-gusto <- gusto %>%
-  tibble() %>%
-  rename(
-    "outcome" = "day30",
-    "treatment" = "tpa"
-  )
-
-prediction <- lrm(
-  outcome ~ treatment + age + Killip + pmin(sysbp, 120) + lsp(pulse, 50) + pmi + miloc,
-  data = gusto,
-  maxit = 99
-)
-
-
-
-riskLinearPredictor <- predict(
-  prediction,
-  newdata = gusto %>% mutate(treatment = 0) %>% data.frame()
-)
-
-gusto <- gusto %>%
-  mutate(
-    riskLinearPredictor = riskLinearPredictor
-  )
-
-folds <- caret::createFolds(gusto$outcome, k = 4)
-
-evaluatePerformance <- function(data, testRows, settings) {
-  isStratified <- FALSE
-  if ("modelBased" %in% class(settings)) {
-    model <- fitModelBasedHte(data %>% dplyr::slice(-testRows), settings)
-    tmp <- data %>%
-      slice(testRows) %>%
-      dplyr::mutate(
-        predictedBenefit = predictBenefitModelBasedHte(
-          p             = plogis(.$riskLinearPredictor), 
-          modelBasedFit = model
-        )
-      )
-    
-  } else if ("rcs" %in% class(settings)) {
-    model <- fitRcsHte(data %>% dplyr::slice(-testRows), settings)
-    tmp <- gusto %>%
-      slice(testRows) %>%
-      dplyr::mutate(
-        predictedBenefit = predictSmoothBenefit(
-          p          = plogis(riskLinearPredictor), 
-          smoothFit  = model
-        )
-      )
-  } else if ("stratified" %in% class(settings)) {
-    isStratified <- TRUE
-    model <- fitStratifiedHte(data %>% dplyr::slice(-testRows), settings)
-    tmp <- gusto %>%
-      slice(testRows) %>%
-      dplyr::mutate(
-        predictedBenefit = predictStratifiedBenefit(
-          p          = plogis(riskLinearPredictor), 
-          stratifiedHte  = model
-        )
-      )
-  }
-  cForBenefit <- calculateCForBenefit(tmp)
-  iciForBenefit <- calculateCalibrationForBenefit(tmp)
-  aic <- ifelse(
-    isStratified,
-    NA,
-    model$aic
-  )
-  
-  return(
-    list(
-      c = cForBenefit,
-      ici = iciForBenefit$ici,
-      aic = aic
-    )
-  )
-}
-
-
-constant <- lapply(
-  folds,
-  evaluatePerformance,
-  data = gusto,
-  settings = createModelBasedSettings(type = "treatment")
-)
-
-constantData <- do.call(bind_rows, constant)
-cConstant <- mean(constantData$c)
-iciConstant <- mean(constantData$ici)
-aicConstnat <- mean(constantData$aic)
-
-stratified <- lapply(
-  folds,
-  evaluatePerformance,
-  data = gusto,
-  settings = createStratifiedSettings()
-)
-
-stratifiedData <- do.call(bind_rows, stratified)
-cStratified <- mean(stratifiedData$c)
-iciStratified <- mean(stratifiedData$ici)
-
-
-linear <- lapply(
-  folds,
-  evaluatePerformance,
-  data = gusto,
-  settings = createModelBasedSettings()
-)
-
-linearData <- do.call(bind_rows, linear)
-clinear <- mean(linearData$c)
-iciLinear <- mean(linearData$ici)
-aicLinear <- mean(linearData$aic)
-
-
-rcs3 <- lapply(
-  folds,
-  evaluatePerformance,
-  data = gusto,
-  settings = createRcsSettings(nKnots = 3)
-)
-
-rcs3Data <- do.call(bind_rows, rcs3)
-cRcs3    <- mean(rcs3Data$c)
-iciRcs3  <- mean(rcs3Data$ici)
-aicRcs3  <- mean(rcs3Data$aic)
-
-
-rcs4 <- lapply(
-  folds,
-  evaluatePerformance,
-  data = gusto,
-  settings = createRcsSettings(nKnots = 4)
-)
-
-rcs4Data <- do.call(bind_rows, rcs4)
-cRcs4    <- mean(rcs4Data$c)
-iciRcs4  <- mean(rcs4Data$ici)
-aicRcs4  <- mean(rcs4Data$aic)
-
-
-rcs5 <- lapply(
-  folds,
-  evaluatePerformance,
-  data = gusto,
-  settings = createRcsSettings(nKnots = 5)
-)
-
-rcs5Data <- do.call(bind_rows, rcs5)
-cRcs5    <- mean(rcs5Data$c)
-iciRcs5  <- mean(rcs5Data$ici)
-aicRcs5  <- mean(rcs5Data$aic)
-
-gustoPerformance <- tibble(
-  discrimination = c(
-    cConstant, clinear, cRcs3,
-    cRcs4, cRcs5
-  ),
-  calibration = c(
-    iciConstant, iciLinear, iciRcs3,
-    iciRcs4, iciRcs5
-  ),
-  aic = c(
-    aicConstnat, aicLinear, aicRcs3,
-    aicRcs4, aicRcs5
-  ),
-  method = c(
-    "constant treatment effect",
-    "linear interaction",
-    "RCS smoothing with 3 knots",
-    "RCS smoothing with 4 knots",
-    "RCS smoothing with 5 knots"
-  )
-)
+gustoPerformance <- readr::read_csv(here::here("data/processed/gustoPerformanceMetrics.csv"))
 
 discriminationPerformance <- gustoPerformance %>%
-  slice(c(2, 3)) %>%
-  select(discrimination)
-
+  select("discrimination")
 calibrationPerformance <- gustoPerformance %>%
-  slice(c(2, 3)) %>%
-  select(calibration)
-
+  select("calibration")
 ```
 
 We used the risk linear predictor to fit the proposed methods under study for
@@ -506,13 +327,13 @@ predicted decreasing benefit with increasing risk may be somewhat too flexible.
 The more robust models, the linear interaction model or the model with RCS
 smoothing (3 knots), gave very similar benefit predictions, followed the
 evolution of the stratified estimates very closely and may therefore be
-preferable for use in clinical practice. The model with RCS smoothing (3 knots)
-had somewhat lower AIC compared to the linear interaction model, slightly better
+preferable for use in clinical practice. The linear interaction model
+had somewhat lower AIC compared to the model with RCS smoothing (3 knots), slightly better
 cross-validated discrimination (c-for-benefit
 `r round(discriminationPerformance[2, ], 3)` vs
-`r round(discriminationPerformance[1, ], 3)`) and quite similar cross-validated
+`r round(discriminationPerformance[3, ], 3)`) and quite similar cross-validated
 calibration (ICI-for benefit `r round(calibrationPerformance[2, ], 4)` vs
-`r round(calibrationPerformance[1, ], 4)`).
+`r round(calibrationPerformance[3, ], 4)`).
 
 
 ```{r gusto, echo=FALSE, fig.cap="Individualized absolute benefit predictions based on baseline risk when using a constantn treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.", fig.show="hold", out.width = '100%'}

@@ -131,6 +131,7 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
                                                        data/processed/rmse.csv\
                                                        data/processed/discrimination.csv\
                                                        data/processed/calibration.csv\
+						       data/processed/gustoPerformanceMetrics.csv\
                                                        figures/rmse_base.png\
                                                        figures/rmse_auc.png\
                                                        figures/rmse_sample_size.png\

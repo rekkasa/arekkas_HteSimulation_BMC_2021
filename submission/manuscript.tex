@@ -58,7 +58,7 @@ were better able to predict absolute benefit in simulations}
   {}%
   {\par}
 % For Pandoc 2.11+
-\newenvironment{CSLReferences}[3] % #1 hanging-ident, #2 entry spacing
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
  {% don't indent paragraphs
   \setlength{\parindent}{0pt}
   % turn on hanging indent if param 1 is 1
@@ -72,7 +72,7 @@ were better able to predict absolute benefit in simulations}
 \usepackage{calc} % for calculating minipage widths
 \newcommand{\CSLBlock}[1]{#1\hfill\break}
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \renewcommand*\familydefault{\sfdefault}
@@ -395,11 +395,11 @@ benefit with increasing risk may be somewhat too flexible. The more
 robust models, the linear interaction model or the model with RCS
 smoothing (3 knots), gave very similar benefit predictions, followed the
 evolution of the stratified estimates very closely and may therefore be
-preferable for use in clinical practice. The model with RCS smoothing (3
-knots) had somewhat lower AIC compared to the linear interaction model,
-slightly better cross-validated discrimination (c-for-benefit 0.537 vs
-0.527) and quite similar cross-validated calibration (ICI-for benefit
-0.0114 vs 0.0116).
+preferable for use in clinical practice. The linear interaction model
+had somewhat lower AIC compared to the model with RCS smoothing (3
+knots), slightly better cross-validated discrimination (c-for-benefit
+0.526 vs 0.525) and quite similar cross-validated calibration (ICI-for
+benefit 0.0115 vs 0.0117).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/gusto} \caption{Individualized absolute benefit predictions based on baseline risk when using a constantn treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.}\label{fig:gusto}

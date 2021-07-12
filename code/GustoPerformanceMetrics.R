@@ -12,169 +12,210 @@ library(tidyverse)
 library(rms)
 library(SmoothHte)
 
-set.seed(19910930)
 load("data/raw/gusto.rda")
-
-res <- list()
+set.seed(19910930)
 
 gusto <- gusto %>%
   tibble() %>%
-  filter(!is.na(tpa)) %>%
   rename(
     "outcome" = "day30",
     "treatment" = "tpa"
   )
 
-prediction <- lrm(
-  outcome ~ treatment + age + Killip + pmin(sysbp, 120) + lsp(pulse, 50) + pmi + miloc,
-  data = gusto,
-  maxit = 99
-)
-
-riskLinearPredictor <- predict(
-  prediction,
-  newdata = gusto %>% mutate(treatment = 0) %>% data.frame()
-)
-
-gusto <- gusto %>%
-  mutate(
-    riskLinearPredictor = riskLinearPredictor,
-    predictedRisk       = plogis(riskLinearPredictor)
+replicationExpression <- function(gusto) {
+  prediction <- rms::lrm(
+    outcome ~ treatment + age + Killip + pmin(sysbp, 120) + lsp(pulse, 50) + pmi + miloc,
+    data = gusto,
+    maxit = 99
   )
-
-constantModel <- fitModelBasedHte(
-  data     = gusto, 
-  settings = createModelBasedSettings(type = "treatment")
-)
-
-tmpData <- gusto %>%
-  mutate(
-    predictedBenefit = predictBenefitModelBasedHte(
-      p = predictedRisk,
-      modelBasedFit = constantModel
+  
+  riskLinearPredictor <- predict(
+    prediction,
+    newdata = gusto %>% mutate(treatment = 0) %>% data.frame()
+  )
+  
+  gusto <- gusto %>%
+    mutate(
+      riskLinearPredictor = riskLinearPredictor
+    )
+  
+  folds <- caret::createFolds(gusto$outcome, k = 4)
+  
+  evaluatePerformance <- function(data, testRows, settings) {
+    isStratified <- FALSE
+    if ("modelBased" %in% class(settings)) {
+      model <- fitModelBasedHte(data %>% dplyr::slice(-testRows), settings)
+      tmp <- data %>%
+        slice(testRows) %>%
+        dplyr::mutate(
+          predictedBenefit = predictBenefitModelBasedHte(
+            p             = plogis(.$riskLinearPredictor), 
+            modelBasedFit = model
+          )
+        )
+      
+    } else if ("rcs" %in% class(settings)) {
+      model <- fitRcsHte(data %>% dplyr::slice(-testRows), settings)
+      tmp <- gusto %>%
+        slice(testRows) %>%
+        dplyr::mutate(
+          predictedBenefit = predictSmoothBenefit(
+            p          = plogis(riskLinearPredictor), 
+            smoothFit  = model
+          )
+        )
+    } else if ("stratified" %in% class(settings)) {
+      isStratified <- TRUE
+      model <- fitStratifiedHte(data %>% dplyr::slice(-testRows), settings)
+      tmp <- gusto %>%
+        slice(testRows) %>%
+        dplyr::mutate(
+          predictedBenefit = predictStratifiedBenefit(
+            p          = plogis(riskLinearPredictor), 
+            stratifiedHte  = model
+          )
+        )
+    }
+    cForBenefit <- calculateCForBenefit(tmp)
+    iciForBenefit <- calculateCalibrationForBenefit(tmp)
+    aic <- ifelse(
+      isStratified,
+      NA,
+      model$aic
+    )
+    
+    return(
+      list(
+        c = cForBenefit,
+        ici = iciForBenefit$ici,
+        aic = aic
+      )
+    )
+  }
+  
+  
+  constant <- lapply(
+    folds,
+    evaluatePerformance,
+    data = gusto,
+    settings = createModelBasedSettings(type = "treatment")
+  )
+  
+  constantData <- do.call(bind_rows, constant)
+  cConstant <- mean(constantData$c)
+  iciConstant <- mean(constantData$ici)
+  aicConstnat <- mean(constantData$aic)
+  
+  stratified <- lapply(
+    folds,
+    evaluatePerformance,
+    data = gusto,
+    settings = createStratifiedSettings()
+  )
+  
+  stratifiedData <- do.call(bind_rows, stratified)
+  cStratified <- mean(stratifiedData$c)
+  iciStratified <- mean(stratifiedData$ici)
+  
+  
+  linear <- lapply(
+    folds,
+    evaluatePerformance,
+    data = gusto,
+    settings = createModelBasedSettings()
+  )
+  
+  linearData <- do.call(bind_rows, linear)
+  clinear <- mean(linearData$c)
+  iciLinear <- mean(linearData$ici)
+  aicLinear <- mean(linearData$aic)
+  
+  
+  rcs3 <- lapply(
+    folds,
+    evaluatePerformance,
+    data = gusto,
+    settings = createRcsSettings(nKnots = 3)
+  )
+  
+  rcs3Data <- do.call(bind_rows, rcs3)
+  cRcs3    <- mean(rcs3Data$c)
+  iciRcs3  <- mean(rcs3Data$ici)
+  aicRcs3  <- mean(rcs3Data$aic)
+  
+  
+  rcs4 <- lapply(
+    folds,
+    evaluatePerformance,
+    data = gusto,
+    settings = createRcsSettings(nKnots = 4)
+  )
+  
+  rcs4Data <- do.call(bind_rows, rcs4)
+  cRcs4    <- mean(rcs4Data$c)
+  iciRcs4  <- mean(rcs4Data$ici)
+  aicRcs4  <- mean(rcs4Data$aic)
+  
+  
+  rcs5 <- lapply(
+    folds,
+    evaluatePerformance,
+    data = gusto,
+    settings = createRcsSettings(nKnots = 5)
+  )
+  
+  rcs5Data <- do.call(bind_rows, rcs5)
+  cRcs5    <- mean(rcs5Data$c)
+  iciRcs5  <- mean(rcs5Data$ici)
+  aicRcs5  <- mean(rcs5Data$aic)
+  
+  tibble(
+    discrimination = c(
+      cConstant, clinear, cRcs3,
+      cRcs4, cRcs5
+    ),
+    calibration = c(
+      iciConstant, iciLinear, iciRcs3,
+      iciRcs4, iciRcs5
+    ),
+    aic = c(
+      aicConstnat, aicLinear, aicRcs3,
+      aicRcs4, aicRcs5
+    ),
+    method = c(
+      "constant treatment effect",
+      "linear interaction",
+      "RCS smoothing with 3 knots",
+      "RCS smoothing with 4 knots",
+      "RCS smoothing with 5 knots"
     )
   )
+}
 
-res$constant <- list(
-  c = calculateCForBenefit(tmpData),
-  ici = calculateCalibrationForBenefit(tmpData)$ici
-)
+res <- list()
 
-stratified <- fitStratifiedHte(
-  data     = gusto,
-  settings = createStratifiedSettings()
-)
-
-tmpData <- gusto %>%
-  mutate(
-    predictedBenefit = predictStratifiedBenefit(
-      p             = predictedRisk,
-      stratifiedHte = stratified
-    )
+i <- 1
+while (i <= 100) {
+  res[[i]] <- tryCatch(
+    {
+      replicationExpression(gusto)
+    },
+    error = function(e) {
+      e$message
+    }
   )
+  if (is.character(res[[i]])) {
+    i <- i - 1
+  } else {
+    i <- i + 1
+  }
+}
 
-res$stratified <- list(
-  c = calculateCForBenefit(tmpData),
-  ici = calculateCalibrationForBenefit(tmpData)$ici
-)
-
-linearModel <- fitModelBasedHte(
-  data     = gusto,
-  settings = createModelBasedSettings()
-)
-
-tmpData <- gusto %>%
-  mutate(
-    predictedBenefit = predictBenefitModelBasedHte(
-      p             = predictedRisk,
-      modelBasedFit = linearModel
-    )
-  )
-
-res$linear <- list(
-  c = calculateCForBenefit(tmpData),
-  ici = calculateCalibrationForBenefit(tmpData)$ici
-)
-
-rcs3Model <- fitRcsHte(
-  data     = gusto,
-  settings = createRcsSettings()
-)
-
-tmpData <- gusto %>%
-  mutate(
-    predictedBenefit = predictSmoothBenefit(
-      p         = predictedRisk,
-      smoothFit = rcs3Model
-    )
-  )
-
-res$rcs3 <- list(
-  c = calculateCForBenefit(tmpData),
-  ici = calculateCalibrationForBenefit(tmpData)$ici
-)
-
-rcs4Model <- fitRcsHte(
-  data     = gusto,
-  settings = createRcsSettings(nKnots = 4)
-)
-
-tmpData <- gusto %>%
-  mutate(
-    predictedBenefit = predictSmoothBenefit(
-      p         = predictedRisk,
-      smoothFit = rcs4Model
-    )
-  )
-
-res$rcs4 <- list(
-  c = calculateCForBenefit(tmpData),
-  ici = calculateCalibrationForBenefit(tmpData)$ici
-)
-
-rcs5Model <- fitRcsHte(
-  data     = gusto,
-  settings = createRcsSettings(nKnots = 5)
-)
-
-tmpData <- gusto %>%
-  mutate(
-    predictedBenefit = predictSmoothBenefit(
-      p         = predictedRisk,
-      smoothFit = rcs5Model
-    )
-  )
-
-res$rcs5 <- list(
-  c = calculateCForBenefit(tmpData),
-  ici = calculateCalibrationForBenefit(tmpData)$ici
-)
-
- data.frame(
-  matrix(
-    unlist(res),
-    nrow=length(res),
-    byrow=TRUE
-    )
-) %>%
-  tibble() %>%
-  rename(
-    "c"   = "X1",
-    "ici" = "X2"
-  ) %>%
-   mutate(
-     model = c(
-       "Constant treatment effect",
-       "Stratified",
-       "Linear interaction",
-       "RCS (3 knots)",
-       "RCS (4 knots)",
-       "RCS (5 knots)"
-     )
-   ) %>%
-   relocate(
-     model,
-     .before = c
-   ) %>%
-   write_csv("data/processed/gustoPerformanceMetrics.csv")
-
+do.call(bind_rows, res) %>%
+  group_by(method) %>%
+  summarise(
+    discrimination = mean(discrimination),
+    calibration = mean(calibration),
+    aic = mean(aic)
+  ) %>% 
+  readr::write_csv("data/processed/gustoPerformanceMetrics.csv")

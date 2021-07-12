@@ -9,8 +9,8 @@ header-includes:
   - \usepackage{amssymb}
   - \usepackage{bm}
   - \usepackage{booktabs}
-  - \newcommand\given[1][]{\:#1\vert\:}
   - \newcommand{\beginsupplement}{\setcounter{table}{0}  \renewcommand{\thetable}{S\arabic{table}} \setcounter{figure}{0} \renewcommand{\thefigure}{S\arabic{figure}}}
+  - \newcommand\given[1][]{\:#1\vert\:}
 editor_options: 
   chunk_output_type: console
 bibliography: references.bib
@@ -462,7 +462,8 @@ metrics <- readr::read_csv(
     col.names = c(
       "Model",
       "C",
-      "ICI"
+      "ICI",
+      "AIC"
     ),
     caption    = "Performance metrics of the different methods used to predict benefit of tPA on 30-day mortality using data from the GUSTO-I trial."
   ) 
