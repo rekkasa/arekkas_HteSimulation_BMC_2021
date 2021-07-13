@@ -14,8 +14,9 @@
 \usepackage{lipsum}
 \usepackage{graphicx}
 
-\title{Models including an interaction of treatment with baseline risk
-were better able to predict absolute benefit in simulations}
+\title{A model including an interaction of treatment with baseline risk
+was the optimal risk-based approach to predicting absolute treatment
+benefit}
 
 \author{
     Alexandros Rekkas
@@ -127,8 +128,9 @@ a PI by treatment interaction performed better under most simulation
 settings. Flexible models required larger sample sizes and higher AUC of
 the PI to outperform the linear interaction model. The adaptive approach
 performed similarly to the best-performing method in most scenarios.
-\textbf{Conclusion:} Usually, a model with a linear interaction of the
-PI with treatment is better able to predict absolute treatment benefit.
+\textbf{Conclusion:} Under most circumstances, a model with a linear
+interaction of the PI with treatment is the optimal risk-based approach
+to predicting absolute treatment benefit.
 \end{abstract}
 
 \keywords{
@@ -138,8 +140,6 @@ PI with treatment is better able to predict absolute treatment benefit.
    \and
     prediction models
   }
-
-\linenumbers
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -466,21 +466,20 @@ more recent literature {[}14--16{]}. Simulations are also needed to
 assess relative performance and define the settings where these break
 down or outperform each other.
 
-In conclusion, when comparing different risk-based approaches to predict
-individualizing benefit a models including a linear treatment
-interaction with the prognostic performed best in a wide range of
-scenarios. More flexible models with restricted cubic splines required
-larger sample sizes and higher AUC of the PI to outperform the linear
-model. An adaptive approach, selecting the model with optimal AIC, had
-comparable performance to the best performing approach in most of the
-scenarios.
+In conclusion, when comparing different risk-based approaches to
+predicting individualized treatment benefit, a model including a linear
+treatment interaction with the prognostic index performed best in a wide
+range of scenarios. More flexible models with restricted cubic splines
+required larger sample sizes and higher AUC of the prognostic index to
+outperform the linear interaction model. An adaptive approach, selecting
+the model with the optimal AIC, had comparable performance to the best
+performing approach in most of the scenarios.
 
 \newpage
 
 \hypertarget{references}{%
 \section{References}\label{references}}
 
-\nolinenumbers
 \setlength{\parindent}{-0.25in}
 \setlength{\leftskip}{0.25in}
 

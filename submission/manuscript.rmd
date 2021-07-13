@@ -1,7 +1,28 @@
 ---
-title: "Models including an interaction of treatment with baseline risk were better able to predict absolute benefit in simulations"
+title: |
+ A model including an interaction of treatment with baseline risk was the optimal
+ risk-based approach to predicting absolute treatment benefit
 abstract: |
- **Objective:** To compare different risk-based methods predicting individualized treatment effects in RCT simulations. **Study Design and Setting:** We simulated data using diverse assumptions for a baseline prognostic index of risk (PI) and the shape of its intereraction with treatment (none, linear or quadratic). In each sample we predicted absolute benefit using: models with the PI and a constant relative treatment effect; models including an interaction of treatment with the PI; stratification in quarters of the PI; nonlinear transformations of the PI (restricted cubic splines with 3, 4 and 5 knots); an adaptive approach using Akaike’s Information Criterion. We evaluated predictive performance using root mean squared error and measures of discrimination and calibration for benefit. Starting from a base case scenario (sample size 4,250, treatment odds ratio 0.8, AUC of the PI 0.75), we varied the sample size, the treatment effect strength, and the PI's discriminative ability. **Results:** Models including a PI by treatment interaction performed better under most simulation settings. Flexible models required larger sample sizes and higher AUC of the PI to outperform the linear interaction model. The adaptive approach performed similarly to the best-performing method in most scenarios. **Conclusion:** Usually, a model with a linear interaction of the PI with treatment is better able to predict absolute treatment benefit.
+ **Objective:** To compare different risk-based methods predicting individualized
+ treatment effects in RCT simulations. **Study Design and Setting:** We simulated
+ data using diverse assumptions for a baseline prognostic index of risk (PI) and
+ the shape of its intereraction with treatment (none, linear or quadratic). In 
+ each sample we predicted absolute benefit using: models with the PI and a 
+ constant relative treatment effect; models including an interaction of treatment 
+ with the PI; stratification in quarters of the PI; nonlinear transformations of 
+ the PI (restricted cubic splines with 3, 4 and 5 knots); an adaptive approach 
+ using Akaike’s Information Criterion. We evaluated predictive performance using 
+ root mean squared error and measures of discrimination and calibration for 
+ benefit. Starting from a base case scenario (sample size 4,250, treatment odds 
+ ratio 0.8, AUC of the PI 0.75), we varied the sample size, the treatment effect 
+ strength, and the PI's discriminative ability. **Results:** Models including a 
+ PI by treatment interaction performed better under most simulation settings. 
+ Flexible models required larger sample sizes and higher AUC of the PI to 
+ outperform the linear interaction model. The adaptive approach performed 
+ similarly to the best-performing method in most scenarios. **Conclusion:** 
+ Under most circumstances, a model with a linear interaction of the PI with 
+ treatment is the optimal risk-based approach to predicting absolute treatment
+ benefit.
 authors:
   - name: Alexandros Rekkas
     department: Department of Medical Informatics
@@ -74,7 +95,6 @@ knit_hooks$set(
 set.seed(19910930)
 ```
 
-\linenumbers
 # Introduction
 Predictive approaches for assessing heterogeneity of treatment effects (HTE) aim
 at the development of models predicting either individualized effects or which
@@ -395,18 +415,18 @@ approaches available in more recent literature [@Athey2019; @Lu2018;
 @Wager2018]. Simulations are also needed to assess relative performance and
 define the settings where these break down or outperform each other.
 
-In conclusion, when comparing different risk-based approaches to predict
-individualizing benefit a models including a linear treatment interaction with
-the prognostic performed best in a wide range of scenarios. More flexible models
-with restricted cubic splines required larger sample sizes and higher AUC of the
-PI to outperform the linear model. An adaptive approach, selecting the model
-with optimal AIC, had comparable performance to the best performing approach in
-most of the scenarios.
+In conclusion, when comparing different risk-based approaches to predicting 
+individualized treatment benefit, a model including a linear treatment 
+interaction with the prognostic index performed best in a wide range of 
+scenarios. More flexible models with restricted cubic splines required larger
+sample sizes and higher AUC of the prognostic index to outperform the linear
+interaction model. An adaptive approach, selecting the model with the optimal 
+AIC, had comparable performance to the best performing approach in most of the 
+scenarios.
 
 
 \newpage
 # References
-\nolinenumbers
 \setlength{\parindent}{-0.25in}
 \setlength{\leftskip}{0.25in}
 \noindent
