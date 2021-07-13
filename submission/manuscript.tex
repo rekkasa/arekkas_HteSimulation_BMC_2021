@@ -166,7 +166,7 @@ risk prediction model is developed externally or internally on the
 entire RCT population, ``blinded'' to treatment; then the RCT population
 is stratified using this prediction model to evaluate risk-based
 treatment effect variation {[}6{]}. However, even though estimates at
-the risk subgroup level may be accurate, these estimated do not apply to
+the risk subgroup level may be accurate, these estimates do not apply to
 individual patients, especially for patients with predicted risk at the
 boundaries of the risk intervals. Hence, the risk-stratified approach is
 useful for exploring and presenting HTE, but is not useful for
@@ -174,8 +174,8 @@ supporting treatment decisions for individual patients.
 
 To individualize treatment effects, the recent PATH statement suggested
 various risk-based models including a prognostic index of baseline risk
-(PI) and treatment assignment {[}cite PATH !!{]}. We aimed to summarize
-and compare different risk-based models for predicting individualized
+(PI) and treatment assignment {[}3,4{]}. We aimed to summarize and
+compare different risk-based models for predicting individualized
 treatment effects. We simulated RCT settings to compare the performance
 of these models under different assumptions of the relationship between
 baseline risk and treatment. We illustrated the different models by a
@@ -195,36 +195,34 @@ Treatment was allocated using a 50:50 split. Outcomes for patients in
 the control arm were generated from a logistic regression model
 including all baseline covariates. In the base case scenario coefficient
 values were such, that the AUC of the logistic regression model was
-\(0.75\) and the event rate in the control arm was \(20\%\) (Supplement
-1).
+\(0.75\) and the event rate in the control arm was \(20\%\).
 
 While binary outcomes in the control arm were generated from Bernoulli
 variables with true probabilities
 \(P(y=1|X) = \text{expit}(PI)=\frac{e^{PI}}{1+e^{PI}}\), the outcomes in
-the treatment arm based on true probabilities \(\text{expit}(lp_1)\),
-with \[lp_1 = \gamma_2(PI-c)^2 + \gamma_1(PI-c) + \gamma_0\]
+the treatment arm were based on true probabilities
+\(\text{expit}(lp_1)\), with
+\[lp_1 = \gamma_2(PI-c)^2 + \gamma_1(PI-c) + \gamma_0\]
 
 The coefficients \(\gamma_0,\gamma_1\) and \(\gamma_2\) along with the
 centering constant \(c\) were set for each simulation scenario to mimic
 a wide variety scenarios, ranging from true constant relative treatment
 effect (\(\gamma_1=\gamma_2=0\)) to moderate and strong linear
 (\(\gamma_2=0\)) and quadratic deviations. We also considered scenarios
-with treatment-covariate interactions. These scenarios include 4 weak
+with treatment-covariate interactions. These scenarios included 4 weak
 interactions (\(\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82\)), 4 strong
 interactions (\(\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61\)), and 2
-weak and 2 strong interactions. Combining all these different settings
-resulted in a simulation study of \(66\) scenarios. The exact settings
-for each scenario are available in the supplementary material.
+weak and 2 strong interactions.
 
-The sample size of the base case scenario was set to 4,250 (\(80%
-\) power for the detection of a marginal OR of 0.8). We evaluated the
+The sample size of the base case scenario was set to 4,250 (\(80\%\)
+power for the detection of a marginal OR of 0.8). We evaluated the
 effect of smaller or larger sample sizes of 1,064 and 17,000,
-respectively. We also evaluated the of worse or better discriminative
-ability for risk, adjusting the baseline covariate coefficients, such
-that the AUC of the regression model in the control arm was 0.65 and
-0.85 respectively.
+respectively. We also evaluated the effect of worse or better
+discriminative ability for risk, adjusting the baseline covariate
+coefficients, such that the AUC of the regression model in the control
+arm was 0.65 and 0.85 respectively.
 
-Combining all these settings resulted in a simualation study of 66
+Combining all these settings resulted in a simulation study of 66
 scenarios (exact settings in the supplementary material).
 
 \hypertarget{individualized-risk-based-benefit-predictions}{%
@@ -249,7 +247,7 @@ expecting it to perform worse than the other candidates, as its
 objective is not to individualize benefit prediction.
 
 Second, we considered a model which assumes \emph{constant relative
-treatment effect} (constant OR) Hence, absolute benefit is predicted
+treatment effect} (constant OR). Hence, absolute benefit is predicted
 from \(\hat{\tau}(\bm{x}) = \text{expit}(PI +\log(\text{OR}))\).
 
 Third, we considered a logistic regression model including treatment,
