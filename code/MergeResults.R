@@ -9,7 +9,7 @@ if (!dir.exists(".scratch/tmp")) {
 }
 lapply(1:scenarios, createTmpFiles, scenarioDir = "data/raw/", tmpDir = ".scratch/tmp/")
 lapply(
-  c("rmse", "discrimination", "calibration", "concordance"), 
+  c("rmse", "discrimination", "calibration", "concordance", "adaptiveModel"), 
   mergeTmpFiles, 
   tmpDir = ".scratch/tmp",
   saveDir = "data/processed"

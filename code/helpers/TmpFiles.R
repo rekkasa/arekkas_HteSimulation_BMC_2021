@@ -88,6 +88,24 @@ createTmpFiles <- function(scenarioId, scenarioDir, tmpDir) {
     )
   )
   
+  readr::write_csv(
+    evaluation$adaptiveModel,
+    file.path(
+      tmpDir,
+      paste(
+        paste(
+          "tmp",
+          "adaptiveModel",
+          "scenario",
+          scenarioId,
+          sep = "_"
+        ),
+        "csv",
+        sep = "."
+      )
+    )
+  )
+  
   return("done")
   
 }
@@ -104,8 +122,14 @@ mergeTmpFiles <- function(metric, tmpDir, saveDir) {
     )
   ) 
   
+  defaultType <- ifelse(
+    metric != "adaptiveModel",
+    "d",
+    "c"
+  )
+  
   tmp <- files %>%
-    lapply(readr::read_csv, col_types = cols(.default = "d")) %>% 
+    lapply(readr::read_csv, col_types = cols(.default = defaultType)) %>% 
     bind_rows %>%
     readr::write_csv(
       file.path(
