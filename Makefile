@@ -102,6 +102,10 @@ figures/gusto.tiff figures/gusto.png : code/GustoPlot.R\
                                        data/raw/gusto.rda
 	$<
 
+figures/selectedModelAdaptive.tiff : code/SelectedModelAdaptive.R\
+	                             data/processed/adaptiveModel.csv
+	$<
+
 data/raw/gusto.rda : code/GetGustoData.sh
 	$<
 
