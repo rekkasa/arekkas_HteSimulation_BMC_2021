@@ -466,8 +466,110 @@ metrics <- readr::read_csv(
       "AIC"
     ),
     caption    = "Performance metrics of the different methods used to predict benefit of tPA on 30-day mortality using data from the GUSTO-I trial."
-  ) 
+  ) %>%
+   kable_styling(latex_options = "HOLD_position")
 ```
 
 
 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(flextable)
+
+analysisIds <- read_csv(
+  here("data/processed/analysisIds.csv"),
+  col_types = "iffiiddddddddddddd"
+)
+
+interactionAnalysisIds <- read_csv(
+  here::here("data/processed/analysisIdsInteractions.csv")
+)
+
+dat1 <- readr::read_csv(here::here("data/processed/adaptiveModel.csv")) %>%
+  filter(scenarioId < 64) %>%
+  group_by(scenarioId) %>%
+  nest() %>% 
+  mutate(
+    test = lapply(data, plyr::count),
+    n = lapply(data, nrow)
+  ) %>%
+  select(scenarioId, test, n) %>%
+  arrange(scenarioId) %>%
+  unnest(c(test, n)) %>%
+  mutate(
+    perc = round(freq / n, 2),
+    model = ifelse(
+      selectedAdaptiveModel == "RCS with 3 knots",
+      "rcs",
+      selectedAdaptiveModel
+    )
+  ) %>%
+  ungroup() %>%
+  select(scenarioId, model, perc) %>%
+  spread(model, perc) %>%
+  replace(is.na(.), 0) %>%
+  left_join(analysisIds, by = c("scenarioId" = "scenario")) %>%
+  select(
+    type,
+    effectSize,
+    sampleSize,
+    auc,
+    treatment,
+    risk,
+    rcs
+  )
+
+dat2 <- readr::read_csv(here::here("data/processed/adaptiveModel.csv")) %>%
+  filter(scenarioId >= 64) %>%
+  group_by(scenarioId) %>%
+  nest() %>% 
+  mutate(
+    test = lapply(data, plyr::count),
+    n = lapply(data, nrow)
+  ) %>%
+  select(scenarioId, test, n) %>%
+  arrange(scenarioId) %>%
+  unnest(c(test, n)) %>%
+  mutate(
+    perc = round(freq / n, 2),
+    model = ifelse(
+      selectedAdaptiveModel == "RCS with 3 knots",
+      "rcs",
+      selectedAdaptiveModel
+    )
+  ) %>%
+  ungroup() %>%
+  select(scenarioId, model, perc) %>%
+  spread(model, perc) %>%
+  replace(is.na(.), 0) %>%
+  left_join(interactionAnalysisIds, by = c("scenarioId" = "scenario")) %>%
+  select(
+    type,
+    effectSize,
+    sampleSize,
+    auc,
+    treatment,
+    risk,
+    rcs
+  )
+
+dat <- dat1 %>% bind_rows(dat2)
+
+
+colourer <- scales::col_quantile(
+  palette = c("#e5f5f9", "#2ca25f"),
+  domain = c(0, 1),
+  n = 20
+)
+
+flextable(dat) %>%
+  theme_booktabs(bold_header = TRUE) %>%
+  bg(
+    bg = colourer,
+    j = c("treatment", "risk", "rcs"),
+    part = "body"
+  ) %>%
+  set_caption("Rates at which the adaptive approach selected each model type.")
+```
