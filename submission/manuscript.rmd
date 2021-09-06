@@ -193,14 +193,21 @@ Second, we considered a model which assumes *constant relative treatment effect*
 (constant OR). Hence, absolute benefit is predicted from
 $\hat{\tau}(\bm{x}) = \text{expit}(PI +\log(\text{OR}))$.
 
-Third, we considered a logistic regression model including treatment, the prognostic index, and their interaction. Absolute benefit is then estimated from 
+Third, we considered a logistic regression model including treatment, the
+prognostic index, and their linear interaction. Absolute benefit is then
+estimated from
 $\hat{\tau}(\bm{x})=\text{expit}(\beta_0+\beta_{PI}PI) - \text{expit}(\beta_0+\beta_{t_x}+(\beta_{PI}+\beta_*)PI)$.
 We will refer to this method as the *linear interaction* approach.
 
-Finally, we used *restricted cubic splines* (RCS) to relax the linearity
+Fourth, we used *restricted cubic splines* (RCS) to relax the linearity
 assumption on the effect of the linear predictor [@Harrell1988]. We considered
 splines with 3, 4 and 5 knots to compare models with different levels of
 flexibility.
+
+Finally, we considered an adaptive approach using Akaike's Information Criterion
+(AIC) for model selection. The candidate models were: a constant treatment
+effect model, a model with a linear interaction with treatment and RCS models
+with 3, 4 and 5 knots.
 
 ## Evaluation metrics
 We evaluated the predictive accuracy of the considered methods by the root mean
@@ -240,7 +247,7 @@ performed equally well to the linear interaction method. Increasing the number
 of knots in RCS resulted in higher RMSE across all scenarios. The adaptive
 approach performed very similarly to the best performing model in each scenario.
 
-```{r rmsebase, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated superpopulation of size 500,000. \\textit{Panel A} presents the results of the scenario with true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \\textit{Panel B} presents the results under moderate linear deviations from constant treatment effects; \\textit{Panel C} presents the results for strong linear deviations from constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from constant relative treatment effects.", fig.show="hold", out.width = '100%'}
+```{r rmsebase, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated superpopulation of size 500,000. The scenario with true constant relative treatment effect had a true prediction AUC of 0.75 and sample size of 4250. Results are presented under moderate linear, strong linear, and strong quadratic deviations from constant relative treatment effects.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_base.png"))
 ```
 
@@ -255,7 +262,7 @@ knots) in the case of strong quadratic deviations. Again, the increased
 flexibility of RCS smoothing with higher number of knots resulted in overfitting
 and worse predictive accuracy (Figure \ref{fig:rmsesamplesize}; Panel D).
 
-```{r rmsesamplesize, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 17,000; \\textit{Panel B} presents the results under moderate linear deviations from constant treatment effects; \\textit{Panel C} presents the results for strong linear deviations from constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations constant relative treatment effects.", fig.show="hold", out.width = '100%'}
+```{r rmsesamplesize, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. Sample size 17,000 rather than 4250 in Figure \\ref{fig:rmsebase}", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_sample_size.png"))
 ```
 
@@ -268,7 +275,7 @@ being a close second (Figure \ref{fig:rmseauc}; Panels B and C). Increasing the
 number of knots of RCS smoothing resulted in increased RMSE, which was less
 pronounced in the case of strong quadratic deviations.
 
-```{r rmseauc, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.85 and sample size of 4,250; \\textit{Panel B} presents the results under moderate linear deviations from constant treatment effects, while holding true prediction AUC and sample size constant; \\textit{Panel C} presents the results for strong linear deviations from constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from constant relative treatment effects.", fig.show="hold", out.width = '100%'}
+```{r rmseauc, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/rmse_auc.png"))
 ```
 
@@ -281,7 +288,7 @@ tended to present much lower variability compared to all other approaches
 observed decreasing median values and increasing variability of the
 c-for-benefit in all scenarios.
 
-```{r discrimination, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \\textit{Panel B} presents the results under moderate linear deviations from constant treatment effects; \\textit{Panel C} presents the results for strong linear deviations from constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from constant relative treatment effects.", fig.show="hold", out.width = '100%'}
+```{r discrimination, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/discrimination_base.png"))
 ```
 
@@ -294,7 +301,7 @@ comparable to the linear interaction model's performance, nonetheless (Figure
 constant treatment effect model was poorly calibrated (Figure
 \ref{fig:calibration}; Panels C and D).
 
-```{r calibration, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. \\textit{Panel A} presents the results under the base case scenario of true constant relative treatment effect, with a true prediction AUC of 0.75 and sample size of 4250; \\textit{Panel B} presents the results under moderate linear deviations from constant treatment effectst; \\textit{Panel C} presents the results for strong linear deviations from of constant relative treatment effects; \\textit{Panel D} presents the results for strong quadratic deviations from constant relative treatment effects.", fig.show="hold", out.width = '100%'}
+```{r calibration, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
@@ -368,14 +375,14 @@ including restricted cubic splines with 3 knots only outperformed the linear
 interaction model in the presence of strong quadratic deviations from a constant
 relative treatment effect.
 
-Including restricted cubic splines with 4 or 5 knots proved to be too flexible,
-as indicated by higher RMSE, increased variability of discrimination for benefit
-and worse calibration of benefit predictions. Even with larger sample sizes and
-strong quadratic deviations from the base case scenario of constant relative
-treatment effects, these more flexible restricted cubic splines did not
-outperform the simpler RCS with 3 knots. These more flexible approaches may only
-be helpful if we expect more extreme patterns of heterogeneous treatment
-effects.
+Models including restricted cubic splines with 4 or 5 knots proved to be too
+flexible, as indicated by higher RMSE, increased variability of discrimination
+for benefit and worse calibration of benefit predictions. Even with larger
+sample sizes and strong quadratic deviations from the base case scenario of
+constant relative treatment effects, these more flexible restricted cubic
+splines did not outperform the simpler RCS with 3 knots. These approaches may
+only be helpful if we expect more extreme patterns of heterogeneous treatment
+effects compared to the quadratic deviations considered here.
 
 The constant treatment effect model, despite having adequate performance in the
 presence of weak treatment effect heterogeneity on the relative scale, quickly
@@ -387,8 +394,8 @@ estimating treatment effect requires groups of patients rather than individual
 patients--but are not helpful for making individualized absolute benefit
 predictions.
 
-Increasing the discriminative ability of the risk model – by increasing the
-predictor coefficients of the true risk model – reduced RMSE for all methods.
+Increasing the discriminative ability of the risk model--by increasing the
+predictor coefficients of the true risk model--reduced RMSE for all methods.
 This increase in discriminative ability translates in higher variability of
 predicted risks, which, in turn, allows the considered methods to better capture
 absolute treatment benefits. As a consequence, the increase in discriminative
@@ -397,6 +404,16 @@ though risk model performance is very important for the ability of risk-based
 methods to predict treatment benefit, prediction model development was outside
 the scope of this work and has already been studied extensively
 [@vanKlaveren2019; @Burke2014; @Abadie2018].
+
+The adaptive approach had adequate performance, following closely the
+performance of the "true" model in most scenarios. However, with smaller sample
+sizes it tended to "miss" the treatment-risk interactions and selected simpler
+models. This resulted in increased RMSE variability in these scenarios,
+especially in the case of true strong linear deviations from the base case
+scenario. This tendency was mitigated when the discriminative ability of the
+prediction model was higher. Therefore, in the case of smaller sample sizes
+and/or poorly discriminating prediction models, the simpler linear interaction
+model is a safer choice for predicting absolute benefits.
 
 Risk-based approaches to predictive HTE estimate treatment benefit as a function
 of baseline risk. A limitation of our study is that we assumed treatment benefit
