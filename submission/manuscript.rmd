@@ -1,7 +1,7 @@
 ---
 title: |
- A model including an interaction of treatment with baseline risk was the optimal
- risk-based approach to predicting absolute treatment benefit
+ Linear interaction of treatment with baseline risk was sufficient for predicting
+ individualized benefit
 abstract: |
  **Objective:** To compare different risk-based methods predicting individualized
  treatment effects in RCT simulations. **Study Design and Setting:** We simulated
@@ -326,13 +326,13 @@ tissue plasminogen activator (tPA) treatment and
 streptokinase. The outcome of interest was 30-day mortality, recorded for all
 patients.
 
-In line with previous analyses [@Califf1997; @Steyerberg2000], we fitted a logistic regression
-model with 6 baseline covariates, i.e. age, Killip class, systolic blood
-pressure, heart rate, an indicator of previous MI, and the location of MI, to
-predict 30-day mortality risk. A constant effect of treatment was included in
-the model. When deriving risk predictions for individuals we set the treatment
-indicator to 0. More information on model development can be found in the
-supplement.
+In line with previous analyses [@Califf1997; @Steyerberg2000], we fitted a
+logistic regression model with 6 baseline covariates, i.e. age, Killip class,
+systolic blood pressure, heart rate, an indicator of previous MI, and the
+location of MI, to predict 30-day mortality risk. A constant effect of treatment
+was included in the model. When deriving risk predictions for individuals we set
+the treatment indicator to 0. More information on model development can be found
+in the supplement.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 gustoPerformance <- readr::read_csv(here::here("data/processed/gustoPerformanceMetrics.csv"))
