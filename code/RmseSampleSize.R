@@ -8,12 +8,12 @@ library(tidyverse)
 
 source("code/helpers/CreateManuscriptPlots.R")
 
-scenarios <- c(16, 34, 43, 61)
+scenarios <- c(7, 16, 43, 61)
 
 metric <- "rmse"
 titles <- c(
-  "**A.** Constant treatment effect",
-  "**B.** Moderate linear deviation",
+  "**C.** Absent treatment effect",
+  "**B.** Constant treatment effect",
   "**C.** Strong linear deviation",
   "**D.** Strong quadratic deviation"
 )
