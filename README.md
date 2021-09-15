@@ -1,4 +1,4 @@
-# Linear interaction of treatment with baseline risk was sufficient for predicting individualized benefit
+# Continuous risk-based predictive approaches to treatment effect heterogeneity: A simulation study
 
 ![front](https://github.com/rekkasA/arekkas_HteSimulation_XXXX_2021/blob/master/extras/figures/front.png)
 
