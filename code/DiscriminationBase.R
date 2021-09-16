@@ -8,12 +8,12 @@ library(tidyverse)
 
 source("code/helpers/CreateManuscriptPlots.R")
 
-scenarios <- c(1, 10, 37, 55)
+scenarios <- c(10, 28, 37, 55)
 
 metric <- "discrimination"
 titles <- c(
-  "**A.** Absent treatment effect",
-  "**B.** Constant treatment effect",
+  "**A.** Constant treatment effect",
+  "**B.** Moderate linear deviation",
   "**C.** Strong linear deviation",
   "**D.** Strong quadratic deviation"
 )
