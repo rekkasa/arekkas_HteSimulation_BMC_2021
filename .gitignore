@@ -1,4 +1,8 @@
 .Rhistory
+manuscript_files
+manuscript_cache
+supplement_files
+supplement_cache
 rsconnect
 .scratch
 .Rproj.user
