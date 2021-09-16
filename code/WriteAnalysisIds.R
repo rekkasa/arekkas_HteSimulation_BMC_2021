@@ -84,6 +84,15 @@ table <- bind_rows(grid2, grid1) %>%
     c = case_when(
       (type == "linear"     |  type       == "constant")   ~ 0,
       (type == "quadratic"                             )   ~ -5
+    ),
+    title = case_when(
+      (type == "constant"    & effectSize == "absent"  ) ~ "Absent treatment effect",
+      (type == "constant"    & effectSize == "moderate") ~ "Constant treatment effect",
+      (type == "constant"    & effectSize == "high"    ) ~ "Strong treatment effect",
+      (type == "linear"      & effectSize == "moderate") ~ "Moderate linear deviation",
+      (type == "linear"      & effectSize == "high"    ) ~ "Strong linear deviation",
+      (type == "quadratic"   & effectSize == "moderate") ~ "Moderate quadratic deviation",
+      (type == "quadratic"   & effectSize == "high"    ) ~ "Strong quadratic deviation"
     )
   ) %>%
   mutate(scenario = 1:n()) %>%
