@@ -62,8 +62,8 @@ header-includes:
   - \usepackage{amssymb}
   - \usepackage{bm}
   - \usepackage{booktabs}
-  - \newcommand\given[1][]{\:#1\vert\:}
   - \date{}
+  - \newcommand\given[1][]{\:#1\vert\:}
 editor_options: 
   chunk_output_type: console
 bibliography: references.bib
@@ -77,6 +77,7 @@ library(knitr)
 library(kableExtra)
 library(SmoothHte)
 library(rms)
+library(here)
 
 d <- function(x, decimals = 2) {
   sprintf(paste0("%1.", decimals, "f"), x) 
@@ -247,8 +248,9 @@ performed equally well to the linear interaction method. Increasing the number
 of knots in RCS resulted in higher RMSE across all scenarios. The adaptive
 approach performed very similarly to the best performing model in each scenario.
 
-```{r rmsebase, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated superpopulation of size 500,000. The scenario with true constant relative treatment effect had a true prediction AUC of 0.75 and sample size of 4250. Results are presented under moderate linear, strong linear, and strong quadratic deviations from constant relative treatment effects.", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/rmse_base.png"))
+```{r rmsebase, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated superpopulation of size 500,000. The scenario with true constant relative treatment effect had a true prediction AUC of 0.75 and sample size of 4250. Results are presented under moderate linear, strong linear, and strong quadratic deviations from constant relative treatment effects.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_base.tiff")))
+# knitr::include_graphics(here::here("figures/rmse_base.png"))
 ```
 
 When we increased the sample size (N = `r 17000`), the model including a
@@ -262,8 +264,9 @@ knots) in the case of strong quadratic deviations. Again, the increased
 flexibility of RCS smoothing with higher number of knots resulted in overfitting
 and worse predictive accuracy (Figure \ref{fig:rmsesamplesize}; Panel D).
 
-```{r rmsesamplesize, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. Sample size 17,000 rather than 4250 in Figure \\ref{fig:rmsebase}", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/rmse_sample_size.png"))
+```{r rmsesamplesize, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. Sample size 17,000 rather than 4250 in Figure \\ref{fig:rmsebase}", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_sample_size.tiff")))
+# knitr::include_graphics(here::here("figures/rmse_sample_size.png"))
 ```
 
 When we increased the AUC of the true prediction model to 0.85, models including
@@ -275,8 +278,9 @@ being a close second (Figure \ref{fig:rmseauc}; Panels B and C). Increasing the
 number of knots of RCS smoothing resulted in increased RMSE, which was less
 pronounced in the case of strong quadratic deviations.
 
-```{r rmseauc, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/rmse_auc.png"))
+```{r rmseauc, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_auc.tiff")))
+# knitr::include_graphics(here::here("figures/rmse_auc.png"))
 ```
 
 The constant effects model, the linear interaction model and models with RCS
@@ -288,8 +292,9 @@ tended to present much lower variability compared to all other approaches
 observed decreasing median values and increasing variability of the
 c-for-benefit in all scenarios.
 
-```{r discrimination, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/discrimination_base.png"))
+```{r discrimination, cache=TRUE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/discrimination_base.tiff")))
+# knitr::include_graphics(here::here("figures/discrimination_base.png"))
 ```
 
 As for calibration, the linear interaction model had the lowest median
@@ -301,8 +306,9 @@ comparable to the linear interaction model's performance, nonetheless (Figure
 constant treatment effect model was poorly calibrated (Figure
 \ref{fig:calibration}; Panels C and D).
 
-```{r calibration, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/calibration_base.png"))
+```{r calibration, cache=TRUE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/calibration_base.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 ## Case study
@@ -361,7 +367,7 @@ calibration (ICI-for benefit `r round(calibrationPerformance[2, ], 4)` vs
 `r round(calibrationPerformance[3, ], 4)`).
 
 
-```{r gusto, echo=FALSE, fig.cap="Individualized absolute benefit predictions based on baseline risk when using a constantn treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.", fig.show="hold", out.width = '100%'}
+```{r gusto, cache=TRUE, echo=FALSE, fig.cap="Individualized absolute benefit predictions based on baseline risk when using a constantn treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.", fig.show="hold", out.width = '100%'}
 knitr::include_graphics(here::here("figures/gusto.png"))
 ```
 

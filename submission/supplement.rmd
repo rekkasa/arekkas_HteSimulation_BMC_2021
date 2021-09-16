@@ -573,3 +573,9 @@ flextable(dat) %>%
   ) %>%
   set_caption("Rates at which the adaptive approach selected each model type.")
 ```
+
+
+```{r rmseAbsent, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods when there is no treatment effect. Each row contains the result for sample sizes of 1064, 4250 and 17000. Each column contains the results for AUC of the baseline risk prediction model of 0.65, 0.75 and 0.85.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_absent.tiff")))
+# knitr::include_graphics(here::here("figures/rmse_base.png"))
+```
