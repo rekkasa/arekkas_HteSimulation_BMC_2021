@@ -58,9 +58,10 @@ header-includes:
   - \usepackage{setspace}
   - \usepackage{amsmath}
   - \doublespacing
-  - \usepackage[left]{lineno}
+  - \usepackage[pagewise, left]{lineno}
   - \usepackage{amssymb}
   - \usepackage{bm}
+  - \usepackage{caption}
   - \usepackage{booktabs}
   - \date{}
   - \newcommand\given[1][]{\:#1\vert\:}
@@ -95,6 +96,9 @@ knit_hooks$set(
 )
 set.seed(19910930)
 ```
+
+\doublespacing 
+\linenumbers
 
 # Introduction
 Predictive approaches for assessing heterogeneity of treatment effects (HTE) aim
@@ -245,8 +249,13 @@ quadratic deviations from a constant relative treatment effect the linear
 interaction model performed best (Figure \ref{fig:rmsebase}; Panels B and C).
 Only in the case of strong quadratic deviations models including RCS (3 knots)
 performed equally well to the linear interaction method. Increasing the number
-of knots in RCS resulted in higher RMSE across all scenarios. The adaptive
-approach performed very similarly to the best performing model in each scenario.
+of knots in RCS resulted in higher RMSE across all scenarios. The adaptive 
+approach selected a linear interaction model 35\% of the time in the case of
+true strong linear deviations, while the majority of the time (56\%) it selected
+a simpler constant treatment effect model (Supplementary Table S7). Similarly, 
+in the case of true strong quadratic deviations, the adaptive approach selected 
+the RCS (3 knots) model 29\% of the time, while the simpler linear interaction 
+model was selected 68\% of the time.
 
 ```{r rmsebase, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated superpopulation of size 500,000. The scenario with true constant relative treatment effect had a true prediction AUC of 0.75 and sample size of 4250. Results are presented under moderate linear, strong linear, and strong quadratic deviations from constant relative treatment effects.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_base.tiff")))
@@ -276,7 +285,15 @@ from the base case of true constant relative treatment effects (Figure
 interaction model had the lowest RMSE with the RCS smoothing methods (3 knots)
 being a close second (Figure \ref{fig:rmseauc}; Panels B and C). Increasing the
 number of knots of RCS smoothing resulted in increased RMSE, which was less
-pronounced in the case of strong quadratic deviations.
+pronounced in the case of strong quadratic deviations. With increasing 
+prediction AUC we saw an increased tendency of the adaptive approach to select
+more complex models compared to the base case scenario. In the case of strong 
+linear deviations, the linear interaction model was selected the majority of the
+time (63\%), while the simpler constant treatment effect model was selected 26\%
+of the time (Supplementart Table S7). However, the increased RMSE of the
+constant treatment effect model inflated the the RMSE of the linear interaction
+model. In the case of strong quadratic deviations the RCS (3 knots) model was
+selected 84\% of the time.
 
 ```{r rmseauc, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_auc.tiff")))
