@@ -22,7 +22,6 @@ library(dplyr)
 
 analysisIds <- readr::read_csv(
   "data/processed/analysisIds.csv",
-  col_types = "iffiiddddddddddddd"
 )
 
 analysisIdsInteractions <- readr::read_csv(
