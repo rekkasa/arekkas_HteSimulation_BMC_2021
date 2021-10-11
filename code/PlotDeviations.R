@@ -32,7 +32,7 @@ analysisIdsInteractions <- readr::read_csv(
 generatePlot <- function(scenarios) {
   
   gammas <- list()
-  for (i in seq_along(scenarios)) {
+  for (i in seq_along(scenarios, analysisIds)) {
     idSettings <- analysisIds %>%
       filter(scenario == scenarios[i])
     gammas[[i]] <- list(
