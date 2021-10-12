@@ -1,3 +1,19 @@
+source("code/helpers/PlotGammas.R")
+
+library(tidyverse)
+library(SmoothHte)
+library(SimulateHte)
+library(SimulationEvaluationHte)
+library(dplyr)
+
+analysisIds <- readr::read_csv(
+  "data/processed/analysisIds.csv",
+)
+
+analysisIdsInteractions <- readr::read_csv(
+  "data/processed/analysisIdsInteractions.csv",
+  col_types = "icfiidddddddddddddd"
+)
 calcAbsoluteBenefit <- function(p, g0 = 0, g1 = 0, g2 = 0, l = 0) {
   x <- log(p / (1 - p))
   sq <- calcSquare(x, g0, g1, g2, l)
@@ -56,6 +72,7 @@ plotGompertz <- function(
   )
 }
 
+scenarios <- c(46, 55)
 
 gammas <- list()
 for (i in seq_along(scenarios)) {
