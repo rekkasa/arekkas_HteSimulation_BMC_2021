@@ -199,29 +199,29 @@ server <- function(input, output) {
     
     
     analysisIds <- read_csv("analysisIds.csv")
-    scenarios <- c(46, 55)
-    
-    gammas <- list()
-    for (i in seq_along(scenarios)) {
-        idSettings <- analysisIds %>%
-            filter(scenario == scenarios[i])
-        gammas[[i]] <- list(
-            g0 = idSettings$g0,
-            g1 = idSettings$g1,
-            g2 = idSettings$g2,
-            c  = idSettings$c
-        )
-    }
-    
     gammasNonMonotonic <- reactive({
         calculateGammas(
-        b1 = input$b1,
-        b2 = input$b2,
-        m  = input$m
-    )
+            b1 = input$b1,
+            b2 = input$b2,
+            m  = input$m
+        )
     })
     
     output$distPlot <- renderPlot({
+        scenariosRelative <- c(46, 55)
+        
+        gammas <- list()
+        for (i in seq_along(scenariosRelative)) {
+            idSettings <- analysisIds %>%
+                filter(scenario == scenariosRelative[i])
+            gammas[[i]] <- list(
+                g0 = idSettings$g0,
+                g1 = idSettings$g1,
+                g2 = idSettings$g2,
+                c  = idSettings$c
+            )
+        }
+        
         ggplot() +
             plotRelativeConstant(0, label = "absent", linetype = "longdash", size = 1.2) +
             plotRelativeConstant(log(.8), harm = input$harm, label = "base-case") +
@@ -247,22 +247,20 @@ server <- function(input, output) {
         
     })
     
-    scenarios <- c(10, 28, 37, 55)
-    
-    gammas <- list()
-    for (i in seq_along(scenarios)) {
-        idSettings <- analysisIds %>%
-            filter(scenario == scenarios[i])
-        gammas[[i]] <- list(
-            g0 = idSettings$g0,
-            g1 = idSettings$g1,
-            g2 = idSettings$g2,
-            c  = idSettings$c
-        )
-    }
-    
-    
     output$distPlot2 <- renderPlot({
+    scenarios <- c(10, 28, 37, 55)
+        gammas <- list()
+        for (i in seq_along(scenarios)) {
+            idSettings <- analysisIds %>%
+                filter(scenario == scenarios[i])
+            gammas[[i]] <- list(
+                g0 = idSettings$g0,
+                g1 = idSettings$g1,
+                g2 = idSettings$g2,
+                c  = idSettings$c
+            )
+        }
+        
         ggplot() +
             plotAbsoluteBenefitGomp(f(-.26, .2, -.8), harm = input$harm, label = "gompertz") +
             plotAbsoluteBenefit(
