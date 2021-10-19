@@ -9,7 +9,7 @@ shiny::shinyServer(
     selectedVals$base                  <- "absent"
     selectedVals$type                  <- "constant"
     selectedVals$nPatients             <- 4250
-    selectedVals$predictionPerformance <- 75
+    selectedVals$predictionPerformance <- .75
     selectedVals$harm                  <- "absent"
     
     observeEvent(
