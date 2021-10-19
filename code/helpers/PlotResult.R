@@ -1,5 +1,5 @@
 
-plotResult <- function(scenarios, processed, titles) {
+plotResult <- function(scenarios, processed, titles, metric) {
   
   plotList <- list()
   

@@ -3,14 +3,14 @@
 library(tidyverse)
 library(readr)
 
-effect <- c("weak", "strong", "mixed")
-typeOfEffect <- "interaction"
+base <- "interaction"
+type <- c("weak", "strong", "mixed")
 n <- 4250
-auc <- 75
+auc <- .75
 
 table <- tibble(
-  type       = typeOfEffect,
-  effectSize = effect,
+  base       = base,
+  type       = type,
   sampleSize = n,
   auc        = auc
 ) %>%
@@ -26,20 +26,20 @@ table <- tibble(
     b8 = .49,
     g0 = log(.8),
     g1 = case_when(
-      (effect == "weak" | effect == "mixed") ~ -.19,
-      (effect == "strong"                  ) ~ -.49
+      (type == "weak" | type == "mixed") ~ -.19,
+      (type == "strong"                  ) ~ -.49
     ),
     g2 = case_when(
-      (effect == "weak"                      ) ~ -.19,
-      (effect == "mixed" | effect == "strong") ~ -.49
+      (type == "weak"                      ) ~ -.19,
+      (type == "mixed" | type == "strong") ~ -.49
     ),
     g5 = case_when(
-      (effect == "weak" | effect == "mixed") ~ -.19,
-      (effect == "strong"                  ) ~ -.49
+      (type == "weak" | type == "mixed") ~ -.19,
+      (type == "strong"                  ) ~ -.49
     ),
     g6 = case_when(
-      (effect == "weak"                      ) ~ -.19,
-      (effect == "mixed" | effect == "strong") ~ -.49
+      (type == "weak"                      ) ~ -.19,
+      (type == "mixed" | type == "strong") ~ -.49
     ),
     scenario = 63 + 1:n()
   ) %>%

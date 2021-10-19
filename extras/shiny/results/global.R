@@ -13,16 +13,13 @@ calibration <- readr::read_csv(
 )
 
 analysisIds1 <- readr::read_csv(
-  "data/analysisIds.csv",
-  col_types = "icciiddddddddddddd"
+  "data/analysisIds.csv"
 ) %>%
-  select(scenario, type, effectSize, sampleSize, auc)
+  select(scenario, base, type, harm, sampleSize, auc)
 
-analysisIds2 <- readr::read_csv(
-  "data/analysisIdsInteractions.csv",
-  col_types = "icciidddddddddddddd"
-) %>%
-  select(scenario, type, effectSize, sampleSize, auc)
+analysisIds2 <- readr::read_csv("data/analysisIdsInteractions.csv") %>%
+  select(scenario, base, type, sampleSize, auc) %>%
+  mutate(harm = "absent")
 
 analysisIds <- bind_rows(analysisIds1, analysisIds2)
 

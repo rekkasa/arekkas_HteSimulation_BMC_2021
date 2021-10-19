@@ -6,36 +6,44 @@ shiny::shinyServer(
   ) {
     
     selectedVals                       <- shiny::reactiveValues()
-    selectedVals$effect                <- "moderate"
+    selectedVals$base                  <- "absent"
+    selectedVals$type                  <- "constant"
     selectedVals$nPatients             <- 4250
     selectedVals$predictionPerformance <- 75
+    selectedVals$harm                  <- "absent"
     
     observeEvent(
-      input$type,
+      input$base, 
       {
         req(
           input$type, 
-          input$effect, 
           input$nPatients, 
-          input$predictionPerformance
+          input$predictionPerformance,
+          input$harm
         )
         
-        selectedVals$effect                <- input$effect
+        selectedVals$type                  <- input$type
         selectedVals$nPatients             <- input$nPatients
         selectedVals$predictionPerformance <- input$predictionPerformance
+        selectedVals$harm                  <- input$harm
       }
     )
     
-    output$effectInput <- shiny::renderUI(
+    
+    
+    output$typeInput <- shiny::renderUI(
       {
-        if (input$type != "interaction") {
+        if (input$base != "interaction") {
           shiny::selectInput(
-            inputId  = "effect",
-            label    = "Effect",
+            inputId  = "type",
+            label    = "Type",
             choices  = c(
-              "absent",
-              "moderate",
-              "high"
+              "constant",
+              "linear-moderate",
+              "linear-high",
+              "quadratic-moderate",
+              "quadratic-high",
+              "non-monotonic"
             ),
             selected = selectedVals$effect
           )
@@ -56,12 +64,12 @@ shiny::shinyServer(
     
     output$toggleNPatients <- shiny::renderUI(
       {
-        if (input$type != "interaction") {
+        if (input$base != "interaction") {
           shiny::selectInput(
             inputId  = "nPatients",
             label    = "Number of patients",
             choices  = c(
-              1064,
+              1063,
               4250,
               17000
             ),
@@ -73,14 +81,14 @@ shiny::shinyServer(
     
     output$togglePredictionPerformance <- shiny::renderUI(
       {
-        if (input$type != "interaction") {
+        if (input$base != "interaction") {
           shiny::selectInput(
             inputId  = "predictionPerformance",
             label    = "Prediction model AUC",
             choices  = c(
-              65,
-              75,
-              85
+              .65,
+              .75,
+              .85
             ),
             selected = selectedVals$predictionPerformance
           )
@@ -88,15 +96,33 @@ shiny::shinyServer(
       }
     )
     
+    output$toggleHarmInput <- shiny::renderUI(
+      {
+        if (input$base != "interaction") {
+          shiny::selectInput(
+            inputId  = "harm",
+            label    = "Constant harm",
+            choices  = c(
+              "absent",
+              "positive",
+              "negative"
+            ),
+            selected = selectedVals$harm
+          )
+        }
+      }
+    )
+    
     currentScenario <- reactive(
       {
-        if (input$type != "interaction") {
+        if (input$base != "interaction") {
           analysisIds %>%
             filter(
+              base       == input$base,
               type       == input$type,
-              effectSize == input$effect,
               sampleSize == input$nPatients,
-              auc        == input$predictionPerformance
+              auc        == input$predictionPerformance,
+              harm       == input$harm
             ) %>%
             pull(scenario)
         } else {

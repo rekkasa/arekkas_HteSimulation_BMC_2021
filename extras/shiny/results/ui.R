@@ -24,19 +24,20 @@ shiny::shinyUI(
         shiny::conditionalPanel(
           condition = "input.menu1 == 'settings'",
           shiny::selectInput(
-            inputId  = "type",
-            label    = "Type",
+            inputId  = "base",
+            label    = "Base",
             choices  = c(
-              "constant",
-              "linear",
-              "quadratic",
+              "absent",
+              "moderate",
+              "high",
               "interaction"
             ),
-            selected = "constant"
+            selected = "absent"
           ),
-          shiny::uiOutput("effectInput"),
+          shiny::uiOutput("typeInput"),
           shiny::uiOutput("toggleNPatients"),
-          shiny::uiOutput("togglePredictionPerformance")
+          shiny::uiOutput("togglePredictionPerformance"),
+          shiny::uiOutput("toggleHarmInput")
         )
       )
     ),
