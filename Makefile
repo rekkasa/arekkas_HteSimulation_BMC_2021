@@ -14,12 +14,12 @@ $(EVALFILES) : code/SimulationScript.R\
 
 
 extras/protocol/protocol.pdf : extras/protocol/protocol.rmd\
-		               extras/protocol/references.bib\
-			       extras/protocol/jamia.csl\
+		                     extras/protocol/references.bib\
+			                   extras/protocol/jamia.csl\
 	                       data/processed/analysisIds.csv\
 	                       data/processed/analysisIdsInteractions.csv\
 	                       figures/deviate_linear_08.png\
-                               figures/deviate_quadratic_08.png
+                         figures/deviate_quadratic_08.png
 	R -e 'rmarkdown::render("extras/protocol/protocol.rmd", output_format = "all")'
 
 extras/outline/outline.pdf : extras/outline/outline.rmd\
@@ -35,12 +35,12 @@ figures/deviate_linear_08.png figures/deviate_quadratic_08.png figures/deviate_l
 
 figures/rmse_constant.png figures/rmse_constant.tiff : code/RmseConstant.R\
                                                        code/helpers/CreateManuscriptPlots.R\
-						       data/processed/rmse.csv
+						                                           data/processed/rmse.csv
 	$<
 
 figures/discrimination_interactions.png figures/discrimination_interactions.tiff : code/DiscriminationInteractionPlots.R\
                                                                                    code/helpers/CreateManuscriptPlots.R\
-						                                   data/processed/discrimination.csv
+						                                                                       data/processed/discrimination.csv
 	$<
 
 figures/calibration_interactions.png :code/CalibrationInteractionPlots.R\
