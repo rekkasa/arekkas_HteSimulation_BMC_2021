@@ -160,12 +160,12 @@ shiny::shinyServer(
         tmp <- rmseSubset()
         tmp %>%
           select(-scenarioId) %>%
-          createPlot2() %>%
-          plotly::layout(
-            yaxis = list(
-              range = c(0, .15)
-            )
-          )
+          createPlot2()
+          # plotly::layout(
+          #   yaxis = list(
+          #     range = c(0, .15)
+          #   )
+          # )
       }
     )
     
