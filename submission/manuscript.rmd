@@ -3,11 +3,8 @@ title: |
  Linear interaction of treatment with baseline risk was sufficient for predicting
  individualized benefit
 abstract: |
- **Objective:** To compare different risk-based methods predicting individualized
- treatment effects in RCT simulations. **Study Design and Setting:** We simulated
  data using diverse assumptions for a baseline prognostic index of risk (PI) and
  the shape of its intereraction with treatment (none, linear or quadratic). In
- each sample we predicted absolute benefit using: models with the PI and a
  constant relative treatment effect; models including an interaction of treatment
  with the PI; stratification in quarters of the PI; nonlinear transformations of
  the PI (restricted cubic splines with 3, 4 and 5 knots); an adaptive approach
@@ -15,14 +12,17 @@ abstract: |
  root mean squared error and measures of discrimination and calibration for
  benefit. Starting from a base case scenario (sample size 4,250, treatment odds
  ratio 0.8, AUC of the PI 0.75), we varied the sample size, the treatment effect
- strength, and the PI's discriminative ability. **Results:** Models including a
  PI by treatment interaction performed better under most simulation settings.
  Flexible models required larger sample sizes and higher AUC of the PI to
  outperform the linear interaction model. The adaptive approach tended to select
  simpler models with smaller sample sizes and/or worse prediction performance.
- **Conclusion:** Under most circumstances, a model with a linear interaction of
  the PI with treatment is the optimal risk-based approach to predicting absolute
  treatment benefit.
+ **Objective:** To compare different risk-based methods predicting individualized
+ treatment effects in RCT simulations. **Study Design and Setting:** We simulated
+ each sample we predicted absolute benefit using: models with the PI and a
+ strength, and the PI's discriminative ability. **Results:** Models including a
+ **Conclusion:** Under most circumstances, a model with a linear interaction of
 authors:
   - name: Alexandros Rekkas
     department: Department of Medical Informatics
@@ -146,35 +146,32 @@ For each patient we generated 8 baseline covariates here
 $x_1,\dots,x_4\sim N(0, 1)$ and $x_5,\dots,x_8\sim B(1, 0.2)$. Treatment
 was allocated using a 50:50 split. Outcomes for patients in the control arm were
 generated from a logistic regression model including all baseline covariates. In
-the base case scenario coefficient values were such, that the AUC of the
+the base scenarios coefficient values were such, that the AUC of the
 logistic regression model was $0.75$ and the event rate in the control arm was
-$20\%$.
+$20\%$. Binary outcomes in the control arm were generated from Bernoulli variables
+with true probabilities 
+$P(y=1|X, t_x = 0) = \text{expit}(PI)=\frac{e^{PI}}{1+e^{PI}}$.
 
-While binary outcomes in the control arm were generated from Bernoulli variables
-with true probabilities $P(y=1|X) = \text{expit}(PI)=\frac{e^{PI}}{1+e^{PI}}$, 
-the outcomes in the treatment arm were based on true probabilities 
-$\text{expit}(lp_1)$, with $$lp_1 = \gamma_2(PI-c)^2 + \gamma_1(PI-c) + \gamma_0$$
+Outcomes in the treatment arm were generated using 3 base scenarios: absent
+treatment effect (OR = 1), moderate treatment effect (OR = 0.8) and high
+treatment effect (OR = 0.5). We started with simulating outcomes based on true
+constant relative treatment effects for the 3 base scenarios. We then simulated
+linear, quadratic and non-monotonic deviations from constant treatment effects
+using:
+$$lp_1 = \gamma_2(PI-c)^2 + \gamma_1(PI-c) + \gamma_0, $$
+where $lp_1$ is the true linear predictor in the treatment arm, so that
+$P(y=1|X, t_x=1) = \text{expit}(lp_1)$. Finally, we simulated scenarios where a
+constant absolute harm is applied across all treated patients. In this case we
+have $P(y=1|X,t_x=1) = \text{expit}(lp_1) + \text{harm}$.
 
-The coefficients $\gamma_0,\gamma_1$ and $\gamma_2$ along with the
-centering constant $c$ were set for each simulation scenario to mimic a wide
-variety scenarios, ranging from true constant relative treatment effect
-($\gamma_1=\gamma_2=0$) to moderate and strong linear ($\gamma_2=0$) and
-quadratic deviations. We also considered scenarios with treatment-covariate
-interactions.
-These scenarios included 4 weak interactions
-($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82$), 
-4 strong interactions 
-($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$), 
-and 2 weak and 2 strong interactions.
-
-The sample size of the base case scenario was set to 4,250 ($80\%$ power for the
+The sample size for the base scenarios was set to 4,250 ($80\%$ power for the
 detection of a marginal OR of 0.8). We evaluated the effect of smaller or larger
-sample sizes of 1,064 and 17,000, respectively. We also evaluated the effect of
+sample sizes of 1,063 and 17,000, respectively. We also evaluated the effect of
 worse or better discriminative ability for risk, adjusting the baseline
 covariate coefficients, such that the AUC of the regression model in the control
 arm was 0.65 and 0.85 respectively.
 
-Combining all these settings resulted in a simulation study of 66 scenarios
+Combining all these settings resulted in a simulation study of 486 scenarios
 (exact settings in the supplementary material).
 
 ## Individualized risk-based benefit predictions

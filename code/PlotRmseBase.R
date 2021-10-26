@@ -5,6 +5,7 @@
 # Depends: 
 
 library(tidyverse)
+library(glue)
 source("code/helpers/CreateManuscriptPlots.R")
 source("code/helpers/PlotResult.R")
 
@@ -16,6 +17,7 @@ value     <- "base"
 
 titles <- scenarioIds %>%
   filter(scenario %in% scenarios) %>%
+  mutate(title = glue("{base} treatment effect")) %>%
   select(title) %>%
   unlist()
 
@@ -53,7 +55,7 @@ processed <- readr::read_csv(
     f
   )
 
-plotList <- plotResult(scenarios, processed, titles)
+plotList <- plotResult(scenarios, processed, titles, metric = metric)
 
 pp <- gridExtra::grid.arrange(
   plotList[[1]],
