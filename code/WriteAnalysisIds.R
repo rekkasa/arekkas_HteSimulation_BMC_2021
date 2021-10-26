@@ -7,6 +7,8 @@
 library(tidyverse)
 library(readr)
 
+ParallelLogger::logInfo("Writing analysis ids")
+
 base <- c(
   "absent",
   "moderate",
@@ -151,4 +153,6 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
     )
   ) %>%
   relocate(scenario) %>%
-  write_csv(path = "data/processed/analysisIds.csv")
+  write_csv(file = "data/processed/analysisIds.csv")
+
+ParallelLogger::logInfo("Analysis ids saved at ./data/processed/analysisIds.csv")
