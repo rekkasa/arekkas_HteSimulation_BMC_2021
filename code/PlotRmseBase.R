@@ -91,3 +91,10 @@ fileName <- paste0(
     compression = "lzw"
   )
   
+  ggplot2::ggsave(
+    file.path("figures", fileName), 
+    plot = pp,
+    width = 8.5, 
+    height = 7
+  )
+  

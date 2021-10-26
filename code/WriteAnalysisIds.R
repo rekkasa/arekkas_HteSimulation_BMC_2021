@@ -79,9 +79,9 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
       base == "moderate" & type == "quadratic-high" & auc == .75 ~ -4.42,
       base == "moderate" & type == "quadratic-high" & auc == .65 ~ -4.38,
       base == "moderate" & type == "quadratic-high" & auc == .85 ~ -4.13,
-      base == "moderate" & type == "non-monotonic" & auc == .75 ~ -.024,
-      base == "moderate" & type == "non-monotonic" & auc == .65 ~ .22,
-      base == "moderate" & type == "non-monotonic" & auc == .85 ~ -.18,
+      base == "moderate" & type == "non-monotonic" & auc == .75 ~ 0.1734843,
+      base == "moderate" & type == "non-monotonic" & auc == .65 ~ 0.4805806,
+      base == "moderate" & type == "non-monotonic" & auc == .85 ~ -0.08537934,
       base == "high" & type == "linear-moderate" & auc == .75 ~ -.75,
       base == "high" & type == "linear-moderate" & auc == .65 ~ -.77,
       base == "high" & type == "linear-moderate" & auc == .85 ~ -.73,
@@ -94,9 +94,9 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
       base == "high" & type == "quadratic-high" & auc == .75 ~ -4.86,
       base == "high" & type == "quadratic-high" & auc == .65 ~ -4.84,
       base == "high" & type == "quadratic-high" & auc == .85 ~ -4.51,
-      base == "high" & type == "non-monotonic" & auc == .75 ~ -.084,
-      base == "high" & type == "non-monotonic" & auc == .65 ~ .79,
-      base == "high" & type == "non-monotonic" & auc == .85 ~ -.62,
+      base == "high" & type == "non-monotonic" & auc == .75 ~ -0.08413846,
+      base == "high" & type == "non-monotonic" & auc == .65 ~ 0.7862489,
+      base == "high" & type == "non-monotonic" & auc == .85 ~ -0.6206897,
       TRUE ~ 0
     ),
     g1 = case_when(
@@ -109,12 +109,12 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
       base == "absent" & type == "non-monotonic" & auc == .75 ~ 4.21,
       base == "absent" & type == "non-monotonic" & auc == .65 ~ 3.32,
       base == "absent" & type == "non-monotonic" & auc == .85 ~ 4.1,
-      base == "moderate" & type == "non-monotonic" & auc == .75 ~ 1.29,
-      base == "moderate" & type == "non-monotonic" & auc == .65 ~ 1.5,
-      base == "moderate" & type == "non-monotonic" & auc == .85 ~ 1.16,
-      base == "high" & type == "non-monotonic" & auc == .75 ~ 2.03,
-      base == "high" & type == "non-monotonic" & auc == .65 ~ 2.76,
-      base == "high" & type == "non-monotonic" & auc == .85 ~ 1.57,
+      base == "moderate" & type == "non-monotonic" & auc == .75 ~ 1.560407,
+      base == "moderate" & type == "non-monotonic" & auc == .65 ~ 1.78266,
+      base == "moderate" & type == "non-monotonic" & auc == .85 ~ 1.354139,
+      base == "high" & type == "non-monotonic" & auc == .75 ~ 2.034903,
+      base == "high" & type == "non-monotonic" & auc == .65 ~ 2.761839,
+      base == "high" & type == "non-monotonic" & auc == .85 ~ 1.565517,
       TRUE ~ 1
     ),
     g2 = case_when(
@@ -127,12 +127,12 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
       base == "absent" & type == "non-monotonic" & auc == .75 ~ .54,
       base == "absent" & type == "non-monotonic" & auc == .65 ~ .38,
       base == "absent" & type == "non-monotonic" & auc == .85 ~ .55,
-      base == "moderate" & type == "non-monotonic" & auc == .75 ~ .59,
-      base == "moderate" & type == "non-monotonic" & auc == .65 ~ .09,
-      base == "moderate" & type == "non-monotonic" & auc == .85 ~ .04,
-      base == "high" & type == "non-monotonic" & auc == .75 ~ .21,
-      base == "high" & type == "non-monotonic" & auc == .65 ~ .32,
-      base == "high" & type == "non-monotonic" & auc == .85 ~ .14,
+      base == "moderate" & type == "non-monotonic" & auc == .75 ~ 0.105142,
+      base == "moderate" & type == "non-monotonic" & auc == .65 ~ 0.1373087,
+      base == "moderate" & type == "non-monotonic" & auc == .85 ~ 0.0742429,
+      base == "high" & type == "non-monotonic" & auc == .75 ~ 0.2103462,
+      base == "high" & type == "non-monotonic" & auc == .65 ~ 0.3209179,
+      base == "high" & type == "non-monotonic" & auc == .85 ~ 0.137931,
       TRUE ~ 0
     ),
     c = case_when(
@@ -151,4 +151,4 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
     )
   ) %>%
   relocate(scenario) %>%
-  write_csv(file = "data/processed/analysisIds.csv")
+  write_csv(path = "data/processed/analysisIds.csv")
