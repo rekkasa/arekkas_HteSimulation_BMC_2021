@@ -5,18 +5,45 @@
 # Depends: 
 
 library(tidyverse)
-
+library(glue)
 source("code/helpers/CreateManuscriptPlots.R")
+source("code/helpers/PlotResult.R")
 
-scenarios <- c(10, 28, 37, 55)
+scenarioIds <- readr::read_csv("data/processed/analysisIds.csv") %>%
+  filter(
+    base == "moderate",
+    !(type %in% c("moderate-linear", "moderate-quadratic")),
+    sampleSize == 4250,
+    auc == .75
+  )
+metric    <- "calibration"
+value     <- "base"
 
-metric <- "calibration"
-titles <- c(
-  "**A.** Constant treatment effect",
-  "**B.** Moderate linear deviation",
-  "**C.** Strong linear deviation",
-  "**D.** Strong quadratic deviation"
+titles <- scenarioIds %>%
+  mutate(
+    title = ifelse(
+      type == "constant",
+      str_to_sentence(glue("{str_replace_all(type, '-', ' ')} treatment effect")),
+      str_to_sentence(glue("{str_replace_all(type, '-', ' ')} deviation"))
+    )
+  ) %>%
+  select(title) %>%
+  unlist() %>%
+  unique()
+
+names(titles) <- NULL
+
+titlePrefix <- paste0(
+  "**",
+  LETTERS[1:4],
+  ".**"
 )
+
+titles <- paste(
+  titlePrefix,
+  titles
+)
+
 
 metricFile <- paste(metric, "csv", sep = ".")
 
@@ -25,6 +52,7 @@ f <- function(x) x * 100
 processed <- readr::read_csv(
   file = file.path("data/processed", metricFile)
 ) %>% 
+  select(-one_of("locfit")) %>%
   mutate_at(
     c(
       "constant_treatment_effect",
@@ -37,63 +65,55 @@ processed <- readr::read_csv(
     ),
     f
   )
+scenarios <- scenarioIds %>%
+  filter(harm == "absent") %>%
+  select(scenario) %>%
+  unlist()
+names(scenarios) <- NULL
 
-plotList <- list()
-
-for (i in seq_along(scenarios)) {
-  tmp <- processed %>%
-    dplyr::filter(scenarioId == scenarios[i])
-  
-  plot <- createPlot(
-    data = tmp,
-    metric = metric,
-    title = titles[i],
-    limits = c(0, 6),
-    pointSize = .5
-  ) +
-    ggplot2::theme(
-      legend.position = "none",
-      axis.title.x    = ggplot2::element_blank(),
-      axis.text.x     = ggplot2::element_text(size = 10, angle = 45, hjust = 1),
-      axis.title.y    = ggplot2::element_blank(),
-      axis.text.y     = ggplot2::element_text(size = 9.5),
-      plot.title      = ggtext::element_markdown(size = 14)
-    )
-  
-  plotList[[i]] <- plot
-}
+plotList <- plotResult(scenarios, processed, titles, metric = metric, limits = c(0, 6))
 
 pp <- gridExtra::grid.arrange(
-  plotList[[1]],
-  plotList[[2]],
-  plotList[[3]],
-  plotList[[4]],
+  plotList[[1]] + theme(axis.text.x = element_blank()),
+  plotList[[2]] + theme(legend.position = "none", axis.text.x = element_blank()),
+  plotList[[3]] + theme(legend.position = "none"),
+  plotList[[4]] + theme(legend.position = "none"),
+  heights = c(1, 1.3),
   nrow = 2,
   ncol = 2,
   left = grid::textGrob(
     expression(
       paste(
-        "Integrated calibration index (x ", 
-        10^-2, 
+        "Calibration for benefit (x",
+        10^-2,
         ")"
       )
     ),
     rot = 90
   )
 )
+
+fileName <- paste0(
+  paste(
+    metric,
+    value,
+    sep = "_"
+  ),
+  ".tiff"
+)
   ggplot2::ggsave(
-    file.path("figures", "calibration_base.tiff"), 
+    file.path("figures", fileName), 
     plot = pp,
     dpi = 1200,
-    width = 8.5, 
+    width = 10, 
     height = 7,
     compression = "lzw"
   )
   
-  ggplot2::ggsave(
-    file.path("figures", "calibration_base.png"), 
-    plot = pp,
-    width = 8.5, 
-    height = 7
-  )
+  # ggplot2::ggsave(
+  #   file.path("figures", fileName), 
+  #   plot = pp,
+  #   width = 8.5, 
+  #   height = 7
+  # )
   

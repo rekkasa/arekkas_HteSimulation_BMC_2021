@@ -1,25 +1,34 @@
 
-plotResult <- function(scenarios, processed, titles, metric) {
+plotResult <- function(scenarios, processed, titles, metric, limits = c(0, 10)) {
   
   plotList <- list()
-  
   for (i in seq_along(scenarios)) {
-    tmp <- processed %>%
+    tmpList <- list()
+    tmpList$absent <- processed %>%
       dplyr::filter(scenarioId == scenarios[i])
+    tmpList$positive <- processed %>%
+      dplyr::filter(scenarioId == scenarios[i] + 1)
+    tmpList$negative <- processed %>%
+      dplyr::filter(scenarioId == scenarios[i] + 2)
+    
+    tmpData <- bind_rows(tmpList, .id = "harm")
     
     plot <- createPlot(
-      data = tmp,
+      data = tmpData,
       metric = metric,
       title = titles[i],
-      limits = c(0, 10),
-      pointSize = .5
+      limits = limits,
+      pointSize = .2
     ) +
       ggplot2::theme(
-        legend.position = "none",
+        legend.position = c(.405, .913),
+        legend.title    = ggplot2::element_text(size = 10),
+        legend.text     = ggplot2::element_text(size = 7),
+        legend.direction = "horizontal",
         axis.title.x    = ggplot2::element_blank(),
         axis.text.x     = ggplot2::element_text(size = 10, angle = 45, hjust = 1),
         axis.title.y    = ggplot2::element_blank(),
-        axis.text.y     = ggplot2::element_text(size = 9.5),
+        axis.text.y     = ggplot2::element_text(size = 8.5),
         plot.title      = ggtext::element_markdown(size = 14)
       )
     

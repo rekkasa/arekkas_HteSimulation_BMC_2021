@@ -70,16 +70,19 @@ figures/rmse_nl_n.tiff figures/rmse_nl_n.png : code/NonLinearityNPatientsPlots.R
 
 figures/rmse_base.tiff figures/rmse_base.png : code/PlotRmseBase.R\
 	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
 	data/processed/rmse.csv
 	$< 
 
 figures/rmse_sample_size.tiff figures/rmse_sample_size.png : code/PlotRmseSampleSize.R\
 	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
 	data/processed/rmse.csv
 	$<
 
 figures/rmse_auc.tiff figures/rmse_auc.png : code/PlotRmseAuc.R\
 	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
 	data/processed/rmse.csv
 	$<
 
@@ -88,22 +91,24 @@ figures/rmse_absent.tiff : code/PlotRmseAbsent.R\
 	data/processed/rmse.csv
 	$<
 
-figures/calibration_base.tiff figures/calibration_base.png : code/CalibrationBase.R\
+figures/calibration_base.tiff : code/CalibrationBase.R\
 	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
 	data/processed/calibration.csv
 	$<
 
-figures/discrimination_base.tiff figures/discrimination_base.png : code/DiscriminationBase.R\
+figures/discrimination_base.tiff : code/DiscriminationBase.R\
 	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
 	data/processed/discrimination.csv
 	$<
 
-figures/rmse_n_auc.tiff figures/rmse_n_auc.png : code/NPatientsAucPlots.R\
+figures/rmse_n_auc.tiff : code/NPatientsAucPlots.R\
 	code/helpers/CreateManuscriptPlots.R\
 	data/processed/rmse.csv
 	$<
 
-figures/gusto.tiff figures/gusto.png : code/GustoPlot.R\
+figures/gusto.tiff : code/GustoPlot.R\
 	data/raw/gusto.rda
 	$<
 
@@ -139,12 +144,12 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 	data/processed/rmse.csv\
 	data/processed/discrimination.csv\
 	data/processed/calibration.csv\
-	data/processed/gustoPerformanceMetrics.csv
-#	figures/rmse_base.tiff\
-#	figures/rmse_auc.tiff\
-#	figures/rmse_sample_size.tiff\
-#	figures/calibration_base.tiff\
-#	figures/discrimination_base.tiff\
+	data/processed/gustoPerformanceMetrics.csv\
+	figures/rmse_base.tiff\
+	figures/rmse_sample_size.tiff\
+	figures/rmse_auc.tiff\
+	figures/calibration_base.tiff\
+	figures/discrimination_base.tiff\
 #	figures/gusto.png
 	R -e 'rmarkdown::render("submission/manuscript.rmd", output_format = "all")'
 
