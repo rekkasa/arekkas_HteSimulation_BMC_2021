@@ -1,6 +1,6 @@
 # Continuous risk-based predictive approaches to treatment effect heterogeneity: A simulation study
 
-![front](https://github.com/rekkasA/arekkas_HteSimulation_XXXX_2021/blob/master/extras/figures/front.png)
+![front](https://github.com/rekkasa/arekkas_HteSimulation_XXXX_2021/blob/testing/extras/figures/front.tiff)
 
 ## Summary
 **Objective:** Compare risk-based methods for individualizing treatment effects
