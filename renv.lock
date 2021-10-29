@@ -128,18 +128,6 @@
       "Repository": "CRAN",
       "Hash": "0cf10dab0d023d5b46a5a14387556891"
     },
-    "SimulateHte": {
-      "Package": "SimulateHte",
-      "Version": "0.1.0",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "SimulateHte",
-      "RemoteUsername": "rekkasa",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "8d8eed26de974489409b02123134e42234a12396",
-      "Hash": "47d210663c2e73a565a6a2ac545af770"
-    },
     "SimulationEvaluationHte": {
       "Package": "SimulationEvaluationHte",
       "Version": "0.0.0.9000",
