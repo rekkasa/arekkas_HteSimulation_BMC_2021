@@ -39,10 +39,10 @@ shiny::shinyServer(
             label    = "Type",
             choices  = c(
               "constant",
-              "linear-moderate",
-              "linear-high",
-              "quadratic-moderate",
-              "quadratic-high",
+              "moderate-linear",
+              "strong-linear",
+              "moderate-quadratic",
+              "strong-quadratic",
               "non-monotonic"
             ),
             selected = selectedVals$effect
