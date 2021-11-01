@@ -29,6 +29,7 @@ extras/outline/outline.pdf : extras/outline/outline.rmd\
 
 figures/deviate_linear_08.png figures/deviate_quadratic_08.png figures/deviate_linear_absolute_08.png figures/deviate_quadratic_absoltue_08.png : code/PlotDeviations.R\
 	code/helpers/PlotGammas.R\
+	code/helpers/PlotDeviationsFunctions.R\
 	data/processed/analysisIds.csv\
 	data/processed/analysisIdsInteractions.csv
 	$<
@@ -52,10 +53,6 @@ figures/calibration_interactions.png :code/CalibrationInteractionPlots.R\
 figures/rmse_interactions.png figures/rmse_interactions.tiff : code/InteractionPlots.R\
 	code/helpers/CreateManuscriptPlots.R\
 	data/processed/rmse.csv
-	$<
-
-figures/deviationsManuscript.png : code/PlotDeviationsManuscript.R\
-	code/helpers/PlotGammas.R
 	$<
 
 figures/rmse_nl_auc.tiff figures/rmse_nl_auc.png : code/NlAucPlots.R\

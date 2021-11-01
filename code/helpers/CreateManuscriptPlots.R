@@ -33,12 +33,12 @@ createPlot <- function(
     ) %>% 
     reshape2::melt()
   levels(tmp$variable) <- case_when(
-    levels(tmp$variable) == "linear_predictor"          ~ "Linear interaction",
-    levels(tmp$variable) == "constant_treatment_effect" ~ "Constant\ntreatment effect",
+    levels(tmp$variable) == "linear_predictor"          ~ "Linear",
+    levels(tmp$variable) == "constant_treatment_effect" ~ "Constant",
     levels(tmp$variable) == "stratified"                ~ "Stratified",
-    levels(tmp$variable) == "rcs_3_knots"               ~ "RCS\n(3 knots)",
-    levels(tmp$variable) == "rcs_4_knots"               ~ "RCS\n(4 knots)",
-    levels(tmp$variable) == "rcs_5_knots"               ~ "RCS\n(5 knots)",
+    levels(tmp$variable) == "rcs_3_knots"               ~ "RCS-3",
+    levels(tmp$variable) == "rcs_4_knots"               ~ "RCS-4",
+    levels(tmp$variable) == "rcs_5_knots"               ~ "RCS-5",
     levels(tmp$variable) == "adaptive"                  ~ "Adaptive",
     TRUE                                                ~ levels(tmp$variable)
   )

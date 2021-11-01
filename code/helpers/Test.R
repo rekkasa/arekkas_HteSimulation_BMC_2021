@@ -23,6 +23,7 @@ calcAbsoluteBenefit <- function(p, g0 = 0, g1 = 0, g2 = 0, l = 0) {
 
 plotAbsoluteBenefit <- function(g0 = 0, g1 = 1, g2 = 0, l = 0, label) {
   ggplot2::stat_function(
+    size = 1.4,
     data = data.frame(x = c(.05, .95)),
     ggplot2::aes(x = x, color = label),
     fun = calcAbsoluteBenefit,

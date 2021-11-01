@@ -1,4 +1,3 @@
-
 plotResult <- function(scenarios, processed, titles, metric, limits = c(0, 10)) {
   
   plotList <- list()
@@ -21,12 +20,12 @@ plotResult <- function(scenarios, processed, titles, metric, limits = c(0, 10)) 
       pointSize = .2
     ) +
       ggplot2::theme(
-        legend.position = c(.405, .913),
+        legend.position = c(.405, .923),
         legend.title    = ggplot2::element_text(size = 10),
         legend.text     = ggplot2::element_text(size = 7),
         legend.direction = "horizontal",
         axis.title.x    = ggplot2::element_blank(),
-        axis.text.x     = ggplot2::element_text(size = 10, angle = 45, hjust = 1),
+        axis.text.x     = ggplot2::element_text(size = 9),
         axis.title.y    = ggplot2::element_blank(),
         axis.text.y     = ggplot2::element_text(size = 8.5),
         plot.title      = ggtext::element_markdown(size = 14)

@@ -7,8 +7,6 @@
 library(tidyverse)
 library(readr)
 
-ParallelLogger::logInfo("Writing analysis ids")
-
 base <- c(
   "absent",
   "moderate",
@@ -17,19 +15,19 @@ base <- c(
 
 type <- c(
   "constant",
-  "moderate-linear",
-  "strong-linear",
-  "moderate-quadratic",
-  "strong-quadratic",
+  "linear-moderate",
+  "linear-high",
+  "quadratic-moderate",
+  "quadratic-high",
   "non-monotonic"
 )
 
 auc <- c(.75, .65, .85)
 
 sampleSize <- c(4250, 1063, 17000)
-harm <- c("absent", "positive", "negative")
+harm <- c("absent", "moderate-positive", "strong-positive", "negative")
 
-analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
+expand_grid(base, type, sampleSize, auc, harm) %>%
   mutate(
     b0 = case_when(
       auc == .75 ~ -2.08,
@@ -54,60 +52,60 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
       base == "absent" & type == "constant" ~ 0,
       base == "moderate" & type == "constant" ~ log(.8),
       base == "high" & type == "constant" ~ log(.5),
-      base == "absent" & type == "moderate-linear" & auc == .75 ~ -.06,
-      base == "absent" & type == "moderate-linear" & auc == .65 ~ -.08,
-      base == "absent" & type == "moderate-linear" & auc == .85 ~ -.07,
-      base == "absent" & type == "strong-linear" & auc == .75 ~ -.25,
-      base == "absent" & type == "strong-linear" & auc == .65 ~ -.29,
-      base == "absent" & type == "strong-linear" & auc == .85 ~ -.22,
-      base == "absent" & type == "moderate-quadratic" & auc == .75 ~ -4.81,
-      base == "absent" & type == "moderate-quadratic" & auc == .65 ~ -4.77,
-      base == "absent" & type == "moderate-quadratic" & auc == .85 ~ -4.71,
-      base == "absent" & type == "strong-quadratic" & auc == .75 ~ -4.22,
-      base == "absent" & type == "strong-quadratic" & auc == .65 ~ -4.16,
-      base == "absent" & type == "strong-quadratic" & auc == .85 ~ -3.95,
+      base == "absent" & type == "linear-moderate" & auc == .75 ~ -.06,
+      base == "absent" & type == "linear-moderate" & auc == .65 ~ -.08,
+      base == "absent" & type == "linear-moderate" & auc == .85 ~ -.07,
+      base == "absent" & type == "linear-high" & auc == .75 ~ -.25,
+      base == "absent" & type == "linear-high" & auc == .65 ~ -.29,
+      base == "absent" & type == "linear-high" & auc == .85 ~ -.22,
+      base == "absent" & type == "quadratic-moderate" & auc == .75 ~ -4.81,
+      base == "absent" & type == "quadratic-moderate" & auc == .65 ~ -4.77,
+      base == "absent" & type == "quadratic-moderate" & auc == .85 ~ -4.71,
+      base == "absent" & type == "quadratic-high" & auc == .75 ~ -4.22,
+      base == "absent" & type == "quadratic-high" & auc == .65 ~ -4.16,
+      base == "absent" & type == "quadratic-high" & auc == .85 ~ -3.95,
       base == "absent" & type == "non-monotonic" & auc == .75 ~ 2.49,
       base == "absent" & type == "non-monotonic" & auc == .65 ~ 2.15,
       base == "absent" & type == "non-monotonic" & auc == .85 ~ 1.74,
-      base == "moderate" & type == "moderate-linear" & auc == .75 ~ -.29,
-      base == "moderate" & type == "moderate-linear" & auc == .65 ~ -.3,
-      base == "moderate" & type == "moderate-linear" & auc == .85 ~ -.28,
-      base == "moderate" & type == "strong-linear" & auc == .75 ~ -.46,
-      base == "moderate" & type == "strong-linear" & auc == .65 ~ -.5,
-      base == "moderate" & type == "strong-linear" & auc == .85 ~ -.41,
-      base == "moderate" & type == "moderate-quadratic" & auc == .75 ~ -5.02,
-      base == "moderate" & type == "moderate-quadratic" & auc == .65 ~ -4.99,
-      base == "moderate" & type == "moderate-quadratic" & auc == .85 ~ -4.91,
-      base == "moderate" & type == "strong-quadratic" & auc == .75 ~ -4.42,
-      base == "moderate" & type == "strong-quadratic" & auc == .65 ~ -4.38,
-      base == "moderate" & type == "strong-quadratic" & auc == .85 ~ -4.13,
+      base == "moderate" & type == "linear-moderate" & auc == .75 ~ -.29,
+      base == "moderate" & type == "linear-moderate" & auc == .65 ~ -.3,
+      base == "moderate" & type == "linear-moderate" & auc == .85 ~ -.28,
+      base == "moderate" & type == "linear-high" & auc == .75 ~ -.46,
+      base == "moderate" & type == "linear-high" & auc == .65 ~ -.5,
+      base == "moderate" & type == "linear-high" & auc == .85 ~ -.41,
+      base == "moderate" & type == "quadratic-moderate" & auc == .75 ~ -5.02,
+      base == "moderate" & type == "quadratic-moderate" & auc == .65 ~ -4.99,
+      base == "moderate" & type == "quadratic-moderate" & auc == .85 ~ -4.91,
+      base == "moderate" & type == "quadratic-high" & auc == .75 ~ -4.42,
+      base == "moderate" & type == "quadratic-high" & auc == .65 ~ -4.38,
+      base == "moderate" & type == "quadratic-high" & auc == .85 ~ -4.13,
       base == "moderate" & type == "non-monotonic" & auc == .75 ~ 0.1734843,
       base == "moderate" & type == "non-monotonic" & auc == .65 ~ 0.4805806,
       base == "moderate" & type == "non-monotonic" & auc == .85 ~ -0.08537934,
-      base == "high" & type == "moderate-linear" & auc == .75 ~ -.75,
-      base == "high" & type == "moderate-linear" & auc == .65 ~ -.77,
-      base == "high" & type == "moderate-linear" & auc == .85 ~ -.73,
-      base == "high" & type == "strong-linear" & auc == .75 ~ -.9,
-      base == "high" & type == "strong-linear" & auc == .65 ~ -.96,
-      base == "high" & type == "strong-linear" & auc == .85 ~ -.84,
-      base == "high" & type == "moderate-quadratic" & auc == .75 ~ -5.48,
-      base == "high" & type == "moderate-quadratic" & auc == .65 ~ -5.46,
-      base == "high" & type == "moderate-quadratic" & auc == .85 ~ -5.35,
-      base == "high" & type == "strong-quadratic" & auc == .75 ~ -4.86,
-      base == "high" & type == "strong-quadratic" & auc == .65 ~ -4.84,
-      base == "high" & type == "strong-quadratic" & auc == .85 ~ -4.51,
+      base == "high" & type == "linear-moderate" & auc == .75 ~ -.75,
+      base == "high" & type == "linear-moderate" & auc == .65 ~ -.77,
+      base == "high" & type == "linear-moderate" & auc == .85 ~ -.73,
+      base == "high" & type == "linear-high" & auc == .75 ~ -.9,
+      base == "high" & type == "linear-high" & auc == .65 ~ -.96,
+      base == "high" & type == "linear-high" & auc == .85 ~ -.84,
+      base == "high" & type == "quadratic-moderate" & auc == .75 ~ -5.48,
+      base == "high" & type == "quadratic-moderate" & auc == .65 ~ -5.46,
+      base == "high" & type == "quadratic-moderate" & auc == .85 ~ -5.35,
+      base == "high" & type == "quadratic-high" & auc == .75 ~ -4.86,
+      base == "high" & type == "quadratic-high" & auc == .65 ~ -4.84,
+      base == "high" & type == "quadratic-high" & auc == .85 ~ -4.51,
       base == "high" & type == "non-monotonic" & auc == .75 ~ -0.08413846,
       base == "high" & type == "non-monotonic" & auc == .65 ~ 0.7862489,
       base == "high" & type == "non-monotonic" & auc == .85 ~ -0.6206897,
       TRUE ~ 0
     ),
     g1 = case_when(
-      type == "moderate-linear" & auc == .75 ~ 0.9472527,
-      type == "moderate-linear" & auc == .65 ~ 0.9340659,
-      type == "moderate-linear" & auc == .85 ~ 0.9296703,
-      type == "strong-linear" & auc == .75 ~ 0.7956044,
-      type == "strong-linear" & auc == .65 ~ 0.7758242,
-      type == "strong-linear" & auc == .85 ~ 0.7846154,
+      type == "linear-moderate" & auc == .75 ~ 0.9472527,
+      type == "linear-moderate" & auc == .65 ~ 0.9340659,
+      type == "linear-moderate" & auc == .85 ~ 0.9296703,
+      type == "linear-high" & auc == .75 ~ 0.7956044,
+      type == "linear-high" & auc == .65 ~ 0.7758242,
+      type == "linear-high" & auc == .85 ~ 0.7846154,
       base == "absent" & type == "non-monotonic" & auc == .75 ~ 4.21,
       base == "absent" & type == "non-monotonic" & auc == .65 ~ 3.32,
       base == "absent" & type == "non-monotonic" & auc == .85 ~ 4.1,
@@ -120,12 +118,12 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
       TRUE ~ 1
     ),
     g2 = case_when(
-      type == "moderate-quadratic" & auc == .75 ~ -0.01255887,
-      type == "moderate-quadratic" & auc == .65 ~ -0.01642314,
-      type == "moderate-quadratic" & auc == .85 ~ -0.01642314,
-      type == "strong-quadratic" & auc == .75 ~ -0.05168458,
-      type == "strong-quadratic" & auc == .65 ~ -0.05941311,
-      type == "strong-quadratic" & auc == .85 ~ -0.05941311,
+      type == "quadratic-moderate" & auc == .75 ~ -0.01255887,
+      type == "quadratic-moderate" & auc == .65 ~ -0.01642314,
+      type == "quadratic-moderate" & auc == .85 ~ -0.01642314,
+      type == "quadratic-high" & auc == .75 ~ -0.05168458,
+      type == "quadratic-high" & auc == .65 ~ -0.05941311,
+      type == "quadratic-high" & auc == .85 ~ -0.05941311,
       base == "absent" & type == "non-monotonic" & auc == .75 ~ .54,
       base == "absent" & type == "non-monotonic" & auc == .65 ~ .38,
       base == "absent" & type == "non-monotonic" & auc == .85 ~ .55,
@@ -141,7 +139,7 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
       startsWith(type, "quad") ~ -5,
       TRUE ~ 0
     ),
-    scenario = 1:486,
+    scenario = 1:n(),
     averageTrueBenefit = case_when(
       base == "absent" ~ 0,
       base == "moderate" & auc == .75 ~ .029,
@@ -155,4 +153,3 @@ analysisIds <- expand_grid(base, type, sampleSize, auc, harm) %>%
   relocate(scenario) %>%
   write_csv(file = "data/processed/analysisIds.csv")
 
-ParallelLogger::logInfo("Analysis ids saved at ./data/processed/analysisIds.csv")

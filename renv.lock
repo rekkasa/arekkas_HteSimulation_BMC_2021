@@ -128,6 +128,18 @@
       "Repository": "CRAN",
       "Hash": "0cf10dab0d023d5b46a5a14387556891"
     },
+    "SimulateHte": {
+      "Package": "SimulateHte",
+      "Version": "0.2",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "SimulateHte",
+      "RemoteUsername": "rekkasa",
+      "RemoteRef": "4d7f8c1",
+      "RemoteSha": "4d7f8c14276ebc194220e7734a8c80a549657c3a",
+      "Hash": "5e90b7078524f9cd2120edae807c4b3e"
+    },
     "SimulationEvaluationHte": {
       "Package": "SimulationEvaluationHte",
       "Version": "0.0.0.9000",
@@ -846,6 +858,20 @@
       "Repository": "CRAN",
       "Hash": "e25078f6e770b81121672874474f69c0"
     },
+    "packrat": {
+      "Package": "packrat",
+      "Version": "0.7.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "95e8c3825efcaad09411799da92c0af9"
+    },
+    "patchwork": {
+      "Package": "patchwork",
+      "Version": "1.1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "c446b30cb33ec125ff02588b60660ccb"
+    },
     "pillar": {
       "Package": "pillar",
       "Version": "1.6.2",
@@ -1048,6 +1074,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "249d8cd1e74a8f6a26194a91b47f21d1"
+    },
+    "rsconnect": {
+      "Package": "rsconnect",
+      "Version": "0.8.24",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5e21fd77eb844fa1ff1d23cb04e1d753"
     },
     "rstudioapi": {
       "Package": "rstudioapi",
