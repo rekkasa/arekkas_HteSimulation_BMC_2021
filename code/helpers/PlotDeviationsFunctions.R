@@ -99,42 +99,35 @@ generateAbsolutePlot <- function(analysisIds, scenarios, ...) {
     plotAbsoluteBenefit(
       log(.8), 
       g1 = 1, 
-      l = 0, label = "base-case"
+      l = 0, label = "Figure A"
       ) +
     plotAbsoluteBenefit(
       g0    = gammas$gammas_linear_moderate$g0,
       g1    = gammas$gammas_linear_moderate$g1,
       g2    = gammas$gammas_linear_moderate$g2,
       l     = gammas$gammas_linear_moderate$c,
-      label = "base-case"
-    ) +
-    plotAbsoluteBenefit(
-      g0    = gammas$gammas_linear_moderate$g0,
-      g1    = gammas$gammas_linear_moderate$g1,
-      g2    = gammas$gammas_linear_moderate$g2,
-      l     = gammas$gammas_linear_moderate$c,
-      label = "linear-moderate"
+      label = "Figure B"
     ) +
     plotAbsoluteBenefit(
       g0    = gammas$gammas_linear_high$g0,
       g1    = gammas$gammas_linear_high$g1,
       g2    = gammas$gammas_linear_high$g2,
       l     = gammas$gammas_linear_high$c,
-      label = "linear-strong"
+      label = "Figure C"
     ) +
     plotAbsoluteBenefit(
       g0    = gammas$gammas_quadratic_high$g0,
       g1    = gammas$gammas_quadratic_high$g1,
       g2    = gammas$gammas_quadratic_high$g2,
       l     = gammas$gammas_quadratic_high$c,
-      label = "quadratic-strong"
+      label = "Figure D"
     ) +
     plotAbsoluteBenefit(
       g0    = gammas$gammas_non_monotonic$g0,
       g1    = gammas$gammas_non_monotonic$g1,
       g2    = gammas$gammas_non_monotonic$g2,
       l     = gammas$gammas_non_monotonic$c,
-      label = "non-monotonic"
+      label = "Figure E"
     ) +
     xlim(0, .5) +
     xlab("Baseline risk") +
@@ -149,11 +142,11 @@ generateAbsolutePlot <- function(analysisIds, scenarios, ...) {
         "#f0027f"
       ),
       breaks = c(
-        "base-case",
-        "linear-moderate",
-        "linear-strong",
-        "quadratic-strong",
-        "non-monotonic"
+        "Figure A",
+        "Figure B",
+        "Figure C",
+        "Figure D",
+        "Figure E"
       )
     ) +
     theme(...)
