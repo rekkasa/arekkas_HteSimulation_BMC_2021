@@ -7,6 +7,8 @@
 library(tidyverse)
 library(glue)
 library(ggtext)
+library(gridExtra)
+library(grid)
 
 source("code/helpers/PlotGammas.R")                # Used to generate the absolute plots
 source("code/helpers/PlotDeviationsFunctions.R")   # Generates the absolute plot
@@ -141,11 +143,23 @@ plotList <- plotResult(scenarios, processed, titles, metric = metric)
 # Put them all together
 # ----------------------
 gridList <- list(
-  plotList[[1]] + theme(axis.text.x = element_blank(), legend.position = c(.14, .87)),
+  plotList[[1]] +
+    theme(
+      plot.title = element_markdown(size = 9),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(size = 8),
+      legend.title = element_text(size = 7.5),
+      legend.text = element_text(size = 7),
+      legend.position = c(.274, .827)
+    ),
   absolutePlots$plot[[1]] +
-    ggtitle("True absolute benefit in treatment arm") +
+    ggtitle("Simulated absolute benefit in treated patients") +
     xlim(c(0, .5)) +
-    ylim(c(-.05, .15)) +
+    scale_y_continuous(
+      position = "right",
+      limits = c(-.05, .15),
+      breaks = seq(-.05, .15, .05)
+    ) +
     scale_color_manual(
       name = "Constant treatment-\n related harm",
       values = c(
@@ -159,14 +173,25 @@ gridList <- list(
       axis.title.x = element_blank(),
       axis.title.y = element_blank(),
       axis.text.x = element_blank(),
-      plot.title = element_markdown(),
+      axis.text.y = element_text(size = 8),
+      plot.title = element_markdown(size = 9),
       legend.position = "none"
     ),
-  plotList[[2]] + theme(axis.text.x = element_blank(), legend.position = "none"),
+  plotList[[2]] + 
+    theme(
+      plot.title = element_markdown(size = 9),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(size = 8),
+      legend.position = "none"
+    ),
   absolutePlots$plot[[2]] +
     ggtitle("True absolute benefit in treatment arm") +
     xlim(c(0, .5)) +
-    ylim(c(-.05, .15)) +
+    scale_y_continuous(
+      position = "right",
+      limits = c(-.05, .15),
+      breaks = seq(-.05, .15, .05)
+    ) +
     scale_color_manual(
       name = "Constant treatment-\n related harm",
       values = c(
@@ -180,14 +205,24 @@ gridList <- list(
       axis.title.x = element_blank(),
       axis.title.y = element_blank(),
       axis.text.x = element_blank(),
-      plot.title = element_markdown(),
+      axis.text.y = element_text(size = 8),
+      plot.title = element_markdown(size = 9, color = "white"),
       legend.position = "none"
     ),
-  plotList[[3]] + theme(axis.text.x = element_blank(), legend.position = "none"),
+  plotList[[3]] +
+    theme(
+      plot.title = element_markdown(size = 9),
+      axis.text.x = element_blank(),
+      legend.position = "none"
+    ),
   absolutePlots$plot[[3]] +
     ggtitle("True absolute benefit in treatment arm") +
     xlim(c(0, .5)) +
-    ylim(c(-.05, .15)) +
+    scale_y_continuous(
+      position = "right",
+      limits = c(-.05, .15),
+      breaks = seq(-.05, .15, .05)
+    ) +
     scale_color_manual(
       name = "Constant treatment-\n related harm",
       values = c(
@@ -200,15 +235,25 @@ gridList <- list(
     theme(
       axis.title.x = element_blank(),
       axis.title.y = element_blank(),
+      axis.text.y = element_text(size = 8),
       axis.text.x = element_blank(),
-      plot.title = element_markdown(),
+      plot.title = element_markdown(size = 9, color = "white"),
       legend.position = "none"
     ),
-  plotList[[4]] + theme(axis.text.x = element_blank(), legend.position = "none"),
+  plotList[[4]] + 
+    theme(
+      plot.title = element_markdown(size = 9),
+      axis.text.x = element_blank(),
+      legend.position = "none"
+    ),
   absolutePlots$plot[[4]] +
     ggtitle("True absolute benefit in treatment arm") +
     xlim(c(0, .5)) +
-    ylim(c(-.05, .15)) +
+    scale_y_continuous(
+      position = "right",
+      limits = c(-.05, .15),
+      breaks = seq(-.05, .15, .05)
+    ) +
     scale_color_manual(
       name = "Constant treatment-\n related harm",
       values = c(
@@ -222,14 +267,23 @@ gridList <- list(
       axis.title.x = element_blank(),
       axis.title.y = element_blank(),
       axis.text.x = element_blank(),
-      plot.title = element_markdown(),
+      axis.text.y = element_text(size = 8),
+      plot.title = element_markdown(size = 9, color = "white"),
       legend.position = "none"
     ),
-  plotList[[5]] + theme(legend.position = "none"),
+  plotList[[5]] +
+    theme(
+      legend.position = "none",
+      plot.title = element_markdown(size = 9)
+    ),
   absolutePlots$plot[[5]] +
-    ggtitle("True absolute benefit in treatment arm") +
+    ggtitle("Simulated absolute benefit in treatment arm") +
     xlim(c(0, .5)) +
-    ylim(c(-.05, .15)) +
+    scale_y_continuous(
+      position = "right",
+      limits = c(-.05, .15),
+      breaks = seq(-.05, .15, .05)
+    ) +
     scale_color_manual(
       name = "Constant treatment-\n related harm",
       values = c(
@@ -241,13 +295,15 @@ gridList <- list(
     theme_bw() +
     theme(
       axis.title.x = element_blank(),
+      axis.text.x = element_text(size = 8),
+      axis.text.y = element_text(size = 8),
       axis.title.y = element_blank(),
-      plot.title = element_markdown(),
+      plot.title = element_markdown(size = 9, color = "white"),
       legend.position = "none"
     )
 )
 
-cowplot::plot_grid(
+pp <- cowplot::plot_grid(
   gridList[[1]],
   gridList[[2]],
   gridList[[3]],
@@ -262,19 +318,7 @@ cowplot::plot_grid(
   rel_widths = c(1, .5)
 )
 
-pp <- gridExtra::grid.arrange(
-  plotList[[1]] + theme(axis.text.x = element_blank()),
-  plotList[[2]] + theme(legend.position = "none", axis.text.x = element_blank()),
-  plotList[[3]] + theme(legend.position = "none", axis.text.x = element_blank()),
-  plotList[[4]] + theme(legend.position = "none"),
-  plotList[[5]] + theme(legend.position = "none"),
-  absolutePlots$plot[[1]],
-  absolutePlots$plot[[2]],
-  absolutePlots$plot[[3]],
-  absolutePlots$plot[[4]],
-  absolutePlots$plot[[5]],
-  ncol = 2,
-  left = grid::textGrob(
+left.grob <- grid::textGrob(
     expression(
       paste(
         "Root mean squared error (x",
@@ -283,8 +327,39 @@ pp <- gridExtra::grid.arrange(
       )
     ),
     rot = 90
-  )
 )
+
+right.grob <- grid::textGrob(
+    "Absolute benefit",
+    rot = 270
+)
+
+
+res <- grid.arrange(arrangeGrob(pp, left = left.grob, right = right.grob))
+
+# pp <- gridExtra::grid.arrange(
+#   plotList[[1]] + theme(axis.text.x = element_blank()),
+#   plotList[[2]] + theme(legend.position = "none", axis.text.x = element_blank()),
+#   plotList[[3]] + theme(legend.position = "none", axis.text.x = element_blank()),
+#   plotList[[4]] + theme(legend.position = "none"),
+#   plotList[[5]] + theme(legend.position = "none"),
+#   absolutePlots$plot[[1]],
+#   absolutePlots$plot[[2]],
+#   absolutePlots$plot[[3]],
+#   absolutePlots$plot[[4]],
+#   absolutePlots$plot[[5]],
+#   ncol = 2,
+#   left = grid::textGrob(
+#     expression(
+#       paste(
+#         "Root mean squared error (x",
+#         10^-2,
+#         ")"
+#       )
+#     ),
+#     rot = 90
+#   )
+# )
 
 fileName <- paste0(
   paste(
@@ -296,10 +371,10 @@ fileName <- paste0(
 )
   ggplot2::ggsave(
     file.path("figures", fileName), 
-    plot = pp,
+    plot = res,
     dpi = 1200,
     width = 10, 
-    height = 7,
+    height = 8,
     compression = "lzw"
   )
   
