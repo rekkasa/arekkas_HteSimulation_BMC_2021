@@ -1,8 +1,22 @@
 #!/usr/bin/env Rscript
 
-# Description: 
-# Output: 
-# Depends: 
+# --------------------------------------------------
+# Description:
+#   Generates the RMSE plots for the base case
+# Output:
+#   figures/rmse_base.tiff
+# Depends:
+#   data/processed/analysisIds.csv
+#   data/processed/rmse.csv
+#   code/helpers/CreateManuscriptPlots.R
+#   code/helpers/PlotResult.R
+#   code/helpers/Absolute.R
+# --------------------------------------------------
+
+args <- commandArgs(trailingOnly = TRUE)
+args_sampleSize <- as.numeric(args[1])
+args_auc <- as.numeric(args[2])
+args_value <- as.character(args[3])
 
 library(tidyverse)
 library(glue)
@@ -10,21 +24,19 @@ library(ggtext)
 library(gridExtra)
 library(grid)
 
-source("code/helpers/PlotGammas.R")                # Used to generate the absolute plots
-source("code/helpers/PlotDeviationsFunctions.R")   # Generates the absolute plot
 source("code/helpers/CreateManuscriptPlots.R")     # Geneartes single boxplot
 source("code/helpers/PlotResult.R")                # Generates the boxplot list
+source("code/helpers/Absolute.R")                  # Generates the absolute plots
 
 scenarioIds <- readr::read_csv("data/processed/analysisIds.csv") %>%
   filter(
     base == "moderate",
     type != "quadratic-moderate",
-    sampleSize == 4250,
-    auc == .75
+    sampleSize == args_sampleSize,
+    auc == args_auc
   ) 
 
 metric    <- "rmse"
-value     <- "base"
 
 titles <- scenarioIds %>%
   mutate(
@@ -59,7 +71,6 @@ f <- function(x) x * 100
 processed <- readr::read_csv(
   file = file.path("data/processed", metricFile)
 ) %>% 
-  select(-one_of("locfit")) %>%
   mutate_at(
     c(
       "constant_treatment_effect",
@@ -73,45 +84,9 @@ processed <- readr::read_csv(
     f
   )
 
-
-plotAbsoluteBenefit <- function(data) {
-  calcSquare <- function(x, g0 = 0, g1 = 0, g2 = 0, l = 0) {
-    ret <- g0 + g1 * (x - l) + g2 * (x - l)**2
-    return(ret)
-  }
-  calcAbsoluteBenefit <- function(p, g0 = 0, g1 = 0, g2 = 0, l = 0, harm) {
-    x <- log(p / (1 - p))
-    sq <- calcSquare(x, g0, g1, g2, l)
-    benefit <- plogis(x) - plogis(sq) - harm
-    return(benefit)
-  }
-  harmSettings <- unique(data$harm)
-  res <- ggplot()
-  for (i in seq_along(harmSettings)) {
-    harm <- case_when(
-      harmSettings[i] == "moderate-positive" ~ data$averageTrueBenefit[1] / 4, 
-      harmSettings[i] == "strong-positive"   ~ data$averageTrueBenefit[1] / 2, 
-      harmSettings[i] == "negative"          ~ -data$averageTrueBenefit[1] / 4, 
-      TRUE                                   ~ 0
-    )
-    args <- list(
-      g0 = data$g0,
-      g1 = data$g1,
-      g2 = data$g2,
-      l = data$c,
-      harm = harm
-    )
-    label <- harmSettings[i]
-    res <- res + ggplot2::stat_function(
-      data = data.frame(x = c(.05, .95), label = label),
-      ggplot2::aes(x = x, color = label, group = label),
-      fun = calcAbsoluteBenefit,
-      args = args
-    )
-  }
-  return(res)
-}
-
+# ----------------------------------
+# Create the absolute benefit plots
+# ----------------------------------
 absolutePlots <- scenarioIds %>%
   filter(harm != "negative") %>%
   group_by(type) %>%
@@ -139,18 +114,23 @@ names(scenarios) <- NULL
 plotList <- plotResult(scenarios, processed, titles, metric = metric)
 
 
-# ----------------------
-# Put them all together
-# ----------------------
+# ------------------------------------
+# Put them all together:
+#   - create a list of plots
+#   - combine the list with cowplot
+# -----------------------------------
 gridList <- list(
   plotList[[1]] +
     theme(
       plot.title = element_markdown(size = 9),
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
       axis.text.x = element_blank(),
       axis.text.y = element_text(size = 8),
+      legend.direction = "horizontal",
       legend.title = element_text(size = 7.5),
       legend.text = element_text(size = 7),
-      legend.position = c(.274, .827)
+      legend.position = c(.334, .827)
     ),
   absolutePlots$plot[[1]] +
     ggtitle("Simulated absolute benefit in treated patients") +
@@ -180,6 +160,7 @@ gridList <- list(
   plotList[[2]] + 
     theme(
       plot.title = element_markdown(size = 9),
+      axis.title = element_blank(),
       axis.text.x = element_blank(),
       axis.text.y = element_text(size = 8),
       legend.position = "none"
@@ -212,6 +193,7 @@ gridList <- list(
   plotList[[3]] +
     theme(
       plot.title = element_markdown(size = 9),
+      axis.title = element_blank(),
       axis.text.x = element_blank(),
       legend.position = "none"
     ),
@@ -243,6 +225,7 @@ gridList <- list(
   plotList[[4]] + 
     theme(
       plot.title = element_markdown(size = 9),
+      axis.title = element_blank(),
       axis.text.x = element_blank(),
       legend.position = "none"
     ),
@@ -273,6 +256,9 @@ gridList <- list(
     ),
   plotList[[5]] +
     theme(
+      axis.title = element_blank(),
+      axis.text.x = element_text(size = 8),
+      axis.text.y = element_text(size = 8),
       legend.position = "none",
       plot.title = element_markdown(size = 9)
     ),
@@ -364,7 +350,7 @@ res <- grid.arrange(arrangeGrob(pp, left = left.grob, right = right.grob))
 fileName <- paste0(
   paste(
     metric,
-    value,
+    args_value,
     sep = "_"
   ),
   ".tiff"

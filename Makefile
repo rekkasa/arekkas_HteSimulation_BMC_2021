@@ -65,23 +65,29 @@ figures/rmse_nl_n.tiff figures/rmse_nl_n.png : code/NonLinearityNPatientsPlots.R
 	data/processed/rmse.csv
 	$<
 
-figures/rmse_base.tiff figures/rmse_base.png : code/PlotRmseBase.R\
+figures/rmse_base.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
 	code/helpers/PlotResult.R\
-	data/processed/rmse.csv
-	$< 
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< 4250 0.75 base
 
-figures/rmse_sample_size.tiff figures/rmse_sample_size.png : code/PlotRmseSampleSize.R\
+figures/rmse_sample_size.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
 	code/helpers/PlotResult.R\
-	data/processed/rmse.csv
-	$<
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< 17000 0.75 sample_size
 
-figures/rmse_auc.tiff figures/rmse_auc.png : code/PlotRmseAuc.R\
+figures/rmse_auc.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
 	code/helpers/PlotResult.R\
-	data/processed/rmse.csv
-	$<
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< 4250 0.85 auc
 
 figures/rmse_absent.tiff : code/PlotRmseAbsent.R\
 	code/helpers/CreateManuscriptPlots.R\

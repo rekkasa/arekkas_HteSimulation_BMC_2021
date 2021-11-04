@@ -142,7 +142,7 @@ patients with an acute myocardial infarction (MI).
 
 ## Simulation scenarios
 
-For each patient we generated 8 baseline covariates here
+For each patient we generated 8 baseline covariates
 $x_1,\dots,x_4\sim N(0, 1)$ and $x_5,\dots,x_8\sim B(1, 0.2)$. Treatment
 was allocated using a 50:50 split. Outcomes for patients in the control arm were
 generated from a logistic regression model including all baseline covariates. In
@@ -215,7 +215,7 @@ with 3, 4 and 5 knots.
 We evaluated the predictive accuracy of the considered methods by the root mean
 squared error (RMSE):
 
-$$\text{RMSE}=\frac{1}{n}\sum_{i=1}^n\big(\tau(\bm{x}_i) - \hat{\tau}(\bm{x}_i)\big)^2$$
+$$\text{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^n\big(\tau(\bm{x}_i) - \hat{\tau}(\bm{x}_i)\big)^2}$$
 We compared the discriminative ability of the methods under study using
 c-for-benefit [@vanKlaveren2018]. The c-for-benefit represents the probability
 that from two randomly chosen matched patient pairs with unequal observed

@@ -16,7 +16,7 @@ createPlot <- function(
     mutate(
       harm = factor(
         harm,
-        levels = c("absent", "positive", "negative", ordered = TRUE)
+        levels = c(unique(.data$harm, ordered = TRUE))
       )
     ) %>%
     dplyr::select(
@@ -67,9 +67,14 @@ createPlot <- function(
       ),
       breaks = c(
         "absent",
-        "positive",
-        "negative"
-        )
+        "moderate_positive",
+        "strong_positive"
+      ),
+      labels = c(
+        "absent",
+        "moderate positive",
+        "strong positive"
+      )
     ) +
     ggplot2::ylab(yAxis) +
     ggplot2::ylim(limits[1], limits[2]) +
