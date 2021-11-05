@@ -27,7 +27,7 @@ createPlot <- function(
         "linear_predictor", 
         "rcs_3_knots",
         "rcs_4_knots",
-        "rcs_5_knots", 
+        # "rcs_5_knots", 
         "adaptive"
       )
     ) %>% 
@@ -38,7 +38,7 @@ createPlot <- function(
     levels(tmp$variable) == "stratified"                ~ "Stratified",
     levels(tmp$variable) == "rcs_3_knots"               ~ "RCS-3",
     levels(tmp$variable) == "rcs_4_knots"               ~ "RCS-4",
-    levels(tmp$variable) == "rcs_5_knots"               ~ "RCS-5",
+    # levels(tmp$variable) == "rcs_5_knots"               ~ "RCS-5",
     levels(tmp$variable) == "adaptive"                  ~ "Adaptive",
     TRUE                                                ~ levels(tmp$variable)
   )
