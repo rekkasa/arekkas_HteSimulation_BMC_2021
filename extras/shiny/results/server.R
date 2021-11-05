@@ -39,10 +39,10 @@ shiny::shinyServer(
             label    = "Type",
             choices  = c(
               "constant",
-              "moderate-linear",
-              "strong-linear",
-              "moderate-quadratic",
-              "strong-quadratic",
+              "linear-moderate",
+              "linear-high",
+              "quadratic-moderate",
+              "quadratic-high",
               "non-monotonic"
             ),
             selected = selectedVals$effect
@@ -104,7 +104,8 @@ shiny::shinyServer(
             label    = "Constant harm",
             choices  = c(
               "absent",
-              "positive",
+              "moderate-positive",
+              "strong-positive",
               "negative"
             ),
             selected = selectedVals$harm
