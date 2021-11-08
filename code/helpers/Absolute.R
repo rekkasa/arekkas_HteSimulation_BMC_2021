@@ -11,6 +11,7 @@ plotAbsoluteBenefit <- function(data, projectDir = NULL) {
   }
   harmSettings <- unique(data$harm)
   res <- ggplot()
+  validationDataset <- list()
   for (i in seq_along(harmSettings)) {
     scenarioSettings <- data %>%
       dplyr::filter(harm == harmSettings[i]) %>%
@@ -22,21 +23,11 @@ plotAbsoluteBenefit <- function(data, projectDir = NULL) {
           TRUE                        ~ 0
         )
       )
-
-    # harm <- case_when(
-    #   harmSettings[i] == "moderate-positive" ~ data$averageTrueBenefit[1] / 4, 
-    #   harmSettings[i] == "strong-positive"   ~ data$averageTrueBenefit[1] / 2, 
-    #   harmSettings[i] == "negative"          ~ -data$averageTrueBenefit[1] / 4, 
-    #   TRUE                                   ~ 0
-    # )
-
     scenarioDir <- paste(
       "scenario",
       as.character(scenarioSettings$scenario),
       sep = "_"
     )
-
-
     args <- list(
       g0   = scenarioSettings$g0,
       g1   = scenarioSettings$g1,
@@ -52,43 +43,53 @@ plotAbsoluteBenefit <- function(data, projectDir = NULL) {
         fun = calcAbsoluteBenefit,
         args = args
       )
-  }
-
-  if (!is.null(projectDir)) {
-    settings <- readRDS(
-      file.path(
-        projectDir,
-        "data",
-        "raw",
-        scenarioDir,
-        "settings.rds"
+    if (!is.null(projectDir)) {
+      settings <- readRDS(
+        file.path(
+          projectDir,
+          "data",
+          "raw",
+          scenarioDir,
+          "settings.rds"
+        )
       )
-    )
-    validationDatabaseSettings <- settings$simulationSettings$databaseSettings
-    validationDatabaseSettings$numberOfObservations <- 1e3
-    validationDataset <- SimulateHte::runDataGeneration(
-      databaseSettings        = validationDatabaseSettings,
-      propensitySettings      = settings$simulationSettings$propensitySettings,
-      baselineRiskSettings    = settings$simulationSettings$baselineRiskSettings,
-      treatmentEffectSettings = settings$simulationSettings$treatmentEffectSettings
-    )
+      validationDatabaseSettings <- settings$simulationSettings$databaseSettings
+      validationDatabaseSettings$numberOfObservations <- 1e5
+      validationDataset[[i]] <- SimulateHte::runDataGeneration(
+        databaseSettings        = validationDatabaseSettings,
+        propensitySettings      = settings$simulationSettings$propensitySettings,
+        baselineRiskSettings    = settings$simulationSettings$baselineRiskSettings,
+        treatmentEffectSettings = settings$simulationSettings$treatmentEffectSettings
+      )
+    }
+  }
+  if (!is.null(projectDir)) {
+    fullValidationDataset <- validationDataset %>%
+      bind_rows(.id = "harmSetting")
     res <- res +
       # ggside::ggside(x.pos = "bottom") +
       ggside::ggside(y.pos = "left") +
       ggside::geom_xsideboxplot(
         aes(x = probs),
-        data = validationDataset %>% mutate(probs = plogis(untreatedRiskLinearPredictor)),
+        data = validationDataset[[1]] %>% mutate(probs = plogis(untreatedRiskLinearPredictor)),
         orientation = "y",
         outlier.shape = NA
       ) +
       ggside::geom_ysideboxplot(
-        aes(y = trueBenefit),
-        data = validationDataset,
+        aes(y = trueBenefit, fill = harmSetting),
+        data = fullValidationDataset,
         orientation = "x",
         outlier.shape = NA
         ) +
       scale_ysidex_continuous() +
-      scale_xsidey_continuous()
+      scale_xsidey_continuous() +
+      scale_fill_manual(
+        values = c(
+          "#26547C",
+          "#06D6A0",
+          "#EF476F"
+        )
+      ) 
   }
   return(res)
 }

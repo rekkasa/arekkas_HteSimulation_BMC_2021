@@ -164,7 +164,7 @@ gridList <- list(
       ggside.rect = element_blank(),
       ggside.axis.text = element_blank(),
       ggside.axis.ticks.length = unit(0, "pt"),
-      ggside.panel.scale = .04,
+      ggside.panel.scale = .07,
       plot.title = element_markdown(size = 9),
       legend.position = "none"
     ),
@@ -178,7 +178,7 @@ gridList <- list(
       ggside.rect = element_blank(),
       ggside.axis.text = element_blank(),
       ggside.axis.ticks.length = unit(0, "pt"),
-      ggside.panel.scale = .04,
+      ggside.panel.scale = .07,
       legend.position = "none"
     ),
   absolutePlots$plot[[2]] +
@@ -207,7 +207,7 @@ gridList <- list(
       ggside.rect = element_blank(),
       ggside.axis.text = element_blank(),
       ggside.axis.ticks.length = unit(0, "pt"),
-      ggside.panel.scale = .04,
+      ggside.panel.scale = .07,
       plot.title = element_markdown(size = 9, color = "white"),
       legend.position = "none"
     ),
@@ -244,7 +244,7 @@ gridList <- list(
       ggside.rect = element_blank(),
       ggside.axis.text = element_blank(),
       ggside.axis.ticks.length = unit(0, "pt"),
-      ggside.panel.scale = .04,
+      ggside.panel.scale = .07,
       plot.title = element_markdown(size = 9, color = "white"),
       legend.position = "none"
     ),
@@ -282,7 +282,7 @@ gridList <- list(
       ggside.rect = element_blank(),
       ggside.axis.text = element_blank(),
       ggside.axis.ticks.length = unit(0, "pt"),
-      ggside.panel.scale = .04,
+      ggside.panel.scale = .07,
       plot.title = element_markdown(size = 9, color = "white"),
       legend.position = "none"
     )
