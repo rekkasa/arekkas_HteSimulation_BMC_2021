@@ -143,7 +143,7 @@ gridList <- list(
     xlim(c(0, .5)) +
     scale_y_continuous(
       position = "right",
-      limits = c(-.05, .15),
+      limits = c(-.058, .15),
       breaks = seq(-.05, .15, .05)
     ) +
   scale_color_manual(
@@ -186,7 +186,7 @@ gridList <- list(
     xlim(c(0, .5)) +
     scale_y_continuous(
       position = "right",
-      limits = c(-.05, .15),
+      limits = c(-.058, .15),
       breaks = seq(-.05, .15, .05)
     ) +
     scale_color_manual(
@@ -223,7 +223,7 @@ gridList <- list(
     xlim(c(0, .5)) +
     scale_y_continuous(
       position = "right",
-      limits = c(-.05, .15),
+      limits = c(-.058, .15),
       breaks = seq(-.05, .15, .05)
     ) +
     scale_color_manual(
@@ -261,7 +261,7 @@ gridList <- list(
     xlim(c(0, .5)) +
     scale_y_continuous(
       position = "right",
-      limits = c(-.05, .15),
+      limits = c(-.058, .15),
       breaks = seq(-.05, .15, .05)
     ) +
     scale_color_manual(

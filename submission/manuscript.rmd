@@ -267,63 +267,45 @@ adaptiveSelections <- adaptiveSelections %>%
   
 ```
 
-The model including a constant relative treatment effect had the
-lowest median RMSE in scenarios with a true constant relative
-treatment effect (OR = 0.8, N = `r 4250` and AUC = 0.75) or with
-moderate linear deviations (Supplement, Figure XX). However, when we
-considered deviations from constant relative treatment effects, the
-linear interaction model performed best most of the time, with RCS-3
-having very comparable performance, outperforming the former in the
-case of strong treatment-related harms and non-monotonic
-deviations. The adaptive approach had comparable performance to the
-best-performing method in each scenario, however, we observed
-increased variability in the case of linear and non-monotonic
-deviations, especially for moderate or strong treatment-related
-harms. 
+The linear interaction model outperformed all RCS methods in terms of
+RMSE in scenarios with true constant relative treatment effect (OR =
+0.8, N = `r 4250` and AUC = 0.75), strong linear and even strong
+quadratic deviations (Figure \ref{fig:rmsebase}). However, with
+non-monotonic deviations errors of the linear interaction model
+increased substantially, especially in the presence of
+treatment-related harms. In these scenarios, RCS-3 proved to be quite
+robust outperforming all other methods. The constant treatment effect
+approach had overall best performance under true constant treatment
+effect settings, but was sensitive to all considered deviations,
+resulting in increased error rates. Finally, the adaptive approach had
+comparable performance to the best-performing method in each
+scenario. However, we observed increased variability in the case of
+linear and non-monotonic deviations, especially for moderate or strong
+treatment-related harms.
 
-The adaptive approach selected the constant treatment effect model
-`r adaptiveSelections %>% filter(scenarioId == 217) %>% pull(treatment) * 100`\% 
-of the time, when no constant treatment-related harms were
-considered, which dropped to
+In the case of true constant relative treatment effects, the adaptive
+approach selected the constnant effect model the majority of the time,
+even in the presence of treatment-related harms
+(`r adaptiveSelections %>% filter(scenarioId == 217) %>% pull(treatment) * 100`\%
+of the time with no harms to
 `r adaptiveSelections %>% filter(scenarioId == 219) %>% pull(treatment) * 100`\% 
-in the case of strong treatment-related harms. When strong linear
-deviations were considered, the adaptive approach favored the constant
-treatment effect model
-(`r adaptiveSelections %>% filter(scenarioId == 289) %>% pull(treatment) * 100`\%
-of the time) in the absence of treatment-related harms, which was
-replaced mainly by the linear interaction model (from
-`r adaptiveSelections %>% filter(scenarioId == 289) %>% pull(risk) * 100`\%
-to 
-`r adaptiveSelections %>% filter(scenarioId == 291) %>% pull(risk) * 100`\%
-of the time) with increasing treatment-related harms. In the case of
-strong quadratic deviations, the adaptive approach selected the
-linear interaction model the majority of the time which also increased
-with stronger treatment-related harms (from
-`r adaptiveSelections %>% filter(scenarioId == 361) %>% pull(risk) * 100`\%
-with no harms to
-`r adaptiveSelections %>% filter(scenarioId == 363) %>% pull(risk) * 100`\%
-with strong harms ). RCS-3 selection frequency decreased with stronger
-treatment-related harms (from
-`r adaptiveSelections %>% filter(scenarioId == 361) %>% pull(rcs_3) * 100`\%
-with no harms to
-`r adaptiveSelections %>% filter(scenarioId == 363) %>% pull(rcs_3) * 100`\%
-with strong harms ). Finally, with true non-monotonic deviations the
-adaptive approach mainly selected the constant treatment effect model
-(from
-`r adaptiveSelections %>% filter(scenarioId == 397) %>% pull(treatment) * 100`\%
-with no harms to
-`r adaptiveSelections %>% filter(scenarioId == 399) %>% pull(treatment) * 100`\%
-with strong harms), the linear interaction model (from
-`r adaptiveSelections %>% filter(scenarioId == 397) %>% pull(risk) * 100`\%
-with no harms to
-`r adaptiveSelections %>% filter(scenarioId == 399) %>% pull(risk) * 100`\%
-with strong harms) and the RCS-3 model
-(from
+with strong harms). With strong linear or quadratic deviations and
+increasing treatment-related harms the adaptive approach increasingly
+favored the linear interaction model. In the case of true
+non-monotonic deviations, we observed increasing selection frequencies
+for RCS-3 with increasing treatment harms (from
 `r adaptiveSelections %>% filter(scenarioId == 397) %>% pull(rcs_3) * 100`\%
 with no harms to
 `r adaptiveSelections %>% filter(scenarioId == 399) %>% pull(rcs_3) * 100`\%
-with strong harms). For more details, see Supplement Table XX).
-
+with strong harms), whereas selection frequencies for the linear
+interaction model dropped from
+`r adaptiveSelections %>% filter(scenarioId == 397) %>% pull(risk) * 100`\%
+with no harms to
+`r adaptiveSelections %>% filter(scenarioId == 399) %>% pull(risk) * 100`\%
+with strong harms. Finally, in the case of strong linear and
+non-monotonic deviations selection frequencies of the constant
+treatment effect model remained high despite increasing treatment
+harms (Supplement, Table XX).
 
 
 ```{r rmsebase, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated super-population of size 500,000. The scenario with true constant relative treatment effect had a true prediction AUC of 0.75 and sample size of 4250. Results are presented under moderate linear, strong linear, and strong quadratic deviations from constant relative treatment effects.", fig.show="hold", out.width = '100%'}
@@ -331,22 +313,14 @@ grid::grid.raster(tiff::readTIFF(here("figures/rmse_base.tiff")))
 # knitr::include_graphics(here::here("figures/rmse_base.png"))
 ```
 
-When we increased the sample size (N = `r 17000`), the model including
-a constant relative treatment effect had the lowest RMSE under the
-assumption of true constant relative treatment effects (Figure
-\ref{fig:rmsesamplesize}; Panel A). However, when introducing strong
-linear deviations the linear interaction model outperformed the
-constant treatment effect model (Figure \ref{fig:rmsesamplesize};
-Panel B). Furthermore, the linear interaction model was outperformed
-by the more flexible RCS models (3 knots) in the case of strong
-quadratic and non-monotonic deviations. Again, the increased
-flexibility of RCS smoothing with higher number of knots resulted in
-overfitting and worse predictive accuracy (Figure
-\ref{fig:rmsesamplesize}; Panels C and D). The adaptive approach again
-followed the performance of the best performing models in each
-scenario. In addition, the increased variability in the adaptive
-method's errors in the base scenario disappeared with large sample
-size.
+Increasing the sample size to `r 17000` favored the RCS-3 approach the
+most, as it achieved lowest or close to lowest RMSE across all
+scenarios (Figure \ref{fig:rmsesamplesize}). Especially in cases of
+strong quadratic and non-monotonic deviations RCS-3 had lower error
+rates compared to the linear interaction approach, regardless of
+treatment-related harms strength. The issues with the large error
+variability of the adaptive approach improved with larger sample
+sizes.
 
 The adaptive approach tended to increasingly favor smoother methods
 (especially RCS-3) with increasing treatment-related harms (see
