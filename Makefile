@@ -1,31 +1,15 @@
 RAW = data/raw
-IDS = $(shell seq 1 486)
+IDS = $(shell seq 1 648)
 DIR = $(addprefix $(RAW)/scenario_, $(IDS))
 EVALFILES = $(addsuffix /evaluation.rds, $(DIR))
 
 print-% :
 	@echo '$*=$($*)'
 
-
 $(EVALFILES) : code/SimulationScript.R\
 	       data/processed/analysisIds.csv\
 	       data/processed/analysisIdsInteractions.csv
 	$< $@
-
-
-extras/protocol/protocol.pdf : extras/protocol/protocol.rmd\
-		                     extras/protocol/references.bib\
-			                   extras/protocol/jamia.csl\
-	                       data/processed/analysisIds.csv\
-	                       data/processed/analysisIdsInteractions.csv\
-	                       figures/deviate_linear_08.png\
-                         figures/deviate_quadratic_08.png
-	R -e 'rmarkdown::render("extras/protocol/protocol.rmd", output_format = "all")'
-
-extras/outline/outline.pdf : extras/outline/outline.rmd\
-			     data/raw/scenario_1/evaluation.rds
-	R -e 'rmarkdown::render("extras/outline/outline.rmd", output_format = "all")'
-
 
 figures/deviate_linear_08.png figures/deviate_quadratic_08.png figures/deviate_linear_absolute_08.png figures/deviate_quadratic_absoltue_08.png : code/PlotDeviations.R\
 	code/helpers/PlotGammas.R\
@@ -125,10 +109,22 @@ data/raw/gusto.rda : code/GetGustoData.sh
 data/processed/analysisIds.csv : code/WriteAnalysisIds.R
 	$<
 
-
-data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibration.csv : code/MergeResults.R
+data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibration.csv data/processed/adaptiveModel.csv: code/MergeResults.R
 	$<
 
+data/processed/adaptiveSelections.csv : code/CreateAdaptiveSelections.R\
+	data/processed/adaptiveModel.csv
+	$<
+
+data/processed/rmseDistribution.csv : code/CreateDistribution.R\
+	code/helpers/GetMedians.R\
+	data/processed/rmse.csv
+	$< rmse
+
+data/processed/discriminationDistribution.csv : code/CreateDistribution.R\
+	code/helpers/GetMedians.R\
+	data/processed/discrimination.csv
+	$< discrimination
 
 data/processed/analysisIdsInteractions.csv : code/WriteAnalysisIdsInteractions.R
 	$<
@@ -140,6 +136,18 @@ data/processed/gustoPerformanceMetrics.csv : code/GustoPerformanceMetrics.R\
 submission/arxiv.sty : code/GetArxivStyle.sh
 	$<
 
+extras/protocol/protocol.pdf : extras/protocol/protocol.rmd\
+		                     extras/protocol/references.bib\
+			                   extras/protocol/jamia.csl\
+	                       data/processed/analysisIds.csv\
+	                       data/processed/analysisIdsInteractions.csv\
+	                       figures/deviate_linear_08.png\
+                         figures/deviate_quadratic_08.png
+	R -e 'rmarkdown::render("extras/protocol/protocol.rmd", output_format = "all")'
+
+extras/outline/outline.pdf : extras/outline/outline.rmd\
+			     data/raw/scenario_1/evaluation.rds
+	R -e 'rmarkdown::render("extras/outline/outline.rmd", output_format = "all")'
 
 submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd\
 	submission/arxiv.sty\
@@ -149,6 +157,8 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 	data/processed/calibration.csv\
   data/processed/adaptiveModel.csv\
 	data/processed/gustoPerformanceMetrics.csv\
+	data/processed/adaptiveSelections.csv\
+	data/processed/rmseDistribution.csv\
 	figures/rmse_base.tiff\
 	figures/rmse_sample_size.tiff\
 	figures/rmse_auc.tiff\
