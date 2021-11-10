@@ -4,7 +4,7 @@ title: |
  individualized benefit
 abstract: |
  **Objective:** To compare different risk-based methods predicting individualized
- treatment effects in GRIT simulations. **Study Design and Setting:** We simulated
+ treatment effects in RCT simulations. **Study Design and Setting:** We simulated
  data using diverse assumptions for a baseline prognostic index of risk (PI) and
  the shape of its interaction with treatment (none, linear or quadratic). In
  each sample we predicted absolute benefit using: models with the PI and a
@@ -171,7 +171,7 @@ worse or better discriminative ability for risk, adjusting the baseline
 covariate coefficients, such that the AUC of the regression model in the control
 arm was 0.65 and 0.85 respectively.
 
-Combining all these settings resulted in a simulation study of 486 scenarios
+Combining all these settings resulted in a simulation study of 648 scenarios
 (exact settings in the supplementary material).
 
 ## Individualized risk-based benefit predictions
@@ -192,7 +192,7 @@ expecting it to perform worse than the other candidates, as its objective is not
 to individualize benefit prediction.
 
 Second, we considered a model which assumes *constant relative treatment effect*
-(constant OR). Hence, absolute benefit is predicted from
+(constant odds ratio). Hence, absolute benefit is predicted from
 $\hat{\tau}(\bm{x}) = \text{expit}(PI +\log(\text{OR}))$.
 
 Third, we considered a logistic regression model including treatment, the
@@ -238,35 +238,11 @@ smooth observed benefit. Values closer to $0$ represent better calibration.
 
 ## Simulations
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-adaptiveSelections <- readr::read_csv(here::here("data/processed/adaptiveModel.csv"))
-adaptiveSelections <- adaptiveSelections %>% 
-  group_by(scenarioId) %>% 
-  nest() %>% 
-  mutate(
-    counts = lapply(data, plyr::count),
-    n = lapply(data, nrow)
-  ) %>%
-  select(
-    scenarioId, counts, n
-  ) %>%
-  unnest(c(counts, n)) %>%
-  mutate(
-    perc = round(freq / n, 2),
-    model = case_when(
-      selectedAdaptiveModel == "RCS with 3 knots" ~ "rcs_3",
-      selectedAdaptiveModel == "RCS with 4 knots" ~ "rcs_4",
-      selectedAdaptiveModel == "RCS with 5 knots" ~ "rcs_5",
-      TRUE                                        ~ selectedAdaptiveModel
-    )
-  ) %>%
-  ungroup() %>%
-  select(scenarioId, model, perc) %>%
-  spread(model, perc) %>%
-  relocate(c(treatment, risk), .before = rcs_3)
-  
+```{r adaptive, echo=FALSE, warning=FALSE, message=FALSE}
+adaptiveSelections <- readr::read_csv(here::here("data/processed/adaptiveSelections.csv"))
+rmseDistribution <- readr::read_csv(here::here("data/processed/rmseDistribution.csv"))
+aucDistribution <- readr::read_csv(here::here("data/processed/discriminationDistribution.csv"))
 ```
-
 The linear interaction model outperformed all RCS methods in terms of
 RMSE in scenarios with true constant relative treatment effect (OR =
 0.8, N = `r 4250` and AUC = 0.75), strong linear and even strong
@@ -279,9 +255,9 @@ approach had overall best performance under true constant treatment
 effect settings, but was sensitive to all considered deviations,
 resulting in increased error rates. Finally, the adaptive approach had
 comparable performance to the best-performing method in each
-scenario. However, we observed increased variability in the case of
-linear and non-monotonic deviations, especially for moderate or strong
-treatment-related harms.
+scenario. However, we observed increased error variability in the case
+of linear and non-monotonic deviations, especially for moderate or
+strong treatment-related harms.
 
 In the case of true constant relative treatment effects, the adaptive
 approach selected the constnant effect model the majority of the time,
@@ -317,10 +293,19 @@ Increasing the sample size to `r 17000` favored the RCS-3 approach the
 most, as it achieved lowest or close to lowest RMSE across all
 scenarios (Figure \ref{fig:rmsesamplesize}). Especially in cases of
 strong quadratic and non-monotonic deviations RCS-3 had lower error
-rates compared to the linear interaction approach, regardless of
-treatment-related harms strength. The issues with the large error
-variability of the adaptive approach improved with larger sample
-sizes.
+rates
+(median RMSE
+`r rmseDistribution %>% filter(scenarioId == 385) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_rcs_3)`
+for strong quadratic deviations and 
+`r rmseDistribution %>% filter(scenarioId == 421) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_rcs_3)`
+for non-monotonic deviations with no treatment-related harms)
+compared to the linear interaction approach
+(median RMSE
+`r rmseDistribution %>% filter(scenarioId == 385) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_linear)` and 
+`r rmseDistribution %>% filter(scenarioId == 421) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_linear)`,
+respectively), regardless of treatment-related harms strength. The
+issues with the large error variability of the adaptive approach
+improved with larger sample sizes.
 
 The adaptive approach tended to increasingly favor smoother methods
 (especially RCS-3) with increasing treatment-related harms (see
@@ -341,50 +326,60 @@ grid::grid.raster(tiff::readTIFF(here("figures/rmse_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/rmse_sample_size.png"))
 ```
 
-When we increased the AUC of the true prediction model to 0.85, models including
-RCS smoothing had the lowest RMSE in the presence of strong quadratic deviations
-from the base case of true constant relative treatment effects (Figure
-\ref{fig:rmseauc}; Panel D). However, with milder deviations, the linear
-interaction model had the lowest RMSE with the RCS smoothing methods (3 knots)
-being a close second (Figure \ref{fig:rmseauc}; Panels B and C). Increasing the
-number of knots of RCS smoothing resulted in increased RMSE, which was less
-pronounced in the case of strong quadratic deviations. With increasing 
-prediction AUC we saw an increased tendency of the adaptive approach to select
-more complex models compared to the base case scenario. In the case of strong 
-linear deviations, the linear interaction model was selected the majority of the
-time (63\%), while the simpler constant treatment effect model was selected 26\%
-of the time (Supplementary Table S7). However, the increased RMSE of the
-constant treatment effect model inflated the the RMSE of the linear interaction
-model. In the case of strong quadratic deviations the RCS (3 knots) model was
-selected 84\% of the time.
+When we increased the AUC of the true prediction model to 0.85 (OR =
+0.8 and N = `r 4250`) the constant effect model outperformed all other
+methods in the case of true constant treatment effects, but proved to
+be the least robust to deviations. Again, RCS-3 had the lowest
+error rates in the case of strong quadratic or monotonic deviations
+and very comparable performance to the best-performing linear
+interaction model in the case of strong linear deviations
+(median RMSE
+`r rmseDistribution %>% filter(scenarioId == 297) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_rcs_3)` for RCS-3 compared to 
+`r rmseDistribution %>% filter(scenarioId == 297) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_linear)`
+for the linear interaction model). The adaptive approach, though it
+performed similar to the best performing method in each scenario, on
+average, there was increased variability in error rates in the case of
+strong linear and non-monotonic deviations. In these scenarios, the adaptive approach often selected the constant treatment effect model
+(`r adaptiveSelections %>% filter(scenarioId == 297) %>% pull(treatment) * 100`\%
+and
+`r adaptiveSelections %>% filter(scenarioId == 405) %>% pull(treatment) * 100`\%
+in the strong linear and non-monotonic deviation scenarios without
+treatment-related harms, respectively).
 
 ```{r rmseauc, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_auc.tiff")))
 # knitr::include_graphics(here::here("figures/rmse_auc.png"))
 ```
 
-The constant effects model, the linear interaction model and models with RCS
-smoothing (3 knots) had the highest median c-for-benefit in the base case
-scenario and the scenarios where linear and quadratic deviations were
-considered. The constant treatment effect model and the linear interaction model
-tended to present much lower variability compared to all other approaches
-(Figure \ref{fig:discrimination}). With increasing number of RCS knots, we
-observed decreasing median values and increasing variability of the
-c-for-benefit in all scenarios.
+In terms of discrimination for benefit (OR = 0.8, N = `r 4250` and AUC
+= 0.75), all methods performed similarly, on average (Figure
+\ref{fig:discrimination}). In the case of non-monotonic deviations,
+the constant effect model had much lower discriminative performance
+compared to the rest of the methods (median AUC of
+`r aucDistribution %>% filter(scenarioId == 397) %>% mutate(across(-one_of("scenarioId"), ~ d(.x))) %>% pull(median_constant)` 
+for the constant effects model compared to the best-performing RCS-3
+with
+`r aucDistribution %>% filter(scenarioId == 397) %>% mutate(across(-one_of("scenarioId"), ~ d(.x))) %>% pull(median_rcs_3)`).
+The linear interaction model was most stable in compared to the other
+methods in terms of error variability. With increasing number of RCS
+knots, we observed decreasing median values and increasing variability
+of the c-for-benefit in all scenarios.
+
 
 ```{r discrimination, cache=TRUE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/discrimination_base.tiff")))
 # knitr::include_graphics(here::here("figures/discrimination_base.png"))
 ```
 
-As for calibration, the linear interaction model had the lowest median
-ICI-for-benefit in the majority of scenarios except for the scenarios where no
-or moderate linear deviations from the base case were considered. In that case
-constant treatment effect models demonstrated optimal calibration, very
-comparable to the linear interaction model's performance, nonetheless (Figure
-\ref{fig:calibration}). With strong linear or quadratic deviations, the
-constant treatment effect model was poorly calibrated (Figure
-\ref{fig:calibration}; Panels C and D).
+As for calibration, the constant effects model outperformed all other
+models in the case of true constant treatment effects, but it was
+miscalibrated for all deviation scenarios (Figure
+\ref{fig:calibration}). The linear interaction model showed best or
+close to best calibration across all scenarios and only showed worse
+calibration compared to RCS-3 in the case of non-monotonic deviations
+and treatment-related harms. The adaptive approach was worse
+calibrated in scenarios with strong linear and non-monotonic
+deviations compared to the linear interaction model and RCS-3.
 
 ```{r calibration, cache=TRUE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/calibration_base.tiff")))
