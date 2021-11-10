@@ -317,8 +317,26 @@ right.grob <- grid::textGrob(
     rot = 270
 )
 
+bottom.left.grob <- grid::textGrob(
+  "Method",
+  just = "center",
+  gp = gpar(fontsize = 10)
+)
 
-res <- grid.arrange(arrangeGrob(pp, left = left.grob, right = right.grob))
+bottom.right.grob <- grid::textGrob(
+  "Baseline risk",
+  just = "center",
+  gp = gpar(fontsize = 10)
+)
+
+bottom.grob <- grid.arrange(
+  bottom.left.grob,
+  bottom.right.grob,
+  nrow = 1,
+  widths = c(2, 1)
+)
+
+res <- grid.arrange(arrangeGrob(pp, left = left.grob, right = right.grob, bottom = bottom.grob))
 
 fileName <- paste0(
   paste(
