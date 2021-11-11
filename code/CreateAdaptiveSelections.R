@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# --------------------------------------------------
+# ===================================================
 # Description: 
 #   Creates a csv file with the models selected
 #   in each run of the simulation
@@ -8,7 +8,7 @@
 #   - data/processed/adaptiveSelections.csv
 # Depends:
 #   - data/processed/adaptiveModel.csv
-# --------------------------------------------------
+# ===================================================
 
 library(tidyverse)
 

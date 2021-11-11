@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# --------------------------------------------------
+# ===================================================
 # Description:
 #   Generates the RMSE plots for the base case
 # Input:
@@ -15,7 +15,7 @@
 #   - code/helpers/CreateManuscriptPlots.R
 #   - code/helpers/PlotResult.R
 #   - code/helpers/Absolute.R
-# --------------------------------------------------
+# ===================================================
 
 args <- commandArgs(trailingOnly = TRUE)
 args_sampleSize <- as.numeric(args[1])

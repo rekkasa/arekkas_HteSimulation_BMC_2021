@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# -----------------------------------------------------------
+# =============================================================
 # Description:
 #   Creates a csv file with all median and the
 #   0.025 and 0.975 quantiles of the
@@ -14,7 +14,7 @@
 #   - data/processed/(rmse|auc|calibration)Distribution.csv
 # Depends:
 #   - code/helpers/GetMedians.R
-# -----------------------------------------------------------
+# =============================================================
 
 args <- commandArgs(trailingOnly = TRUE)
 args_metric <- as.character(args[1])

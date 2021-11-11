@@ -137,12 +137,12 @@ submission/arxiv.sty : code/GetArxivStyle.sh
 	$<
 
 extras/protocol/protocol.pdf : extras/protocol/protocol.rmd\
-		                     extras/protocol/references.bib\
-			                   extras/protocol/jamia.csl\
-	                       data/processed/analysisIds.csv\
-	                       data/processed/analysisIdsInteractions.csv\
-	                       figures/deviate_linear_08.png\
-                         figures/deviate_quadratic_08.png
+	extras/protocol/references.bib\
+	extras/protocol/jamia.csl\
+	data/processed/analysisIds.csv\
+	data/processed/analysisIdsInteractions.csv\
+	figures/deviate_linear_08.png\
+	figures/deviate_quadratic_08.png
 	R -e 'rmarkdown::render("extras/protocol/protocol.rmd", output_format = "all")'
 
 extras/outline/outline.pdf : extras/outline/outline.rmd\

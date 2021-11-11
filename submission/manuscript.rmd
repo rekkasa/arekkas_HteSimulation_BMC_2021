@@ -201,10 +201,10 @@ estimated from
 $\hat{\tau}(\bm{x})=\text{expit}(\beta_0+\beta_{PI}PI) - \text{expit}(\beta_0+\beta_{t_x}+(\beta_{PI}+\beta_*)PI)$.
 We will refer to this method as the *linear interaction* approach.
 
-Fourth, we used *restricted cubic splines* (RCS) to relax the linearity
-assumption on the effect of the linear predictor [@Harrell1988]. We considered
-splines with 3, 4 and 5 knots to compare models with different levels of
-flexibility.
+Fourth, we used *restricted cubic splines* (RCS) to relax the
+linearity assumption on the effect of the linear predictor
+[@Harrell1988]. We considered splines with 3 (RCS-3), 4 (RCS-4) and 5
+(RCS-5) knots to compare models with different levels of flexibility.
 
 Finally, we considered an adaptive approach using Akaike's Information Criterion
 (AIC) for model selection. The candidate models were: a constant treatment
@@ -289,18 +289,15 @@ grid::grid.raster(tiff::readTIFF(here("figures/rmse_base.tiff")))
 # knitr::include_graphics(here::here("figures/rmse_base.png"))
 ```
 
-Increasing the sample size to `r 17000` favored the RCS-3 approach the
-most, as it achieved lowest or close to lowest RMSE across all
-scenarios (Figure \ref{fig:rmsesamplesize}). Especially in cases of
-strong quadratic and non-monotonic deviations RCS-3 had lower error
-rates
-(median RMSE
+Increasing the sample size to `r 17000` favored RCS-3 the most, as it
+achieved lowest or close to lowest RMSE across all scenarios (Figure
+\ref{fig:rmsesamplesize}). Especially in cases of strong quadratic and
+non-monotonic deviations RCS-3 had lower error rates (median RMSE
 `r rmseDistribution %>% filter(scenarioId == 385) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_rcs_3)`
 for strong quadratic deviations and 
 `r rmseDistribution %>% filter(scenarioId == 421) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_rcs_3)`
-for non-monotonic deviations with no treatment-related harms)
-compared to the linear interaction approach
-(median RMSE
+for non-monotonic deviations with no treatment-related harms) compared
+to the linear interaction approach (median RMSE
 `r rmseDistribution %>% filter(scenarioId == 385) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_linear)` and 
 `r rmseDistribution %>% filter(scenarioId == 421) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_linear)`,
 respectively), regardless of treatment-related harms strength. The
@@ -338,8 +335,9 @@ interaction model in the case of strong linear deviations
 `r rmseDistribution %>% filter(scenarioId == 297) %>% mutate(across(-one_of("scenarioId"), ~ d(.x, decimals = 3))) %>% pull(median_linear)`
 for the linear interaction model). The adaptive approach, though it
 performed similar to the best performing method in each scenario, on
-average, there was increased variability in error rates in the case of
-strong linear and non-monotonic deviations. In these scenarios, the adaptive approach often selected the constant treatment effect model
+average, had increased variability in error rates in the case of
+strong linear and non-monotonic deviations. In these scenarios, the
+adaptive approach often selected the constant treatment effect model
 (`r adaptiveSelections %>% filter(scenarioId == 297) %>% pull(treatment) * 100`\%
 and
 `r adaptiveSelections %>% filter(scenarioId == 405) %>% pull(treatment) * 100`\%
@@ -360,7 +358,7 @@ compared to the rest of the methods (median AUC of
 for the constant effects model compared to the best-performing RCS-3
 with
 `r aucDistribution %>% filter(scenarioId == 397) %>% mutate(across(-one_of("scenarioId"), ~ d(.x))) %>% pull(median_rcs_3)`).
-The linear interaction model was most stable in compared to the other
+The linear interaction model was the most stable compared to the other
 methods in terms of error variability. With increasing number of RCS
 knots, we observed decreasing median values and increasing variability
 of the c-for-benefit in all scenarios.
@@ -371,9 +369,9 @@ grid::grid.raster(tiff::readTIFF(here("figures/discrimination_base.tiff")))
 # knitr::include_graphics(here::here("figures/discrimination_base.png"))
 ```
 
-As for calibration, the constant effects model outperformed all other
-models in the case of true constant treatment effects, but it was
-miscalibrated for all deviation scenarios (Figure
+In terms of calibration for benefit, the constant effects model
+outperformed all other models in the case of true constant treatment
+effects, but was miscalibrated for all deviation scenarios (Figure
 \ref{fig:calibration}). The linear interaction model showed best or
 close to best calibration across all scenarios and only showed worse
 calibration compared to RCS-3 in the case of non-monotonic deviations
@@ -448,22 +446,29 @@ knitr::include_graphics(here::here("figures/gusto.png"))
 
 # Discussion
 
-The linear interaction model proved to be superior to alternative approaches
-when predicting risk-based treatment benefit under a wide range of scenarios. It
-generally had lower mean squared error, lower e-for-benefit and higher
-c-for-benefit with lower variability across simulation replications. Models
-including restricted cubic splines with 3 knots only outperformed the linear
-interaction model in the presence of strong quadratic deviations from a constant
-relative treatment effect.
+The linear interaction model displayed very good performance overall
+under many of the considered simulation scenarios. Especially in cases
+with smaller sample sizes and moderately performing baseline risk
+prediction models it had lower RMSE, was better calibrated for benefit
+and had better discrimination for benefit, even in scenarios with
+strong quadratic deviations. However, in scenarios with true
+non-monotonic deviations, the linear interaction model was
+outperformed by RCS-3, especially in the presence of true
+treatment-related harms. Increasing the sample size or the prediction
+model's discrimination favored RCS-3 which had better or very
+comparable performance to the linear interaction model, but was more
+robust to non-monotonic deviations and the presence of
+treatment-related harms.
 
-Models including restricted cubic splines with 4 or 5 knots proved to be too
-flexible, as indicated by higher RMSE, increased variability of discrimination
-for benefit and worse calibration of benefit predictions. Even with larger
-sample sizes and strong quadratic deviations from the base case scenario of
-constant relative treatment effects, these more flexible restricted cubic
-splines did not outperform the simpler RCS with 3 knots. These approaches may
-only be helpful if we expect more extreme patterns of heterogeneous treatment
-effects compared to the quadratic deviations considered here.
+RCS-4 and RCS-5 proved to be too flexible, as indicated by higher
+RMSE, increased variability of discrimination for benefit and worse
+calibration of benefit predictions. Even with larger sample sizes and
+strong quadratic or non-monotonic deviations from the base case
+scenario of constant relative treatment effects, these more flexible
+restricted cubic splines did not outperform the simpler RCS-3 These
+approaches may only be helpful if we expect more extreme patterns of
+heterogeneous treatment effects compared to the quadratic deviations
+considered here.
 
 The constant treatment effect model, despite having adequate performance in the
 presence of weak treatment effect heterogeneity on the relative scale, quickly
@@ -486,42 +491,47 @@ methods to predict treatment benefit, prediction model development was outside
 the scope of this work and has already been studied extensively
 [@vanKlaveren2019; @Burke2014; @Abadie2018].
 
-The adaptive approach had adequate performance, following closely the
-performance of the "true" model in most scenarios. However, with smaller sample
-sizes it tended to "miss" the treatment-risk interactions and selected simpler
-models (Supplementary Table S7). This resulted in increased RMSE variability in
-these scenarios, especially in the case of true strong linear deviations from
-the base case scenario. This tendency was mitigated when the discriminative
-ability of the prediction model was higher. Therefore, in the case of smaller
-sample sizes and/or poorly discriminating prediction models, the simpler linear
-interaction model is a safer choice for predicting absolute benefits.
+The adaptive approach had adequate performance, following closely on
+average the performance of the "true" model in most
+scenarios. However, with smaller sample sizes it tended to "miss" the
+treatment-risk interactions and selected simpler models (Supplementary
+Table S7). This resulted in increased RMSE variability in these
+scenarios, especially in the case of true strong linear or
+non-monotonic deviations from the base case scenario.  Therefore, in
+the case of smaller sample sizes the simpler linear interaction model
+is a safer choice for predicting absolute benefits.
 
-Risk-based approaches to predictive HTE estimate treatment benefit as a function
-of baseline risk. A limitation of our study is that we assumed treatment benefit
-to be a function of baseline risk in the majority of the simulation scenarios.
-Nevertheless, our main conclusions did not change when we generated individual
-treatment-covariate interactions (supplementary table/figure x). Future
-simulation studies could explore the effect of more extensive deviations from
+Risk-based approaches to predictive HTE estimate treatment benefit as
+a function of baseline risk. A limitation of our study is that we
+assumed treatment benefit to be a function of baseline risk in the
+majority of the simulation scenarios. We attempted to address that by
+introducing constant moderate and strong treatment-related harms,
+applied on the absolute scale. Also, we considered a small number of
+scenarios with true treatment-covariate interactions, in which our
+main conclusions remained the same (Supplement, XX). Future simulation
+studies could explore the effect of more extensive deviations from
 risk-based treatment effects.
 
-Recent years have seen an increased interest in predictive HTE approaches
-focusing on individualized benefit predictions. In our simulations we only
-focused on risk-based methods, using baseline risk as a reference in a two-stage
-approach to individualizing benefit predictions. However, there is a plethora of
-different methods, ranging from treatment effect modeling to tree-based
-approaches available in more recent literature [@Athey2019; @Lu2018;
-@Wager2018]. Simulations are also needed to assess relative performance and
-define the settings where these break down or outperform each other.
+Recent years have seen an increased interest in predictive HTE
+approaches focusing on individualized benefit predictions. In our
+simulations we only focused on risk-based methods, using baseline risk
+as a reference in a two-stage approach to individualizing benefit
+predictions. However, there is a plethora of different methods,
+ranging from treatment effect modeling to tree-based approaches
+available in more recent literature [@Athey2019; @Lu2018;
+@Wager2018]. Simulations are also needed to assess relative
+performance and define the settings where these break down or
+outperform each other.
 
-In conclusion, when comparing different risk-based approaches to predicting 
-individualized treatment benefit, a model including a linear treatment 
-interaction with the prognostic index performed best in a wide range of 
-scenarios. More flexible models with restricted cubic splines required larger
-sample sizes and higher AUC of the prognostic index to outperform the linear
-interaction model. An adaptive approach, selecting the model with the optimal 
-AIC, had comparable performance to the best performing approach in most of the 
-scenarios.
-
+In conclusion, the best option for predicting individualized treatment
+benefit using a risk-based approach depends on the setting. With
+smaller sample sizes and/or moderately performing risk prediction
+models the linear interaction approach is a viable option. When those
+constraints are not present or when we anticipate non-negligible
+treatment-related harms, RCS-3 is a better option in terms of error
+rates, discrimination and calibration for benefit. With larger sample
+size, an adaptive approach based on AIC can also be considered as a
+more automated alternative.
 
 \newpage
 # References
