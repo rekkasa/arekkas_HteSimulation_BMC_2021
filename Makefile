@@ -155,7 +155,7 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 	data/processed/rmse.csv\
 	data/processed/discrimination.csv\
 	data/processed/calibration.csv\
-  data/processed/adaptiveModel.csv\
+	data/processed/adaptiveModel.csv\
 	data/processed/gustoPerformanceMetrics.csv\
 	data/processed/adaptiveSelections.csv\
 	data/processed/rmseDistribution.csv\
