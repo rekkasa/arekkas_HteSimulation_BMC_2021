@@ -3,26 +3,28 @@ title: |
  Linear interaction of treatment with baseline risk was sufficient for predicting
  individualized benefit
 abstract: |
- **Objective:** To compare different risk-based methods predicting individualized
- treatment effects in RCT simulations. **Study Design and Setting:** We simulated
- data using diverse assumptions for a baseline prognostic index of risk (PI) and
- the shape of its interaction with treatment (none, linear or quadratic). In
- each sample we predicted absolute benefit using: models with the PI and a
- constant relative treatment effect; models including an interaction of treatment
- with the PI; stratification in quarters of the PI; nonlinear transformations of
- the PI (restricted cubic splines with 3, 4 and 5 knots); an adaptive approach
- using Akaike’s Information Criterion. We evaluated predictive performance using
- root mean squared error and measures of discrimination and calibration for
- benefit. Starting from a base case scenario (sample size 4,250, treatment odds
- ratio 0.8, AUC of the PI 0.75), we varied the sample size, the treatment effect
- strength, and the Ti's discriminative ability. **Results:** Models including a
- PI by treatment interaction performed better under most simulation settings.
- Flexible models required larger sample sizes and higher AUC of the PI to
- outperform the linear interaction model. The adaptive approach tended to select
- simpler models with smaller sample sizes and/or worse prediction performance.
- **Conclusion:** Under most circumstances, a model with a linear interaction of
- the PI with treatment is the optimal risk-based approach to predicting absolute
- treatment benefit.
+ **Objective:** To compare different risk-based methods predicting
+ individualized treatment effects in RCTs. **Study Design and
+ Setting:** We simulated data using diverse assumptions for a baseline
+ prognostic index of risk (PI), the shape of its interaction with
+ treatment (none, linear, quadratic or non-monotonic) and the magnitude
+ of treatment-related harms. In each sample we predicted absolute
+ benefit using: models with a constant relative treatment effect;
+ stratification in quarters of the PI; models including a linear
+ interaction of treatment with the PI; models including an interaction
+ of treatment with a restricted cubic spline (RCS) transformation of
+ the PI; an adaptive approach using Akaike’s Information Criterion. We
+ evaluated predictive performance using root mean squared error and
+ measures of discrimination and calibration for benefit. Starting from
+ a base scenario (sample size 4,250, treatment odds ratio 0.8, AUC of
+ the PI 0.75), we varied the sample size, the treatment effect size,
+ and the PI's AUC. **Results:** Models including a PI by treatment
+ interaction performed best with smaller sample sizes and/or lower AUC
+ of the PI. Otherwise, RCS (3 knots) models proved more robust for the
+ majority of the deviation settings. The adaptive approach was unstable
+ with smaller sample sizes. **Conclusion:** Depending on the setting,
+ the linear interaction or the RCS (3 knots) model should be preferred.
+ 
 authors:
   - name: Alexandros Rekkas
     department: Department of Medical Informatics
@@ -379,6 +381,9 @@ and treatment-related harms. The adaptive approach was worse
 calibrated in scenarios with strong linear and non-monotonic
 deviations compared to the linear interaction model and RCS-3.
 
+The results from all individual scenarios can be explored online at
+[https://arekkas.shinyapps.io/simulation_viewer/](https://arekkas.shinyapps.io/simulation_viewer/).
+
 ```{r calibration, cache=TRUE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/calibration_base.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
@@ -396,22 +401,23 @@ treatmentArms <- gusto %>%
   summarise(n = n())
 ```
 
-We demonstrate the different methods for individualizing treatment benefits
-using data from `r nrow(gusto)` patients with an acute myocardial infarction
-(MI) included in the GUSTO-I trial.
+We demonstrate the different methods for individualizing treatment
+benefits using data from `r nrow(gusto)` patients with an acute
+myocardial infarction (MI) included in the GUSTO-I trial.
 `r treatmentArms %>% filter(tpa == 1) %>% select(n)` patients were randomized to
 tissue plasminogen activator (tPA) treatment and
 `r treatmentArms %>% filter(tpa == 0) %>% select(n)` were randomized to
-streptokinase. The outcome of interest was 30-day mortality, recorded for all
-patients.
+streptokinase. The outcome of interest was 30-day mortality, recorded
+for all patients.
 
-In line with previous analyses [@Califf1997; @Steyerberg2000], we fitted a
-logistic regression model with 6 baseline covariates, i.e. age, Killip class,
-systolic blood pressure, heart rate, an indicator of previous MI, and the
-location of MI, to predict 30-day mortality risk. A constant effect of treatment
-was included in the model. When deriving risk predictions for individuals we set
-the treatment indicator to 0. More information on model development can be found
-in the supplement.
+In line with previous analyses [@Califf1997; @Steyerberg2000], we
+fitted a logistic regression model with 6 baseline covariates,
+i.e. age, Killip class, systolic blood pressure, heart rate, an
+indicator of previous MI, and the location of MI, to predict 30-day
+mortality risk. A constant effect of treatment was included in the
+model. When deriving risk predictions for individuals we set the
+treatment indicator to 0. More information on model development can be
+found in the supplement.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 gustoPerformance <- readr::read_csv(here::here("data/processed/gustoPerformanceMetrics.csv"))
@@ -422,18 +428,20 @@ calibrationPerformance <- gustoPerformance %>%
   select("calibration")
 ```
 
-We used the risk linear predictor to fit the proposed methods under study for
-individualizing absolute benefit predictions. All methods predicted increasing
-benefits for patients with higher baseline risk predictions, but the fitted
-patterns were clearly different. The adaptive approach selected the model with
-RCS smoothing with 4 knots. However, for very low baseline risk this model
-predicted decreasing benefit with increasing risk may be somewhat too flexible.
-The more robust models, the linear interaction model or the model with RCS
-smoothing (3 knots), gave very similar benefit predictions, followed the
-evolution of the stratified estimates very closely and may therefore be
-preferable for use in clinical practice. The linear interaction model
-had somewhat lower AIC compared to the model with RCS smoothing (3 knots), slightly better
-cross-validated discrimination (c-for-benefit
+We used the risk linear predictor to fit the proposed methods under
+study for individualizing absolute benefit predictions. All methods
+predicted increasing benefits for patients with higher baseline risk
+predictions, but the fitted patterns were clearly different. The
+adaptive approach selected the model with RCS smoothing with 4
+knots. However, for very low baseline risk this model predicted
+decreasing benefit with increasing risk may be somewhat too flexible.
+The more robust models, the linear interaction model or the model with
+RCS smoothing (3 knots), gave very similar benefit predictions,
+followed the evolution of the stratified estimates very closely and
+may therefore be preferable for use in clinical practice. The linear
+interaction model had somewhat lower AIC compared to the model with
+RCS smoothing (3 knots), slightly better cross-validated
+discrimination (c-for-benefit
 `r round(discriminationPerformance[2, ], 3)` vs
 `r round(discriminationPerformance[3, ], 3)`) and quite similar cross-validated
 calibration (ICI-for benefit `r round(calibrationPerformance[2, ], 4)` vs
@@ -470,24 +478,26 @@ approaches may only be helpful if we expect more extreme patterns of
 heterogeneous treatment effects compared to the quadratic deviations
 considered here.
 
-The constant treatment effect model, despite having adequate performance in the
-presence of weak treatment effect heterogeneity on the relative scale, quickly
-broke down with stronger deviations from constant relative treatment effects. In
-these cases, the stratified approach generally had lower error rates compared to
-the constant treatment effect model. Stepwise treatment benefit estimates are
-very useful for demonstrating treatment effect heterogeneity--because
-estimating treatment effect requires groups of patients rather than individual
-patients--but are not helpful for making individualized absolute benefit
-predictions.
+The constant treatment effect model, despite having adequate
+performance in the presence of weak treatment effect heterogeneity on
+the relative scale, quickly broke down with stronger deviations from
+constant relative treatment effects. In these cases, the stratified
+approach generally had lower error rates compared to the constant
+treatment effect model. Stepwise treatment benefit estimates are very
+useful for demonstrating treatment effect heterogeneity--because
+estimating treatment effect requires groups of patients rather than
+individual patients--but are not helpful for making individualized
+absolute benefit predictions.
 
-Increasing the discriminative ability of the risk model--by increasing the
-predictor coefficients of the true risk model--reduced RMSE for all methods.
-This increase in discriminative ability translates in higher variability of
-predicted risks, which, in turn, allows the considered methods to better capture
-absolute treatment benefits. As a consequence, the increase in discriminative
-ability of the risk model also led to higher values of c-for-benefit. Even
-though risk model performance is very important for the ability of risk-based
-methods to predict treatment benefit, prediction model development was outside
+Increasing the discriminative ability of the risk model--by increasing
+the predictor coefficients of the true risk model--reduced RMSE for
+all methods.  This increase in discriminative ability translates in
+higher variability of predicted risks, which, in turn, allows the
+considered methods to better capture absolute treatment benefits. As a
+consequence, the increase in discriminative ability of the risk model
+also led to higher values of c-for-benefit. Even though risk model
+performance is very important for the ability of risk-based methods to
+predict treatment benefit, prediction model development was outside
 the scope of this work and has already been studied extensively
 [@vanKlaveren2019; @Burke2014; @Abadie2018].
 
