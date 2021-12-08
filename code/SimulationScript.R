@@ -37,21 +37,23 @@ selectedScenario <- as.numeric(
   stringr::str_extract(args[1], "[0-9]+")
 )
 
-if (selectedScenario <= 486) {
+if (selectedScenario <= 648) {
   idSettings <- analysisIds %>%
     filter(scenario == selectedScenario)
   
   if (idSettings$base != "absent") {
     harm <- case_when(
-      idSettings$harm == "positive" ~ idSettings$averageTrueBenefit / 4, 
-      idSettings$harm == "negative" ~ -idSettings$averageTrueBenefit / 4, 
-      TRUE                          ~ 0
+      idSettings$harm == "moderate-positive" ~ idSettings$averageTrueBenefit / 4, 
+      idSettings$harm == "strong-positive"   ~ idSettings$averageTrueBenefit / 2, 
+      idSettings$harm == "negative"          ~ -idSettings$averageTrueBenefit / 4, 
+      TRUE                                   ~ 0
     )
   } else {
     harm <- case_when(
-      idSettings$harm == "positive" ~ .01,
-      idSettings$harm == "negative" ~ -.01,
-      TRUE                          ~ 0
+      idSettings$harm == "moderate-positive" ~ .01,
+      idSettings$harm == "strong-positive"   ~ .02,
+      idSettings$harm == "negative"          ~ -.01,
+      TRUE                                   ~ 0
     )
   }
   
@@ -193,7 +195,9 @@ smoothSettings <- list(
   adaptive = createHteSettings(
     settings = createAdaptiveSettings(
       list(
-        nonLinearSettings = SmoothHte::createRcsSettings(),
+        rcs3 = SmoothHte::createRcsSettings(),
+        rcs4 = SmoothHte::createRcsSettings(nKnots = 4),
+        rcs5 = SmoothHte::createRcsSettings(nKnots = 5),
         linearSettings    = SmoothHte::createModelBasedSettings(),
         constantSettings  = SmoothHte::createModelBasedSettings(
           type                 = "treatment",

@@ -49,34 +49,77 @@ figures/rmse_nl_n.tiff figures/rmse_nl_n.png : code/NonLinearityNPatientsPlots.R
 	data/processed/rmse.csv
 	$<
 
-figures/rmse_base.tiff : code/PlotRmse.R\
+figures/rmse_moderate_base.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
 	code/helpers/PlotResult.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< 4250 0.75 base
+	$< moderate 4250 0.75 base
 
-figures/rmse_sample_size.tiff : code/PlotRmse.R\
+figures/rmse_moderate_sample_size.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
 	code/helpers/PlotResult.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< 17000 0.75 sample_size
+	$< moderate 17000 0.75 sample_size
 
-figures/rmse_auc.tiff : code/PlotRmse.R\
+figures/rmse_moderate_auc.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
 	code/helpers/PlotResult.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< 4250 0.85 auc
+	$< moderate 4250 0.85 auc
 
-figures/rmse_absent.tiff : code/PlotRmseAbsent.R\
+figures/rmse_absent_base.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
-	data/processed/rmse.csv
-	$<
+	code/helpers/PlotResult.R\
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< absent 4250 0.75 base
+
+figures/rmse_absent_sample_size.tiff : code/PlotRmse.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< absent 17000 0.75 sample_size
+
+figures/rmse_absent_auc.tiff : code/PlotRmse.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< absent 4250 0.85 auc
+
+figures/rmse_high_base.tiff : code/PlotRmse.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< high 4250 0.75 base
+
+figures/rmse_high_sample_size.tiff : code/PlotRmse.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< high 17000 0.75 sample_size
+
+figures/rmse_high_auc.tiff : code/PlotRmse.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< high 4250 0.85 auc
 
 figures/calibration_base.tiff : code/CalibrationBase.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -159,9 +202,9 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 	data/processed/gustoPerformanceMetrics.csv\
 	data/processed/adaptiveSelections.csv\
 	data/processed/rmseDistribution.csv\
-	figures/rmse_base.tiff\
-	figures/rmse_sample_size.tiff\
-	figures/rmse_auc.tiff\
+	figures/rmse_moderate_base.tiff\
+	figures/rmse_moderate_sample_size.tiff\
+	figures/rmse_moderate_auc.tiff\
 	figures/calibration_base.tiff\
 	figures/discrimination_base.tiff\
 #	figures/gusto.png
@@ -169,14 +212,11 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 
 submission/supplement.pdf : submission/supplement.rmd\
 	data/raw/gusto.rda\
-	data/processed/gustoPerformanceMetrics.csv\
-	figures/deviate_linear_08.png\
-	figures/deviate_quadratic_08.png\
-	figures/deviate_linear_absolute_08.png\
-	figures/deviate_quadratic_absolute_08.png\
-	figures/rmse_interactions.png\
-	figures/discrimination_interactions.png\
-	figures/calibration_interactions.png
+	data/processed/gustoPerformanceMetrics.csv
+	# figures/deviate_linear_08.png\
+	# figures/deviate_quadratic_08.png\
+	# figures/deviate_linear_absolute_08.png\
+	# figures/deviate_quadratic_absolute_08.png
 	R -e 'rmarkdown::render("submission/supplement.rmd", output_format = "all")'
 
 .PHONY:
