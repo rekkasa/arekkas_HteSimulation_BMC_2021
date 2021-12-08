@@ -1,58 +1,64 @@
-\documentclass{article}
+\documentclass[]{elsarticle} %review=doublespace preprint=single 5p=2 column
+%%% Begin My package additions %%%%%%%%%%%%%%%%%%%
+\usepackage[hyphens]{url}
 
-\usepackage{arxiv}
+  \journal{arXiv.org} % Sets Journal name
 
-\usepackage[utf8]{inputenc} % allow utf-8 input
-\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
-\usepackage{lmodern}        % https://github.com/rstudio/rticles/issues/343
-\usepackage{hyperref}       % hyperlinks
-\usepackage{url}            % simple URL typesetting
-\usepackage{booktabs}       % professional-quality tables
-\usepackage{amsfonts}       % blackboard math symbols
-\usepackage{nicefrac}       % compact symbols for 1/2, etc.
-\usepackage{microtype}      % microtypography
-\usepackage{lipsum}
+
+\usepackage{lineno} % add
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
 \usepackage{graphicx}
+\usepackage{booktabs} % book-quality tables
+%%%%%%%%%%%%%%%% end my additions to header
 
-\title{Linear interaction of treatment with baseline risk was sufficient
-for predicting individualized benefit}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \usepackage{fontspec}
+  \ifxetex
+    \usepackage{xltxtra,xunicode}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\usepackage[margin=1.0in]{geometry}
+\bibliographystyle{elsarticle-harv}
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={Linear interaction of treatment with baseline risk was sufficient for predicting individualized benefit},
+            colorlinks=false,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
 
-\author{
-    Alexandros Rekkas
-   \\
-    Department of Medical Informatics \\
-    Erasmus Medical Center \\
-  Rotterdam, The Netherlands \\
-  \texttt{} \\
-   \And
-    Peter R. Rijnbeek
-   \\
-    Department of Medical Informatics \\
-    Erasmus Medical Center \\
-  Rotterdam, The Netherlands \\
-  \texttt{} \\
-   \And
-    Ewout W. Steyerberg
-   \\
-    Department of Biomedical Data Sciences \\
-    Leiden University Medical Center \\
-  Leiden, The Netherlands \\
-  \texttt{} \\
-   \And
-    David van Klaveren
-   \\
-    Department of Public Health \\
-    Erasmus Medical Center \\
-  Rotterdam, The Netherlands \\
-  \texttt{} \\
-  }
-
+\setcounter{secnumdepth}{5}
+% Pandoc toggle for numbering sections (defaults to be off)
 
 % Pandoc citation processing
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
 % for Pandoc 2.8 to 2.10.1
 \newenvironment{cslreferences}%
   {}%
@@ -69,17 +75,17 @@ for predicting individualized benefit}
   \fi
  }%
  {}
-\usepackage{calc} % for calculating minipage widths
+\usepackage{calc}
 \newcommand{\CSLBlock}[1]{#1\hfill\break}
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
+% Pandoc header
 \renewcommand*\familydefault{\sfdefault}
 \usepackage{setspace}
 \usepackage{amsmath}
 \doublespacing
-\usepackage[pagewise, left]{lineno}
 \usepackage{amssymb}
 \usepackage{bm}
 \usepackage{caption}
@@ -102,43 +108,54 @@ for predicting individualized benefit}
 \usepackage{xcolor}
 
 
+
 \begin{document}
-\maketitle
+\begin{frontmatter}
 
-\def\tightlist{}
-
-
-\begin{abstract}
-\textbf{Objective:} To compare different risk-based methods predicting
-individualized treatment effects in RCTs. \textbf{Study Design and
-Setting:} We simulated data using diverse assumptions for a baseline
-prognostic index of risk (PI), the shape of its interaction with
-treatment (none, linear, quadratic or non-monotonic) and the magnitude
-of treatment-related harms. In each sample we predicted absolute benefit
-using: models with a constant relative treatment effect; stratification
-in quarters of the PI; models including a linear interaction of
-treatment with the PI; models including an interaction of treatment with
-a restricted cubic spline (RCS) transformation of the PI; an adaptive
-approach using Akaike's Information Criterion. We evaluated predictive
-performance using root mean squared error and measures of discrimination
-and calibration for benefit. Starting from a base scenario (sample size
-4,250, treatment odds ratio 0.8, AUC of the PI 0.75), we varied the
-sample size, the treatment effect size, and the PI's AUC.
-\textbf{Results:} Models including a PI by treatment interaction
-performed best with smaller sample sizes and/or lower AUC of the PI.
-Otherwise, RCS (3 knots) models proved more robust for the majority of
-the deviation settings. The adaptive approach was unstable with smaller
-sample sizes. \textbf{Conclusion:} Depending on the setting, the linear
-interaction or the RCS (3 knots) model should be preferred.
-\end{abstract}
-
-\keywords{
-    treatment effect heterogeneity
-   \and
-    absolute benefit
-   \and
-    prediction models
-  }
+  \title{Linear interaction of treatment with baseline risk was
+sufficient for predicting individualized benefit}
+    \author[1]{Alexandros Rekkas}
+  
+    \author[1]{Peter R. Rijnbeek}
+  
+    \author[2]{Ewout W. Steyerberg}
+  
+    \author[3]{David van Klaveren}
+  
+      \address[1]{Department of Medical Informatics, Erasmus Medical
+Center, Rotterdam, The Netherlands}
+    \address[2]{Department of Biomedical Data Sciences, Leiden
+University Medical Center, Leiden, The Netherlands}
+    \address[3]{Department of Public Health, Erasmus Medical Center,
+Rotterdam, The Netherlands}
+    
+  \begin{abstract}
+  \textbf{Objective}: To compare different risk-based methods predicting
+  individualized treatment effects in RCTs. \textbf{Study Design and
+  Setting}: We simulated RCT data using diverse assumptions for the
+  average treatment effect, a baseline prognostic index of risk (PI),
+  the shape of its interaction with treatment (none, linear, quadratic
+  or non-monotonic) and the magnitude of treatment-related harms. In
+  each sample we predicted absolute benefit using: models with a
+  constant relative treatment effect; stratification in quarters of the
+  PI; models including a linear interaction of treatment with the PI;
+  models including an interaction of treatment with a restricted cubic
+  spline (RCS) transformation of the PI; an adaptive approach using
+  Akaike's Information Criterion. We evaluated predictive performance
+  using root mean squared error and measures of discrimination and
+  calibration for benefit. \textbf{Results}: The linear-interaction
+  model and the RCS-interaction model outperformed the constant
+  treatment effect model in many simulation scenarios. The RCS-model was
+  optimal when quadratic or non-monotonic deviations from a constant
+  treatment effect were stronger, and when sample size was larger.
+  Larger sample size also supported the adaptive approach.
+  \textbf{Conclusion}: An interaction between risk and treatment
+  assignment generally improved treatment effect predictions. Non-linear
+  RCS interactions should be considered for larger sample size.
+  \end{abstract}
+   \begin{keyword} treatment effect heterogeneity absolute
+benefit prediction models\end{keyword}
+ \end{frontmatter}
 
 \doublespacing 
 \linenumbers
@@ -167,12 +184,15 @@ often, risk-modeling approaches are carried out in two steps: first a
 risk prediction model is developed externally or internally on the
 entire RCT population, ``blinded'' to treatment; then the RCT population
 is stratified using this prediction model to evaluate risk-based
-treatment effect variation {[}6{]}. However, even though estimates at
-the risk subgroup level may be accurate, these estimates do not apply to
-individual patients, especially for patients with predicted risk at the
-boundaries of the risk intervals. Hence, the risk-stratified approach is
-useful for exploring and presenting HTE, but is not useful for
-supporting treatment decisions for individual patients.
+treatment effect variation {[}6{]}. This two-step approach identified
+substantial absolute treatment effect differences between low-risk and
+high-risk patients in a re-analysis of 32 large trials {[}7{]}. However,
+even though estimates at the risk subgroup level may be accurate, these
+estimates do not apply to individual patients, especially for patients
+with predicted risk at the boundaries of the risk intervals. Hence, the
+risk-stratified approach is useful for exploring and presenting HTE, but
+is not useful for supporting treatment decisions for individual
+patients.
 
 To individualize treatment effects, the recent PATH statement suggested
 various risk-based models including a prognostic index of baseline risk
@@ -191,7 +211,10 @@ myocardial infarction (MI).
 \hypertarget{simulation-scenarios}{%
 \subsection{Simulation scenarios}\label{simulation-scenarios}}
 
-For each patient we generated 8 baseline covariates
+We simulated a typical RCT that is undertaken to compare a binary
+outcome (e.g.~death) between a group of treated patients in the
+treatment arm and a group of untreated patients in the control arm. For
+each patient we generated 8 baseline covariates
 \(x_1,\dots,x_4\sim N(0, 1)\) and \(x_5,\dots,x_8\sim B(1, 0.2)\).
 Treatment was allocated using a 50:50 split. Outcomes for patients in
 the control arm were generated from a logistic regression model
@@ -204,7 +227,7 @@ true probabilities
 
 Outcomes in the treatment arm were generated using 3 base scenarios:
 absent treatment effect (OR = 1), moderate treatment effect (OR = 0.8)
-and high treatment effect (OR = 0.5). We started with simulating
+and strong treatment effect (OR = 0.5). We started with simulating
 outcomes based on true constant relative treatment effects for the 3
 base scenarios. We then simulated linear, quadratic and non-monotonic
 deviations from constant treatment effects using:
@@ -217,22 +240,25 @@ patients. In this case we have
 
 The sample size for the base scenarios was set to 4,250 (\(80\%\) power
 for the detection of a marginal OR of 0.8). We evaluated the effect of
-smaller or larger sample sizes of 1,063 and 17,000, respectively. We
-also evaluated the effect of worse or better discriminative ability for
-risk, adjusting the baseline covariate coefficients, such that the AUC
-of the regression model in the control arm was 0.65 and 0.85
-respectively.
+smaller or larger sample sizes of 1,063 (4,250 divided by 4) and 17,000
+(4250 multiplied by 4), respectively. We also evaluated the effect of
+worse or better discriminative ability for risk, adjusting the baseline
+covariate coefficients, such that the AUC of the regression model in the
+control arm was 0.65 and 0.85 respectively.
 
 Combining all these settings resulted in a simulation study of 648
-scenarios (exact settings in the supplementary material).
+scenarios (exact settings in the supplementary material). With these
+scenarios we were able to cover the observed treatment effect
+heterogeneity in 32 large trials as well as many other potential
+variations of risk-based treatment effect {[}7{]}.
 
 \hypertarget{individualized-risk-based-benefit-predictions}{%
 \subsection{Individualized risk-based benefit
 predictions}\label{individualized-risk-based-benefit-predictions}}
 
-All methods assume that a risk prediction model is available to assign
-risk predictions to individual patients. For the simulations we
-developed a prediction model internally, using logistic regression
+All risk-based methods assume that a risk prediction model is available
+to assign risk predictions to individual patients. For the simulations
+we developed a prediction model internally, using logistic regression
 including main effects for all baseline covariates and treatment
 assignment. Risk predictions for individual patients were based on
 treatment assignment to the control arm, that is setting treatment
@@ -259,7 +285,7 @@ then estimated from
 We will refer to this method as the \emph{linear interaction} approach.
 
 Fourth, we used \emph{restricted cubic splines} (RCS) to relax the
-linearity assumption on the effect of the linear predictor {[}7{]}. We
+linearity assumption on the effect of the linear predictor {[}8{]}. We
 considered splines with 3 (RCS-3), 4 (RCS-4) and 5 (RCS-5) knots to
 compare models with different levels of flexibility.
 
@@ -276,7 +302,7 @@ root mean squared error (RMSE):
 
 \[\text{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^n\big(\tau(\bm{x}_i) - \hat{\tau}(\bm{x}_i)\big)^2}\]
 We compared the discriminative ability of the methods under study using
-c-for-benefit {[}8{]}. The c-for-benefit represents the probability that
+c-for-benefit {[}9{]}. The c-for-benefit represents the probability that
 from two randomly chosen matched patient pairs with unequal observed
 benefit, the pair with greater observed benefit also has a higher
 predicted benefit. To be able to calculate observed benefit, patients in
@@ -288,7 +314,7 @@ benefit is defined as the average of predicted benefit within each
 matched patient pair.
 
 We evaluated calibration in a similar manner, using the integrated
-calibration index (ICI) for benefit {[}9{]}. The observed benefits are
+calibration index (ICI) for benefit {[}10{]}. The observed benefits are
 regressed on the predicted benefits using a locally weighted scatterplot
 smoother (loess). The ICI-for-benefit is the average absolute difference
 between predicted and smooth observed benefit. Values closer to \(0\)
@@ -303,100 +329,103 @@ represent better calibration.
 The linear interaction model outperformed all RCS methods in terms of
 RMSE in scenarios with true constant relative treatment effect (OR =
 0.8, N = 4,250 and AUC = 0.75), strong linear and even strong quadratic
-deviations (Figure \ref{fig:rmsebase}). However, with non-monotonic
-deviations errors of the linear interaction model increased
-substantially, especially in the presence of treatment-related harms. In
-these scenarios, RCS-3 proved to be quite robust outperforming all other
-methods. The constant treatment effect approach had overall best
-performance under true constant treatment effect settings, but was
-sensitive to all considered deviations, resulting in increased error
-rates. Finally, the adaptive approach had comparable performance to the
-best-performing method in each scenario. However, we observed increased
-error variability in the case of linear and non-monotonic deviations,
-especially for moderate or strong treatment-related harms.
+deviations from a constant relative treatment effect (Figure
+\ref{fig:rmsebase}; panels A-C). However, with non-monotonic deviations
+from a constant relative treatment effect, the RMSE of the linear
+interaction model increased substantially, especially in the presence of
+treatment-related harms (Figure \ref{fig:rmsebase}; panel D). In these
+scenarios, RCS-3 outperformed all other methods in terms of RMSE. The
+constant treatment effect approach had overall best performance under
+true constant treatment effect settings, but was sensitive to all
+considered deviations, resulting in increased RMSE. Finally, the
+adaptive approach had comparable performance to the best-performing
+method in each scenario. However, in comparison with the best-performing
+approach, its RMSE was more variable across the 1000 replications in the
+scenarios with linear and non-monotonic deviations, especially when also
+including moderate or strong treatment-related harms. This is caused by
+wrongly selecting the constant treatment effect model in a substantial
+proportion of the replications (Supplement, Table XX).
 
-In the case of true constant relative treatment effects, the adaptive
-approach selected the constnant effect model the majority of the time,
-even in the presence of treatment-related harms (96\% of the time with
-no harms to 88\% with strong harms). With strong linear or quadratic
-deviations and increasing treatment-related harms the adaptive approach
-increasingly favored the linear interaction model. In the case of true
-non-monotonic deviations, we observed increasing selection frequencies
-for RCS-3 with increasing treatment harms (from 32\% with no harms to
-53\% with strong harms), whereas selection frequencies for the linear
-interaction model dropped from 40\% with no harms to 7\% with strong
-harms. Finally, in the case of strong linear and non-monotonic
+In the scenario with a true constant relative treatment effects, the
+adaptive approach selected the constant effect model for the majority of
+the replcations, even in the presence of treatment-related harms (96\%
+of the replications without harms and 88\% with strong harms). With
+strong linear or quadratic deviations and increasing treatment-related
+harms the adaptive approach increasingly favored the linear interaction
+model. With non-monotonic deviations, we observed increasing selection
+frequencies for RCS-3 with increasing treatment harms (from 32\% with no
+harms to 53\% with strong harms), whereas selection frequencies for the
+linear interaction model dropped from 40\% with no harms to 7\% with
+strong harms. Finally, in the case of strong linear and non-monotonic
 deviations selection frequencies of the constant treatment effect model
 remained high despite increasing treatment harms (Supplement, Table XX).
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{manuscript_files/figure-latex/rmsebase-1} \caption{RMSE of the considered methods across 500 replications calculated in a simulated super-population of size 500,000. The scenario with true constant relative treatment effect had a true prediction AUC of 0.75 and sample size of 4250. Results are presented under moderate linear, strong linear, and strong quadratic deviations from constant relative treatment effects.}\label{fig:rmsebase}
+\includegraphics[width=1\linewidth]{manuscript_files/figure-latex/rmsebase-1} \caption{RMSE of the considered methods across 500 replications calculated in a simulated super-population of size 500,000. The scenario with true constant relative treatment effect (panel A) had a true prediction AUC of 0.75 and sample size of 4250. The RMSE is also presented for strong linear (panel B), strong quadratic (panel C), and non-monotonic (panel D) from constant relative treatment effects. Panels on the right side present the true relationship between baseline risk (x-axis) and absolute treatment benefit (y-axis). The 2.5, 25, 50, 75, and 97.5 percentiles of the risk distribution are expressed by the boxplot.}\label{fig:rmsebase}
 \end{figure}
 
 Increasing the sample size to 17,000 favored RCS-3 the most, as it
 achieved lowest or close to lowest RMSE across all scenarios (Figure
 \ref{fig:rmsesamplesize}). Especially in cases of strong quadratic and
-non-monotonic deviations RCS-3 had lower error rates (median RMSE 0.011
-for strong quadratic deviations and 0.010 for non-monotonic deviations
-with no treatment-related harms) compared to the linear interaction
-approach (median RMSE 0.013 and 0.014, respectively), regardless of
-treatment-related harms strength. The issues with the large error
-variability of the adaptive approach improved with larger sample sizes.
-
-The adaptive approach tended to increasingly favor smoother methods
-(especially RCS-3) with increasing treatment-related harms (see
-Supplement, Table XX). However, in the case of true strong quadratic
-deviations the opposite was observed: selection frequency of the linear
-interaction model increased from 31\% (no harms) to 50\% (strong harms)
-whereas for RCS-3 decreased from 52\% (no harms) to 34\% (strong harms).
+non-monotonic deviations RCS-3 had lower RMSE (median 0.011 for strong
+quadratic deviations and 0.010 for non-monotonic deviations with no
+treatment-related harms) compared to the linear interaction approach
+(median 0.013 and 0.014, respectively), regardless of the strength of
+treatment-related harms. Due to the large sample size, the RMSE of the
+adaptive approach was even more similar to the best-performing method,
+and the constant relative treatment effect model was less often wrongly
+selected (\textbf{\emph{numbers????}}).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{manuscript_files/figure-latex/rmsesamplesize-1} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. Sample size 17,000 rather than 4250 in Figure \ref{fig:rmsebase}}\label{fig:rmsesamplesize}
 \end{figure}
 
 When we increased the AUC of the true prediction model to 0.85 (OR = 0.8
-and N = 4,250) the constant effect model outperformed all other methods
-in the case of true constant treatment effects, but proved to be the
-least robust to deviations. Again, RCS-3 had the lowest error rates in
-the case of strong quadratic or monotonic deviations and very comparable
-performance to the best-performing linear interaction model in the case
-of strong linear deviations (median RMSE 0.016 for RCS-3 compared to
-0.014 for the linear interaction model). The adaptive approach, though
-it performed similar to the best performing method in each scenario, on
-average, had increased variability in error rates in the case of strong
-linear and non-monotonic deviations. In these scenarios, the adaptive
-approach often selected the constant treatment effect model (23\% and
-25\% in the strong linear and non-monotonic deviation scenarios without
-treatment-related harms, respectively).
+and N = 4,250). RCS-3 had the lowest RMSE in the case of strong
+quadratic or non-monotonic deviations and very comparable performance to
+the -- optimal -- linear interaction model in the case of strong linear
+deviations (median RMSE 0.016 for RCS-3 compared to 0.014 for the linear
+interaction model). As observed in the base case scenario the adaptive
+approach wrongly selected the constant treatment effect model (23\% and
+25\% of the replications in the strong linear and non-monotonic
+deviation scenarios without treatment-related harms, respectively),
+leading to more variability of the RMSE.
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{manuscript_files/figure-latex/rmseauc-1} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250.}\label{fig:rmseauc}
 \end{figure}
 
-In terms of discrimination for benefit (OR = 0.8, N = 4,250 and AUC =
-0.75), all methods performed similarly, on average (Figure
-\ref{fig:discrimination}). In the case of non-monotonic deviations, the
-constant effect model had much lower discriminative performance compared
-to the rest of the methods (median AUC of 0.04 for the constant effects
-model compared to the best-performing RCS-3 with 0.02). The linear
-interaction model was the most stable compared to the other methods in
-terms of error variability. With increasing number of RCS knots, we
+In comparison with the true approach, dsicrimination for benefit in the
+scenario with a constant relative treatment effect was only slightly
+lower for the linear interaction model, but more substantially lower for
+the non-linear RCS approaches (Figure \ref{fig:discrimination}; panel
+A). With strong linear or quadratic deviations from a constant relative
+treatment effect, all methods discriminated quite similarly (Figure
+\ref{fig:discrimination}; panels B-C). In the scenario with
+non-monotonic deviations, the constant effect model had much lower
+discriminative ability compared to non-linear RCS methods (median AUC of
+0.4971 for the constant effects model, 0.5285 for the linear interaction
+model and 0.5304 for the best-performing RCS-3; Figure
+\ref{fig:rmseauc}; panel D). With increasing number of RCS knots, we
 observed decreasing median values and increasing variability of the
-c-for-benefit in all scenarios.
+c-for-benefit in all scenarios. \textbf{\emph{With increasing sample
+size\ldots{} (Suppl Fig\ldots)}}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{manuscript_files/figure-latex/discrimination-1} \caption{Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.}\label{fig:discrimination}
 \end{figure}
 
 In terms of calibration for benefit, the constant effects model
-outperformed all other models in the case of true constant treatment
-effects, but was miscalibrated for all deviation scenarios (Figure
-\ref{fig:calibration}). The linear interaction model showed best or
-close to best calibration across all scenarios and only showed worse
-calibration compared to RCS-3 in the case of non-monotonic deviations
-and treatment-related harms. The adaptive approach was worse calibrated
-in scenarios with strong linear and non-monotonic deviations compared to
-the linear interaction model and RCS-3.
+outperformed all other models in the scenario with true constant
+treatment effects, but was miscalibrated for all deviation scenarios
+(Figure \ref{fig:calibration}). The linear interaction model showed best
+or close to best calibration across all scenarios and only showed worse
+calibration compared to RCS-3 in case of non-monotonic deviations and
+treatment-related harms (Figure \ref{fig:calibration}; panel D). The
+adaptive approach was worse calibrated in scenarios with strong linear
+and non-monotonic deviations compared to the linear interaction model
+and RCS-3. \textbf{\emph{With increasing sample size\ldots{} (Supp
+Fig\ldots)}}
 
 The results from all individual scenarios can be explored online at
 \url{https://arekkas.shinyapps.io/simulation_viewer/}.
@@ -415,7 +444,7 @@ randomized to tissue plasminogen activator (tPA) treatment and 20,162
 were randomized to streptokinase. The outcome of interest was 30-day
 mortality, recorded for all patients.
 
-In line with previous analyses {[}10,11{]}, we fitted a logistic
+In line with previous analyses {[}11,12{]}, we fitted a logistic
 regression model with 6 baseline covariates, i.e.~age, Killip class,
 systolic blood pressure, heart rate, an indicator of previous MI, and
 the location of MI, to predict 30-day mortality risk. A constant effect
@@ -428,16 +457,16 @@ study for individualizing absolute benefit predictions. All methods
 predicted increasing benefits for patients with higher baseline risk
 predictions, but the fitted patterns were clearly different. The
 adaptive approach selected the model with RCS smoothing with 4 knots.
-However, for very low baseline risk this model predicted decreasing
-benefit with increasing risk may be somewhat too flexible. The more
-robust models, the linear interaction model or the model with RCS
-smoothing (3 knots), gave very similar benefit predictions, followed the
-evolution of the stratified estimates very closely and may therefore be
-preferable for use in clinical practice. The linear interaction model
-had somewhat lower AIC compared to the model with RCS smoothing (3
-knots), slightly better cross-validated discrimination (c-for-benefit
-0.526 vs 0.525) and quite similar cross-validated calibration (ICI-for
-benefit 0.0115 vs 0.0117).
+However, for very low baseline risk the decreasing predicted benefit
+with increasing risk may be somewhat too flexible. The more robust
+models, the linear interaction model or the model with RCS smoothing (3
+knots), gave very similar benefit predictions, followed the evolution of
+the stratified estimates very closely and may therefore be preferable
+for use in clinical practice. The linear interaction model had somewhat
+lower AIC compared to the model with RCS smoothing (3 knots), slightly
+better cross-validated discrimination (c-for-benefit 0.526 vs 0.525) and
+quite similar cross-validated calibration (ICI-for benefit 0.0115 vs
+0.0117).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{/home/arekkas/Documents/Projects/arekkas_HteSimulation_XXXX_2021/figures/gusto} \caption{Individualized absolute benefit predictions based on baseline risk when using a constant treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.}\label{fig:gusto}
@@ -446,27 +475,29 @@ benefit 0.0115 vs 0.0117).
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-The linear interaction model displayed very good performance overall
-under many of the considered simulation scenarios. Especially in cases
-with smaller sample sizes and moderately performing baseline risk
-prediction models it had lower RMSE, was better calibrated for benefit
-and had better discrimination for benefit, even in scenarios with strong
-quadratic deviations. However, in scenarios with true non-monotonic
-deviations, the linear interaction model was outperformed by RCS-3,
-especially in the presence of true treatment-related harms. Increasing
-the sample size or the prediction model's discrimination favored RCS-3
-which had better or very comparable performance to the linear
-interaction model, but was more robust to non-monotonic deviations and
-the presence of treatment-related harms.
+The linear interaction model and the RCS-3 model both displayed very
+good performance under many of the considered simulation scenarios, in
+contrast with the constant relative treatment effect model. The linear
+interaction model was optimal in cases with smaller sample sizes and
+moderately performing baseline risk prediction models, that is, it had
+lower RMSE, was better calibrated for benefit and had better
+discrimination for benefit, even in scenarios with strong quadratic
+deviations. In scenarios with true non-monotonic deviations, the linear
+interaction model was outperformed by RCS-3, especially in the presence
+of true treatment-related harms. Increasing the sample size or the
+prediction model's discriminative ability favored RCS-3, especially in
+scenarios with non-monotonic deviations and in the presence of
+treatment-related harms.
 
-RCS-4 and RCS-5 proved to be too flexible, as indicated by higher RMSE,
-increased variability of discrimination for benefit and worse
-calibration of benefit predictions. Even with larger sample sizes and
-strong quadratic or non-monotonic deviations from the base case scenario
-of constant relative treatment effects, these more flexible restricted
-cubic splines did not outperform the simpler RCS-3 These approaches may
-only be helpful if we expect more extreme patterns of heterogeneous
-treatment effects compared to the quadratic deviations considered here.
+RCS-4 and RCS-5 proved to be too flexible in all considered scenarios,
+as indicated by higher RMSE, increased variability of discrimination for
+benefit and worse calibration of benefit predictions. Even with larger
+sample sizes and strong quadratic or non-monotonic deviations from the
+base case scenario of constant relative treatment effects, these more
+flexible restricted cubic splines did not outperform the simpler RCS-3
+These approaches may only be helpful if we expect more extreme patterns
+of heterogeneous treatment effects compared to the quadratic deviations
+considered here.
 
 The constant treatment effect model, despite having adequate performance
 in the presence of weak treatment effect heterogeneity on the relative
@@ -488,7 +519,7 @@ the increase in discriminative ability of the risk model also led to
 higher values of c-for-benefit. Even though risk model performance is
 very important for the ability of risk-based methods to predict
 treatment benefit, prediction model development was outside the scope of
-this work and has already been studied extensively {[}5,12,13{]}.
+this work and has already been studied extensively {[}5,13,14{]}.
 
 The adaptive approach had adequate performance, following closely on
 average the performance of the ``true'' model in most scenarios.
@@ -517,19 +548,17 @@ simulations we only focused on risk-based methods, using baseline risk
 as a reference in a two-stage approach to individualizing benefit
 predictions. However, there is a plethora of different methods, ranging
 from treatment effect modeling to tree-based approaches available in
-more recent literature {[}14--16{]}. Simulations are also needed to
+more recent literature {[}15--17{]}. Simulations are also needed to
 assess relative performance and define the settings where these break
 down or outperform each other.
 
-In conclusion, the best option for predicting individualized treatment
-benefit using a risk-based approach depends on the setting. With smaller
-sample sizes and/or moderately performing risk prediction models the
-linear interaction approach is a viable option. When those constraints
-are not present or when we anticipate non-negligible treatment-related
-harms, RCS-3 is a better option in terms of error rates, discrimination
-and calibration for benefit. With larger sample size, an adaptive
-approach based on AIC can also be considered as a more automated
-alternative.
+In conclusion, the linear interaction approach is a viable option with
+smaller sample sizes and/or moderately performing risk prediction
+modelsRCS-3 is a better option when non-monotonic deviations from a
+constant relative treatment effect and/or substantial treatment-related
+harms are anticipated. With larger sample size, an adaptive approach --
+selecting the method with optimal AIC -- can also be considered as an
+automated alternative.
 
 \newpage
 
@@ -579,60 +608,66 @@ Assessing and reporting heterogeneity in treatment effects in clinical
 trials: A proposal. Trials 2010;11.
 \url{https://doi.org/10.1186/1745-6215-11-85}.
 
+\leavevmode\hypertarget{ref-Kent2016}{}%
+{[}7{]} Kent DM, Nelson J, Dahabreh IJ, Rothwell PM, Altman DG, Hayward
+RA. Risk and treatment effect heterogeneity: Re-analysis of individual
+participant data from 32 large clinical trials. International Journal of
+Epidemiology 2016:dyw118. \url{https://doi.org/10.1093/ije/dyw118}.
+
 \leavevmode\hypertarget{ref-Harrell1988}{}%
-{[}7{]} Harrell FE, Lee KL, Pollock BG. Regression models in clinical
+{[}8{]} Harrell FE, Lee KL, Pollock BG. Regression models in clinical
 studies: Determining relationships between predictors and response. JNCI
 Journal of the National Cancer Institute 1988;80:1198--202.
 \url{https://doi.org/10.1093/jnci/80.15.1198}.
 
 \leavevmode\hypertarget{ref-vanKlaveren2018}{}%
-{[}8{]} Klaveren D van, Steyerberg EW, Serruys PW, Kent DM. The proposed
+{[}9{]} Klaveren D van, Steyerberg EW, Serruys PW, Kent DM. The proposed
 ``concordance-statistic for benefit'' provided a useful metric when
 modeling heterogeneous treatment effects. Journal of Clinical
 Epidemiology 2018;94:59--68.
 \url{https://doi.org/10.1016/j.jclinepi.2017.10.021}.
 
 \leavevmode\hypertarget{ref-Austin2019}{}%
-{[}9{]} Austin PC, Steyerberg EW. The integrated calibration index (ICI)
-and related metrics for quantifying the calibration of logistic
+{[}10{]} Austin PC, Steyerberg EW. The integrated calibration index
+(ICI) and related metrics for quantifying the calibration of logistic
 regression models. Statistics in Medicine 2019;38:4051--65.
 \url{https://doi.org/10.1002/sim.8281}.
 
 \leavevmode\hypertarget{ref-Califf1997}{}%
-{[}10{]} Califf RM, Woodlief LH, Harrell FE, Lee KL, White HD, Guerci A,
+{[}11{]} Califf RM, Woodlief LH, Harrell FE, Lee KL, White HD, Guerci A,
 et al. Selection of thrombolytic therapy for individual patients:
 Development of a clinical model. American Heart Journal 1997;133:630--9.
 \url{https://doi.org/10.1016/s0002-8703(97)70164-9}.
 
 \leavevmode\hypertarget{ref-Steyerberg2000}{}%
-{[}11{]} Steyerberg EW, Bossuyt PMM, Lee KL. Clinical trials in acute
+{[}12{]} Steyerberg EW, Bossuyt PMM, Lee KL. Clinical trials in acute
 myocardial infarction: Should we adjust for baseline characteristics?
 American Heart Journal 2000;139:745--51.
 \url{https://doi.org/10.1016/s0002-8703(00)90001-2}.
 
 \leavevmode\hypertarget{ref-Burke2014}{}%
-{[}12{]} Burke JF, Hayward RA, Nelson JP, Kent DM. Using internally
+{[}13{]} Burke JF, Hayward RA, Nelson JP, Kent DM. Using internally
 developed risk models to assess heterogeneity in treatment effects in
 clinical trials. Circulation: Cardiovascular Quality and Outcomes
 2014;7:163--9. \url{https://doi.org/10.1161/circoutcomes.113.000497}.
 
 \leavevmode\hypertarget{ref-Abadie2018}{}%
-{[}13{]} Abadie A, Chingos MM, West MR. Endogenous stratification in
+{[}14{]} Abadie A, Chingos MM, West MR. Endogenous stratification in
 randomized experiments. The Review of Economics and Statistics
 2018;100:567--80. \url{https://doi.org/10.1162/rest_a_00732}.
 
 \leavevmode\hypertarget{ref-Athey2019}{}%
-{[}14{]} Athey S, Tibshirani J, Wager S. Generalized random forests. The
+{[}15{]} Athey S, Tibshirani J, Wager S. Generalized random forests. The
 Annals of Statistics 2019;47. \url{https://doi.org/10.1214/18-aos1709}.
 
 \leavevmode\hypertarget{ref-Lu2018}{}%
-{[}15{]} Lu M, Sadiq S, Feaster DJ, Ishwaran H. Estimating individual
+{[}16{]} Lu M, Sadiq S, Feaster DJ, Ishwaran H. Estimating individual
 treatment effect in observational data using random forest methods.
 Journal of Computational and Graphical Statistics 2018;27:209--19.
 \url{https://doi.org/10.1080/10618600.2017.1356325}.
 
 \leavevmode\hypertarget{ref-Wager2018}{}%
-{[}16{]} Wager S, Athey S. Estimation and inference of heterogeneous
+{[}17{]} Wager S, Athey S. Estimation and inference of heterogeneous
 treatment effects using random forests. Journal of the American
 Statistical Association 2018;113:1228--42.
 \url{https://doi.org/10.1080/01621459.2017.1319839}.
@@ -642,9 +677,6 @@ Statistical Association 2018;113:1228--42.
 \setlength{\leftskip}{0in}
 
 \noindent
-
-\bibliographystyle{unsrt}
-\bibliography{references.bib}
 
 
 \end{document}

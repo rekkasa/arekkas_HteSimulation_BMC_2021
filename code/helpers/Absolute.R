@@ -1,4 +1,4 @@
-plotAbsoluteBenefit <- function(data, projectDir = NULL) {
+plotAbsoluteBenefit <- function(data, projectDir = NULL, type) {
   calcSquare <- function(x, g0 = 0, g1 = 0, g2 = 0, l = 0) {
     ret <- g0 + g1 * (x - l) + g2 * (x - l)**2
     return(ret)
@@ -68,19 +68,23 @@ plotAbsoluteBenefit <- function(data, projectDir = NULL) {
       bind_rows(.id = "harmSetting")
     res <- res +
       # ggside::ggside(x.pos = "bottom") +
-      ggside::ggside(y.pos = "left") +
+      ggside::ggside(y.pos = "left")
+    if (type == "constant") {
+      res <- res +
       ggside::geom_xsideboxplot(
         aes(x = probs),
         data = validationDataset[[1]] %>% mutate(probs = plogis(untreatedRiskLinearPredictor)),
         orientation = "y",
         outlier.shape = NA
-      ) +
-      ggside::geom_ysideboxplot(
-        aes(y = trueBenefit, fill = harmSetting),
-        data = fullValidationDataset,
-        orientation = "x",
-        outlier.shape = NA
-        ) +
+      )
+    }
+      # ggside::geom_ysideboxplot(
+      #   aes(y = trueBenefit, fill = harmSetting),
+      #   data = fullValidationDataset,
+      #   orientation = "x",
+      #   outlier.shape = NA
+      #   ) +
+    res <- res +
       scale_ysidex_continuous() +
       scale_xsidey_continuous() +
       scale_fill_manual(

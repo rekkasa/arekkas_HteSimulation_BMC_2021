@@ -195,13 +195,12 @@ extras/outline/outline.pdf : extras/outline/outline.rmd\
 submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd\
 	submission/arxiv.sty\
 	submission/references.bib\
-	data/processed/rmse.csv\
-	data/processed/discrimination.csv\
-	data/processed/calibration.csv\
 	data/processed/adaptiveModel.csv\
 	data/processed/gustoPerformanceMetrics.csv\
 	data/processed/adaptiveSelections.csv\
 	data/processed/rmseDistribution.csv\
+	data/processed/discriminationDistribution.csv\
+	data/processed/calibration.csv\
 	figures/rmse_moderate_base.tiff\
 	figures/rmse_moderate_sample_size.tiff\
 	figures/rmse_moderate_auc.tiff\

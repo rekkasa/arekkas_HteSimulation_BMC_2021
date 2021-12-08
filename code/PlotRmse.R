@@ -18,9 +18,10 @@
 # ===================================================
 
 args <- commandArgs(trailingOnly = TRUE)
-args_sampleSize <- as.numeric(args[1])
-args_auc <- as.numeric(args[2])
-args_value <- as.character(args[3])
+args_base <- as.character(args[1])
+args_sampleSize <- as.numeric(args[2])
+args_auc <- as.numeric(args[3])
+args_value <- as.character(args[4])
 
 library(tidyverse)
 library(glue)
@@ -35,7 +36,7 @@ source("code/helpers/Absolute.R")                  # Generates the absolute plot
 
 scenarioIds <- readr::read_csv("data/processed/analysisIds.csv") %>%
   filter(
-    base == "moderate",
+    base == args_base,
     !(type %in% c("quadratic-moderate", "linear-moderate")),
     sampleSize == args_sampleSize,
     auc == args_auc
@@ -102,7 +103,8 @@ absolutePlots <- scenarioIds %>%
       type,
       ~ plotAbsoluteBenefit(
       data = .x,
-      projectDir = "~/Documents/Projects/arekkas_HteSimulation_XXXX_2021"
+      projectDir = "~/Documents/Projects/arekkas_HteSimulation_XXXX_2021",
+      type = .y
       )
     )
   )
@@ -341,6 +343,7 @@ res <- grid.arrange(arrangeGrob(pp, left = left.grob, right = right.grob, bottom
 fileName <- paste0(
   paste(
     metric,
+    args_base,
     args_value,
     sep = "_"
   ),

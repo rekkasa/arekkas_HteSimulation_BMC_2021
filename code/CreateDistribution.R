@@ -11,7 +11,7 @@
 #     - auc
 #     - calibration
 # Output:
-#   - data/processed/(rmse|auc|calibration)Distribution.csv
+#   - data/processed/(rmse|discrimination|calibration)Distribution.csv
 # Depends:
 #   - code/helpers/GetMedians.R
 # =============================================================
@@ -23,12 +23,18 @@ saveFile <- paste0(
   "Distribution.csv"
 )
 
+
 library(tidyverse)
 library(readr)
 
 source("code/helpers/GetMedians.R")
 
-read_csv("data/processed/rmse.csv") %>%
+read_csv(
+  file.path(
+    "data/processed",
+    paste0(args_metric, ".csv")
+  )
+) %>%
   group_by(scenarioId) %>%
   arrange(scenarioId) %>%
   nest() %>%
