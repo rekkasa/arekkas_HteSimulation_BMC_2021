@@ -445,13 +445,6 @@
       "Repository": "CRAN",
       "Hash": "77bd60a6157420d4ffa93b27cf6a58b8"
     },
-    "flextable": {
-      "Package": "flextable",
-      "Version": "0.6.8",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "02b2a538d92093818b31179f75698f61"
-    },
     "forcats": {
       "Package": "forcats",
       "Version": "0.5.1",
@@ -494,13 +487,6 @@
       "Repository": "CRAN",
       "Hash": "bc3bc77ea458de0a6efe94e8e7e9c641"
     },
-    "gdtools": {
-      "Package": "gdtools",
-      "Version": "0.2.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "12a524de5a491ff39debb9311fc0763f"
-    },
     "generics": {
       "Package": "generics",
       "Version": "0.1.0",
@@ -533,6 +519,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "03d8caec959ac70e2d13bad1ac40667c"
+    },
+    "ggthemes": {
+      "Package": "ggthemes",
+      "Version": "4.2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "617fb2c300f68e8b1ba21043fba88fd7"
     },
     "glue": {
       "Package": "glue",
@@ -855,13 +848,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "df58958f293b166e4ab885ebcad90e02"
-    },
-    "officer": {
-      "Package": "officer",
-      "Version": "0.4.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "a49b891db0ebf34b40e6b1fb1ec9d3ad"
     },
     "openssl": {
       "Package": "openssl",
@@ -1216,13 +1202,6 @@
       "Repository": "CRAN",
       "Hash": "f2e17ba09737e2e7e2ec40fc1f9b6e08"
     },
-    "table1": {
-      "Package": "table1",
-      "Version": "1.4.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "d098cc323490c269c4315ed76eaf94a3"
-    },
     "tibble": {
       "Package": "tibble",
       "Version": "3.1.5",
@@ -1355,13 +1334,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "2826c5d9efb0a88f657c7a679c7106db"
-    },
-    "zip": {
-      "Package": "zip",
-      "Version": "2.2.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c7eef2996ac270a18c2715c997a727c5"
     },
     "zoo": {
       "Package": "zoo",
