@@ -184,7 +184,7 @@ and $t_1,\dots,t_k$ are the selected knots. We predict absolute benefit from $$\
   here("data/processed/analysisIds.csv")
 ) %>%
   select(-"type")
-kableExtra::kable(
+kableExtra::kbl(
   asd,
   format = "latex",
   escape = FALSE,
@@ -201,8 +201,10 @@ kableExtra::kable(
     paste0("b", 0:8),
     paste0("g", 0:2),
     "c",
-    "Average benefit"
+    "Before harms",
+    "After harms"
   ),
+  linesep = c('', '', '', '\\addlinespace'),
   digits      = 2,
   format.args = list(
     big.mar      = ",",
@@ -214,8 +216,51 @@ kableExtra::kable(
     c(
       "Analysis ID"           = 5,
       "Baseline risk"         = 9,
-      "True treatment effect" = 4
+      "True treatment effect" = 4,
+      "Benefit"               = 2
       )
   ) %>%
   kableExtra::kable_styling(font_size = 7)
+```
+
+\newpage
+\begin{landscape}
+```{r adaptiveBase, cache=FALSE, echo=FALSE, fig.cap="Adaptive model selection rates for the base case scenario true prediction AUC of 0.75, sample size of 4250", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_base.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+\end{landscape}
+
+\newpage
+\begin{landscape}
+```{r adaptiveSampleSize, cache=FALSE, echo=FALSE, fig.cap="Adaptive model selection rates for sample size of 17000.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_sample_size.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+\end{landscape}
+
+\newpage
+\begin{landscape}
+```{r adaptiveAuc, cache=FALSE, echo=FALSE, fig.cap="Adaptive model selection rates for true prediction AUC of 0.85.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_auc.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+\end{landscape}
+
+\newpage
+```{r rmseHighBase, cache=FALSE, echo=FALSE, fig.cap="RMSE high effect base", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_base.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+
+\newpage
+```{r rmseHighSampleSize, cache=FALSE, echo=FALSE, fig.cap="RMSE high effect sample size", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_sample_size.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+
+\newpage
+```{r rmseHighAuc, cache=FALSE, echo=FALSE, fig.cap="RMSE high effect auc", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_auc.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```

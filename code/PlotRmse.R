@@ -74,6 +74,12 @@ metricFile <- paste(metric, "csv", sep = ".")
 
 f <- function(x) x * 100
 
+limitsHigh <- ifelse(
+  args_base == "high",
+  yes = .2,
+  no = .15
+)
+
 processed <- readr::read_csv(
   file = file.path("data/processed", metricFile)
 ) %>% 
@@ -145,8 +151,8 @@ gridList <- list(
     xlim(c(0, .5)) +
     scale_y_continuous(
       position = "right",
-      limits = c(-.058, .15),
-      breaks = seq(-.05, .15, .05)
+      limits = c(-.058, limitsHigh),
+      breaks = seq(-.05, limitsHigh, .05)
     ) +
   scale_color_manual(
       name = "Constant treatment-\n related harm",
@@ -188,8 +194,8 @@ gridList <- list(
     xlim(c(0, .5)) +
     scale_y_continuous(
       position = "right",
-      limits = c(-.058, .15),
-      breaks = seq(-.05, .15, .05)
+      limits = c(-.058, limitsHigh),
+      breaks = seq(-.05, limitsHigh, .05)
     ) +
     scale_color_manual(
       name = "Constant treatment-\n related harm",
@@ -225,8 +231,8 @@ gridList <- list(
     xlim(c(0, .5)) +
     scale_y_continuous(
       position = "right",
-      limits = c(-.058, .15),
-      breaks = seq(-.05, .15, .05)
+      limits = c(-.058, limitsHigh),
+      breaks = seq(-.05, limitsHigh, .05)
     ) +
     scale_color_manual(
       name = "Constant treatment-\n related harm",
@@ -263,8 +269,8 @@ gridList <- list(
     xlim(c(0, .5)) +
     scale_y_continuous(
       position = "right",
-      limits = c(-.058, .15),
-      breaks = seq(-.05, .15, .05)
+      limits = c(-.058, limitsHigh),
+      breaks = seq(-.05, limitsHigh, .05)
     ) +
     scale_color_manual(
       name = "Constant treatment-\n related harm",

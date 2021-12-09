@@ -64,20 +64,6 @@ rcs5Model <- fitRcsHte(
 
 
 plot <- ggplot() +
-  stat_function(
-    data = data.frame(
-      x     = c(0, maxRisk), 
-      label = "Constant treatment effect"
-    ),
-    aes(
-      x     = x, 
-      color = label
-    ),
-    fun  = predictBenefitModelBasedHte,
-    args = list(
-      modelBasedFit = constantModel
-    )
-  ) +
   geom_pointrange(
     data = stratified$data,
     aes(
@@ -91,13 +77,32 @@ plot <- ggplot() +
   ) +
   stat_function(
     data = data.frame(
+      x     = c(0, maxRisk), 
+      label = "Constant treatment effect"
+    ),
+    aes(
+      x     = x, 
+      color = label,
+      linetype = label,
+      alpha = .8
+    ),
+    size = .8,
+    fun  = predictBenefitModelBasedHte,
+    args = list(
+      modelBasedFit = constantModel
+    )
+  ) +
+  stat_function(
+    data = data.frame(
       x = c(0, maxRisk), 
       label = "Linear interaction"
     ),
     aes(
       x     = x,
+      linetype = label,
       color = label
     ),
+    size = .65,
     fun  = predictBenefitModelBasedHte,
     args = list(
       modelBasedFit = linearModel
@@ -110,8 +115,10 @@ plot <- ggplot() +
     ),
     aes(
       x     = x,
-      color = label
+      color = label,
+      linetype = label
     ),
+    size = .65,
     fun  = predictSmoothBenefit,
     args = list(
       smoothFit = rcs3Model
@@ -124,7 +131,9 @@ plot <- ggplot() +
     ),
     aes(
       x     = x,
-      color = label
+      color = label,
+      linetype = label,
+      alpha = .8
     ),
     fun  = predictSmoothBenefit,
     args = list(
@@ -138,21 +147,9 @@ plot <- ggplot() +
     ),
     aes(
       x     = x,
-      color = label
-    ),
-    fun  = predictSmoothBenefit,
-    args = list(
-      smoothFit = rcs5Model
-    )
-  ) +
-  stat_function(
-    data = data.frame(
-      x = c(0, maxRisk), 
-      label = "RCS 5 knots"
-    ),
-    aes(
-      x     = x,
-      color = label
+      color = label,
+      linetype = label,
+      alpha = .8
     ),
     fun  = predictSmoothBenefit,
     args = list(
@@ -161,12 +158,12 @@ plot <- ggplot() +
   ) +
   scale_color_manual(
     values = c(
-      "#66c2a5", 
-      "#fc8d62",
-      "#8da0cb",
-      "#e78ac3",
-      "#a6d854", 
-      "#ffd92f"
+      "#2274A5", 
+      "#969A97",
+      "#273043",
+      "#DB3A34",
+      "#F75C03",
+      "#FFC857"
     ),
     breaks = c(
       "Constant treatment effect",
@@ -176,6 +173,17 @@ plot <- ggplot() +
       "RCS 4 knots",
       "RCS 5 knots"
     )
+  ) +
+  scale_linetype_manual(
+    values = c("dashed", "solid", "solid", "solid", "solid"),
+    breaks = c(
+      "Constant treatment effect",
+      "Linear interaction",
+      "RCS 3 knots",
+      "RCS 4 knots",
+      "RCS 5 knots"
+    ),
+    guide = FALSE
   ) +
   xlab("Baseline risk") +
   ylab("Predicted benefit") +
@@ -198,10 +206,10 @@ plot <- ggplot() +
     compression = "lzw"
   )
   
-  ggplot2::ggsave(
-    file.path("figures", "gusto.png"), 
-    plot = plot,
-    width = 7, 
-    height = 5
-  )
+#   ggplot2::ggsave(
+#     file.path("figures", "gusto.png"), 
+#     plot = plot,
+#     width = 7, 
+#     height = 5
+#   )
   

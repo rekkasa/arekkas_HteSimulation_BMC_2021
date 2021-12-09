@@ -148,6 +148,17 @@ expand_grid(base, type, sampleSize, auc, harm) %>%
       base == "high" & auc == .75 ~ .079,
       base == "high" & auc == .65 ~ .089,
       base == "high" & auc == .85 ~ .069,
+    ),
+    averageBenefit = case_when(
+      base == "absent" & harm == "absent" ~ 0,
+      base == "absent" & harm == "moderate-positive" ~ -.01,
+      base == "absent" & harm == "strong-positive" ~ -.02,
+      base == "absent" & harm == "negative" ~ .01,
+      base != "absent" & harm == "absent" ~ averageTrueBenefit,
+      base != "absent" & harm == "moderate-positive" ~ averageTrueBenefit - averageTrueBenefit / 4,
+      base != "absent" & harm == "strong-positive" ~ averageTrueBenefit - averageTrueBenefit / 4,
+      base != "absent" & harm == "moderate-positive" ~ averageTrueBenefit - averageTrueBenefit / 2,
+      base != "absent" & harm == "negative" ~ averageTrueBenefit + averageTrueBenefit / 4,
     )
   ) %>%
   relocate(scenario) %>%

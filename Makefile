@@ -142,9 +142,20 @@ figures/gusto.tiff : code/GustoPlot.R\
 	data/raw/gusto.rda
 	$<
 
-figures/selectedModelAdaptive.tiff : code/SelectedModelAdaptive.R\
+figures/selected_model_adaptive_base.tiff : code/SelectedModelAdaptive.R\
+	data/processed/analysisIds.csv\
 	data/processed/adaptiveModel.csv
-	$<
+	$< moderate 4250 0.75 base
+
+figures/selected_model_adaptive_sample_size.tiff : code/SelectedModelAdaptive.R\
+	data/processed/analysisIds.csv\
+	data/processed/adaptiveModel.csv
+	$< moderate 17000 0.75 sample_size
+
+figures/selected_model_adaptive_auc.tiff : code/SelectedModelAdaptive.R\
+	data/processed/analysisIds.csv\
+	data/processed/adaptiveModel.csv
+	$< moderate 4250 0.85 auc
 
 data/raw/gusto.rda : code/GetGustoData.sh
 	$<
@@ -206,12 +217,19 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 	figures/rmse_moderate_auc.tiff\
 	figures/calibration_base.tiff\
 	figures/discrimination_base.tiff\
-#	figures/gusto.png
+	figures/gusto.tiff
 	R -e 'rmarkdown::render("submission/manuscript.rmd", output_format = "all")'
 
 submission/supplement.pdf : submission/supplement.rmd\
 	data/raw/gusto.rda\
-	data/processed/gustoPerformanceMetrics.csv
+	data/processed/gustoPerformanceMetrics.csv\
+	data/processed/analysisIds.csv\
+	figures/selected_model_adaptive_base.tiff\
+	figures/selected_model_adaptive_sample_size.tiff\
+	figures/selected_model_adaptive_auc.tiff\
+	figures/rmse_high_base.tiff\
+	figures/rmse_high_sample_size.tiff\
+	figures/rmse_high_auc.tiff
 	# figures/deviate_linear_08.png\
 	# figures/deviate_quadratic_08.png\
 	# figures/deviate_linear_absolute_08.png\

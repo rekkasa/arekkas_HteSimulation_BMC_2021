@@ -270,11 +270,11 @@ effect settings, but was sensitive to all considered deviations,
 resulting in increased RMSE. Finally, the adaptive approach had
 comparable performance to the best-performing method in each
 scenario. However, in comparison with the best-performing approach, its RMSE was
-more variable across the 1000 replications in the scenarios with linear and
+more variable across the 500 replications in the scenarios with linear and
 non-monotonic deviations, especially when also including moderate or strong
 treatment-related harms. This is caused by wrongly selecting the constant
 treatment effect model in a substantial proportion of the replications
-(Supplement, Table XX).
+(Supplement, Figure S3).
 
 In the scenario with a true constant relative treatment effects, the adaptive
 approach selected the constant effect model for the majority of the replcations, even in
@@ -455,7 +455,8 @@ calibration (ICI-for benefit `r round(calibrationPerformance[2, ], 4)` vs
 
 
 ```{r gusto, cache=TRUE, echo=FALSE, fig.cap="Individualized absolute benefit predictions based on baseline risk when using a constant treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/gusto.png"))
+grid::grid.raster(tiff::readTIFF(here("figures/gusto.tiff")))
+# knitr::include_graphics(here::here("figures/gusto.png"))
 ```
 
 # Discussion
