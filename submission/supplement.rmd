@@ -191,7 +191,7 @@ kableExtra::kbl(
   longtable   = TRUE,
   align       = "r",
   booktabs    = TRUE,
-  caption     = "",
+  caption     = "Scenario settings of the entire simulation study.",
   col.names   = c(
     "Scenario",
     "Base",
