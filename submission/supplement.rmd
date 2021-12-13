@@ -72,13 +72,28 @@ P(y\given\bm{x}, t_x=1) = g(lp_1)
 where $$lp_1 = \gamma_2(lp_0-c)^2+\gamma_1(lp_0-c)+\gamma_0$$
 
 ## Base-case scenario
-The base-case scenario assumes a constant odds ratio of $0.8$ in favor of treatment. The simulated datasets are of size $n=4250$, where treatment is allocated at random using a 50/50 split (80% power for the detection of an unadjusted OR of 0.8, assuming an event rate of 20% in the untreated arm). Outcome incidence in the untreated population is set at $20\%$. For the development of the prediction model we use the model defined in \@ref(eq:p0) including a constant treatment effect. When doing predictions, $t_x$ is set to $0$. The value of the true $\bm{\beta}$ is such that the above prediction model has an AUC of $0.75$.
+The base-case scenario assumes a constant odds ratio of $0.8$ in favor
+of treatment. The simulated datasets are of size $n=4250$, where
+treatment is allocated at random using a 50/50 split (80% power for
+the detection of an unadjusted OR of 0.8, assuming an event rate of
+20% in the untreated arm). Outcome incidence in the untreated
+population is set at $20\%$. For the development of the prediction
+model we use the model defined in \@ref(eq:p0) including a constant
+treatment effect. When doing predictions, $t_x$ is set to $0$. The
+value of the true $\bm{\beta}$ is such that the above prediction model
+has an AUC of $0.75$.
 
 
-The previously defined targets are achieved when $\bm{\beta}=(-2.08, 0.49,\dots,0.49)^t$. For the derivations in the treatment arm we use $\bm{\gamma}=(\log(0.8), 1, 0)^t$.
+The previously defined targets are achieved when $\bm{\beta}=(-2.08,
+0.49,\dots,0.49)^t$. For the derivations in the treatment arm we use
+$\bm{\gamma}=(\log(0.8), 1, 0)^t$.
 
 ## Deviations from base-case
-We deviate from the base-case scenario in two ways. First, we alter the overall target settings of sample size, overall treatment effect and prediction model AUC. In a second stage, we consider settings that violate the assumption of a constant relative treatment effect, using a model-based approach.
+We deviate from the base-case scenario in two ways. First, we alter
+the overall target settings of sample size, overall treatment effect
+and prediction model AUC. In a second stage, we consider settings that
+violate the assumption of a constant relative treatment effect, using
+a model-based approach.
 
 For the first part, we consider:
 
@@ -94,11 +109,11 @@ For the first part, we consider:
   
 We set the true risk model coefficients to be $\bm{\beta} = \big(-1.63, 0.26,\dots,0.26\big)^t$ for $AUC=0.65$ and $\bm{\beta} = \big(-2.7, 0.82,\dots,0.82\big)^t$ for $AUC=0.85$. In both cases, $\beta_0$ is selected so that an event rate of $20\%$ is maintained in the control arm.  
 
-For the second part linear and quadratic deviations from the assumption of
-constant relative effect are considered. We also consider different intensity
-levels of these deviations. The settings for these deviations are defined in
-Table \@ref(tab:tab1) and result in the effects of Figure
-\@ref(fig:fig1). 
+For the second part linear and quadratic deviations from the
+assumption of constant relative effect are considered. We also
+consider different intensity levels of these deviations. The settings
+for these deviations are defined in Table \@ref(tab:tab1) and result
+in the effects of Figure \@ref(fig:fig1).
 
 ```{r fig1, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '50%'}
 knitr::include_graphics(here::here("figures/deviate_linear_08.png"))
@@ -113,9 +128,11 @@ knitr::include_graphics(here::here("figures/deviate_linear_absolute_08.png"))
 knitr::include_graphics(here::here("figures/deviate_quadratic_absolute_08.png"))
 ```
 
-Finally, we consider 3 additional scenarios of interaction of individual
-covariates with treatment. These scenarios include a 4 weak interactions
-($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82$), 4 strong interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$), and 2 weak and 2 strong interactions (Table \@ref(tab:tab2)).
+Finally, we consider 3 additional scenarios of interaction of
+individual covariates with treatment. These scenarios include a 4 weak
+interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82$), 4 strong
+interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$), and 2
+weak and 2 strong interactions (Table \@ref(tab:tab2)).
 
 ## Risk modeling
 Merging treatment arms, we develop prediction models including a constant relative treatment effect:
@@ -129,21 +146,26 @@ Individualized predictions are derived setting $t_x=0$.
 ## Approaches to individualize benefit predictions
 
 ### Risk stratification
-Derive a prediction model using the same approach as above and divide the
-population in equally sized risk-based subgroups. Estimate subgroup-specific
-absolute benefit from the observed absolute differences. Subject-specific
-benefit predictions are made by attributing to individuals their corresponding
-subgroup-specific estimate.
+Derive a prediction model using the same approach as above and divide
+the population in equally sized risk-based subgroups. Estimate
+subgroup-specific absolute benefit from the observed absolute
+differences. Subject-specific benefit predictions are made by
+attributing to individuals their corresponding subgroup-specific
+estimate.
 
 ### Constant treatment effect
-Assuming a constant relative treatment effect, fit the adjusted model in
-\@ref(eq:risk). Then, an estimate of absolute benefit can be derived from$$\hat{f}_{\text{benefit}}(lp\given \bm{x}, \hat{\bm{\beta}}) = g(lp) - g(lp+\hat{\gamma}) $$
+Assuming a constant relative treatment effect, fit the adjusted model
+in \@ref(eq:risk). Then, an estimate of absolute benefit can be
+derived from$$\hat{f}_{\text{benefit}}(lp\given \bm{x},
+\hat{\bm{\beta}}) = g(lp) - g(lp+\hat{\gamma}) $$
 
 ### Linear interaction
-The assumption of constant relative treatment effect is relaxed modeling a
-linear interaction of treatment with the risk linear predictor:
-$$E\{y\given \bm{x}, t_x, \hat{\bm{\beta}}\} = g\big(lp+(\gamma_0+\gamma_1lp)t_x\big)$$
-We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp\given\bm{x}, \hat{\bm{\beta}}) = g(lp) - g\big(\gamma_0+(1+\gamma_1)lp\big)$$
+The assumption of constant relative treatment effect is relaxed
+modeling a linear interaction of treatment with the risk linear
+predictor: $$E\{y\given \bm{x}, t_x, \hat{\bm{\beta}}\} =
+g\big(lp+(\gamma_0+\gamma_1lp)t_x\big)$$ We predict absolute benefit
+from $$\hat{f}_{\text{benefit}}(lp\given\bm{x}, \hat{\bm{\beta}}) =
+g(lp) - g\big(\gamma_0+(1+\gamma_1)lp\big)$$
 
 ### Restricted cubic splines
 Finally, we drop the linearity assumption and predict absolute benefit using
@@ -156,14 +178,13 @@ $$f_{RCS}(x)=\alpha_0+\alpha_1h_1(x)+\alpha_2h_2(x)+\dots+\alpha_{k-1}h_{k-1}(x)
 $$h_{j+1}(x)= (x-t_j)^3-(x-t_{k-1})_+\frac{t_k-t_j}{t_k-t_{k-1}}+(x-t_k)^3_+\frac{t_{k-1}-t_j}{t_k-t_{k-   1}}$$
 and $t_1,\dots,t_k$ are the selected knots. We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp \given \bm{x},\hat{\bm{\beta}})=P(y=1\given lp, t_x=0)-P(y=1\given lp,t_x=1)$$.
 
-```{r tab1, echo=FALSE, eval=TRUE, warning=FALSE}
+
+```{r tab1, echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE}
  asd <- read_csv(
-  here("data/processed/analysisIds.csv"),
-  col_types = "iffiiddddddddddddd"
+  here("data/processed/analysisIds.csv")
 ) %>%
   select(-"type")
-
-kableExtra::kable(
+kableExtra::kbl(
   asd,
   format = "latex",
   escape = FALSE,
@@ -173,409 +194,73 @@ kableExtra::kable(
   caption     = "",
   col.names   = c(
     "Scenario",
-    "Effect",
+    "Base",
     "N",
     "AUC",
+    "Treatment-related harm",
     paste0("b", 0:8),
     paste0("g", 0:2),
-    "c"
+    "c",
+    "Before harms",
+    "After harms"
   ),
+  linesep = c('', '', '', '\\addlinespace'),
   digits      = 2,
   format.args = list(
     big.mar      = ",",
     decimal.mark = "."
   )
 ) %>%
-  kableExtra::group_rows(
-    group_label = "Constant treatment effect",
-    start_row   = 10,
-    italic      = TRUE,
-    end_row     = 27
-  ) %>%
-  kableExtra::group_rows(
-    group_label = "Linear deviation",
-    start_row   = 28,
-    italic      = TRUE,
-    end_row     = 45
-  ) %>%
-  kableExtra::group_rows(
-    group_label = "Quadratic deviation",
-    start_row   = 46,
-    italic      = TRUE,
-    end_row     = 63
-  ) %>%
   kableExtra::landscape() %>%
   kableExtra::add_header_above(
     c(
-      "Analysis ID"           = 4,
+      "Analysis ID"           = 5,
       "Baseline risk"         = 9,
-      "True treatment effect" = 4
+      "True treatment effect" = 4,
+      "Benefit"               = 2
       )
-  )
+  ) %>%
+  kableExtra::kable_styling(font_size = 7)
 ```
 
 \newpage
-```{r tab2, echo=FALSE, eval=TRUE, warning=FALSE}
-asd <- read_csv(
-  here("data/processed/analysisIdsInteractions.csv"),
-  col_types = "iffiidddddddddddddd"
-) %>%
-  select(-c("type", "g0"))
+\begin{landscape}
+```{r adaptiveBase, cache=FALSE, echo=FALSE, fig.cap="Adaptive model selection rates for the base case scenario true prediction AUC of 0.75, sample size of 4250", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_base.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+\end{landscape}
 
-  knitr::kable(
-    asd,
-    format      = "latex",
-    longtable   = TRUE,
-    align       = "r",
-    booktabs    = TRUE,
-    col.names   = c(
-      "Scenario",
-      "Effect",
-      "N",
-      "AUC",
-      paste0("b", 0:8),
-      "g1", "g2", "g5", "g6"
-    ),
-    digits      = 2,
-    format.args = list(
-      big.mar      = ",",
-      decimal.mark = "."
-    ),
-    caption    = ""
-  ) %>%
-  kableExtra::landscape() %>%
-  kableExtra::add_header_above(
-    c(
-      "Analysis ID"           = 4,
-      "Baseline risk"         = 9,
-      "Coefficient in\ntreatment arm" = 4
-      )
-  )
+\newpage
+\begin{landscape}
+```{r adaptiveSampleSize, cache=FALSE, echo=FALSE, fig.cap="Adaptive model selection rates for sample size of 17000.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_sample_size.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+\end{landscape}
+
+\newpage
+\begin{landscape}
+```{r adaptiveAuc, cache=FALSE, echo=FALSE, fig.cap="Adaptive model selection rates for true prediction AUC of 0.85.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_auc.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+\end{landscape}
+
+\newpage
+```{r rmseHighBase, cache=FALSE, echo=FALSE, fig.cap="RMSE high effect base", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_base.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-# Results in scenarios with interactions
-
-When we considered a set of 4 true linear treatment-covariate interactions the
-model containing a linear interaction with the prognostic index had the lowest
-median RMSE. We observed an increasing trend in prediction errors with
-increasing interaction intensity (Figure \@ref(fig:rmseInteractions)). The
-model with restricted cubic spline smoothing (3 knots) had very comparable
-performance to the linear interaction model. Increasing the flexibility of the
-smooth methods resulted in increasing median RMSE. These results may be
-explained by the fact that the interactions considered were linear, thus
-favoring the linear interaction model. More flexible approaches may be better
-suited for higher-order treatment-covariate interactions. Finally, the adaptive
-approach had adequate performance under all scenarios, resembling the
-performance of the best-performing approach every time.
-
-```{r rmseInteractions, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/rmse_interactions.png"))
+\newpage
+```{r rmseHighSampleSize, cache=FALSE, echo=FALSE, fig.cap="RMSE high effect sample size", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_sample_size.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-The constant treatment effects model, the linear interaction model and the model
-with RCS smoothing (3 knots) had the highest c-for-benefit across all scenarios
-(Figrue \@ref(fig:discriminationInteractions)). RCS smoothing with 4 or 5 knots
-did not improve performance. On the contrary, we observed an increasing trend in
-c-for-benefit variability, as was the case in the main text. The adaptive
-apprach again had statisfactory performance.
-
-```{r discriminationInteractions, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/discrimination_interactions.png"))
-```
-
-Despite the very similar performance in terms of prediction errors, the linear
-interaction model resulted in better-calibrated benefit predictions compared to
-the rest of the methods (Figure \@ref(fig:calibrationInteractions)). The constant
-treatment effects model had the highest median ICI-for-benefit across all
-scenario settings, which became more pornounced with increasing
-treatment-covariate interaction intensity.
-
-```{r calibrationInteractions, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '100%'}
-knitr::include_graphics(here::here("figures/calibration_interactions.png"))
-```
-
-# Case study
-
-We fitted a logistic regression model to predict 30-day mortality after a
-myocardial infarction using data from the GUSTO-I trial. The risk factors
-modeled were age, Killip class, systolic blood pressure heart rate, primary MI
-and MI location. We restricted systolic blood pressure values to 120 mmHg and
-modeled heart rate using linear spline transformation with a knot at 50 beats
-per minute. A brief overview of the distribution of baseline characteristics is
-presented in Table \@ref(tab:table1). The coefficients of the model can be seen
-in Table \@ref(tab:modelCoefficients). We used this model in the manuscript to
-derive baseline risk predictions to all patients of the study. For all patients
-we set the treatment indicator to 0, assuming a constant relative treatment
-effect. The model displayed very good internal validity (Table
-\@ref(tab:internalValidity)).
-
-```{r table1, echo=FALSE, warning=FALSE, message=FALSE}
-load(here::here("data/raw/gusto.rda"))
-gusto <- gusto %>%
-  tibble() %>%
-  filter(!is.na(tpa))
-
-gustoTable1 <- gusto %>%
-  mutate(
-    tpa = factor(
-      tpa,
-      levels = c(0, 1),
-      labels = c(
-        "Tissue plasminogen activator",
-        "Streptokinase"
-      )
-    ),
-    Age = age,
-    Outcome = factor(
-      day30,
-      levels = c(0, 1),
-      labels = c(
-        "Alive",
-        "Dead"
-      )
-    )
-  )
-
-res <- table1::table1(
-  ~ sex + Age + Killip + sysbp + + miloc + pulse + pmi + Outcome | tpa,
-  data = gustoTable1,
-  caption = "Baseline characteristics of the patients included in GUSTO-I trial."
-)
-
-table1::t1kable(res)
-```
-
-```{r modelCoefficients, echo=FALSE, warning=FALSE, message=FALSE}
-gustoModelData <- gusto %>%
-  rename(
-    "outcome" = "day30",
-    "treatment" = "tpa"
-  )
-
-prediction <- glm(
-  outcome ~ treatment + age + Killip + pmin(sysbp, 120) + rms::lsp(pulse, 50) + pmi + miloc,
-  data = gustoModelData,
-  maxit = 99,
-  family = "binomial"
-)
-
-
-
-predictionSummary <- summary(prediction)
-table <- predictionSummary$coefficients
-
-rownames(table)[2] <- "Treatment"
-rownames(table)[3] <- "Age"
-rownames(table)[4] <- "KILLIP (II)"
-rownames(table)[5] <- "KILLIP (III)"
-rownames(table)[6] <- "KILLIP (IV)"
-rownames(table)[7] <- "Systolic blood pressure"
-rownames(table)[8] <- "Pulse rate"
-rownames(table)[9] <- "Pulse rate'"
-rownames(table)[10] <- "Prior MI (yes)"
-rownames(table)[11] <- "MI location (other)"
-rownames(table)[12] <- "MI location (anterior)"
-
-
- knitr::kable(
-    table,
-    format      = "latex",
-    align       = "r",
-    booktabs    = TRUE,
-    digits      = 4,
-    format.args = list(
-      big.mar      = ",",
-      decimal.mark = "."
-    ),
-    caption    = "Coefficients of the prediction model for 30-day mortality after myocardial infarction (MI)."
-  ) 
-
-```
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Smooth calibration of the derived prediction model."}
-predictionStats <- rms::val.prob(
-  y = gustoModelData$outcome, 
-  logit = prediction$linear.predictors,
-  logistic.cal = FALSE,
-  statloc = FALSE
-)
-```
-
-```{r internalValidity, echo=FALSE, warning=FALSE, message=FALSE}
-table <- tibble(
-  Metric = c(
-    "AUC",
-    "Brier score",
-    "Emax",
-    "E90",
-    "Eavg"
-  ),
-  Value = c(
-    predictionStats[2],
-    predictionStats["Brier"],
-    predictionStats["Emax"],
-    predictionStats["E90"],
-    predictionStats["Eavg"]
-  )
-)
-
- knitr::kable(
-    table,
-    format      = "latex",
-    align       = "l",
-    booktabs    = TRUE,
-    digits      = 4,
-    format.args = list(
-      big.mar      = ",",
-      decimal.mark = "."
-    ),
-    caption    = "Evaluation statistics of the prediction model for 30-day mortality in GUSTO-I."
-  ) 
-```
-
-We used the derived prediction model to predict benefit of tPA to 30-day
-mortality using the data at hand. The models are presented in the main
-manuscript. All approaches displayed comaprable discrimination for benefit, with
-the constant treatment effect model, the linear interaction model and the RCS (5
-knots) model displaying the highest performance (Table
-\@ref(tab:gustoPerformanceMetrics)). However, the linear interaction model and
-the RCS (5 knots) model were worse calibrated. The constant treatment effect
-model also had the best performance among the considered methods in terms of
-calibration for benefit.
-
-
-```{r gustoPerformanceMetrics, echo=FALSE, warning=FALSE, message=FALSE}
-metrics <- readr::read_csv(
-  here::here("data/processed/gustoPerformanceMetrics.csv")
-)
-
- knitr::kable(
-    metrics,
-    format      = "latex",
-    align       = "l",
-    booktabs    = TRUE,
-    digits      = 4,
-    format.args = list(
-      big.mar      = ",",
-      decimal.mark = "."
-    ),
-    col.names = c(
-      "Model",
-      "C",
-      "ICI",
-      "AIC"
-    ),
-    caption    = "Performance metrics of the different methods used to predict benefit of tPA on 30-day mortality using data from the GUSTO-I trial."
-  ) %>%
-   kable_styling(latex_options = "HOLD_position")
-```
-
-
-
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-library(tidyverse)
-library(kableExtra)
-library(flextable)
-
-analysisIds <- read_csv(
-  here("data/processed/analysisIds.csv"),
-  col_types = "iffiiddddddddddddd"
-)
-
-interactionAnalysisIds <- read_csv(
-  here::here("data/processed/analysisIdsInteractions.csv")
-)
-
-dat1 <- readr::read_csv(here::here("data/processed/adaptiveModel.csv")) %>%
-  filter(scenarioId < 64) %>%
-  group_by(scenarioId) %>%
-  nest() %>% 
-  mutate(
-    test = lapply(data, plyr::count),
-    n = lapply(data, nrow)
-  ) %>%
-  select(scenarioId, test, n) %>%
-  arrange(scenarioId) %>%
-  unnest(c(test, n)) %>%
-  mutate(
-    perc = round(freq / n, 2),
-    model = ifelse(
-      selectedAdaptiveModel == "RCS with 3 knots",
-      "rcs",
-      selectedAdaptiveModel
-    )
-  ) %>%
-  ungroup() %>%
-  select(scenarioId, model, perc) %>%
-  spread(model, perc) %>%
-  replace(is.na(.), 0) %>%
-  left_join(analysisIds, by = c("scenarioId" = "scenario")) %>%
-  select(
-    type,
-    effectSize,
-    sampleSize,
-    auc,
-    treatment,
-    risk,
-    rcs
-  )
-
-dat2 <- readr::read_csv(here::here("data/processed/adaptiveModel.csv")) %>%
-  filter(scenarioId >= 64) %>%
-  group_by(scenarioId) %>%
-  nest() %>% 
-  mutate(
-    test = lapply(data, plyr::count),
-    n = lapply(data, nrow)
-  ) %>%
-  select(scenarioId, test, n) %>%
-  arrange(scenarioId) %>%
-  unnest(c(test, n)) %>%
-  mutate(
-    perc = round(freq / n, 2),
-    model = ifelse(
-      selectedAdaptiveModel == "RCS with 3 knots",
-      "rcs",
-      selectedAdaptiveModel
-    )
-  ) %>%
-  ungroup() %>%
-  select(scenarioId, model, perc) %>%
-  spread(model, perc) %>%
-  replace(is.na(.), 0) %>%
-  left_join(interactionAnalysisIds, by = c("scenarioId" = "scenario")) %>%
-  select(
-    type,
-    effectSize,
-    sampleSize,
-    auc,
-    treatment,
-    risk,
-    rcs
-  )
-
-dat <- dat1 %>% bind_rows(dat2)
-
-
-colourer <- scales::col_quantile(
-  palette = c("#e5f5f9", "#2ca25f"),
-  domain = c(0, 1),
-  n = 20
-)
-
-flextable(dat) %>%
-  theme_booktabs(bold_header = TRUE) %>%
-  bg(
-    bg = colourer,
-    j = c("treatment", "risk", "rcs"),
-    part = "body"
-  ) %>%
-  set_caption("Rates at which the adaptive approach selected each model type.")
-```
-
-
-```{r rmseAbsent, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods when there is no treatment effect. Each row contains the result for sample sizes of 1064, 4250 and 17000. Each column contains the results for AUC of the baseline risk prediction model of 0.65, 0.75 and 0.85.", fig.show="hold", out.width = '100%'}
-grid::grid.raster(tiff::readTIFF(here("figures/rmse_absent.tiff")))
-# knitr::include_graphics(here::here("figures/rmse_base.png"))
+\newpage
+```{r rmseHighAuc, cache=FALSE, echo=FALSE, fig.cap="RMSE high effect auc", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_auc.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```

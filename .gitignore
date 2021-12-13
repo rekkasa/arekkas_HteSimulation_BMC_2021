@@ -11,4 +11,8 @@ Rplots.*
 data/raw
 \#*
 .\#*
+*.tiff
+*.log
 *~
+*.tex
+*.spl

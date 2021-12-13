@@ -20,7 +20,12 @@ library(dplyr)
 
 analysisIds <- readr::read_csv(
   "data/processed/analysisIds.csv",
-  col_types = "iffiiddddddddddddd"
+  col_types =  cols(
+    .default = col_double(),
+    base = col_character(),
+    type = col_character(),
+    harm = col_character()
+  )
 )
 
 analysisIdsInteractions <- readr::read_csv(
@@ -32,13 +37,31 @@ selectedScenario <- as.numeric(
   stringr::str_extract(args[1], "[0-9]+")
 )
 
-if (selectedScenario <= 63) {
+if (selectedScenario <= 648) {
   idSettings <- analysisIds %>%
     filter(scenario == selectedScenario)
+  
+  if (idSettings$base != "absent") {
+    harm <- case_when(
+      idSettings$harm == "moderate-positive" ~ idSettings$averageTrueBenefit / 4, 
+      idSettings$harm == "strong-positive"   ~ idSettings$averageTrueBenefit / 2, 
+      idSettings$harm == "negative"          ~ -idSettings$averageTrueBenefit / 4, 
+      TRUE                                   ~ 0
+    )
+  } else {
+    harm <- case_when(
+      idSettings$harm == "moderate-positive" ~ .01,
+      idSettings$harm == "strong-positive"   ~ .02,
+      idSettings$harm == "negative"          ~ -.01,
+      TRUE                                   ~ 0
+    )
+  }
+  
   createF1 <- function(c) function(x) x - c
   createF2 <- function(c) function(x) (x - c)^2
   treatmentEffectSettings <- SimulateHte::createTreatmentEffectSettings(
     type = "lp",
+    harm = harm,
     modelSettings = SimulateHte::createModelSettings(
       constant = idSettings$g0,
       modelMatrix = matrix(c(1, 1)),
@@ -128,7 +151,7 @@ simulationSettings <- list(
 )
 
 analysisSettings <- SimulationEvaluationHte::createAnalysisSettings(
-  threads        = 2,
+  threads        = 46,
   seed           = 19910930,
   replications   = 500,
   validationSize = 5e5,
@@ -157,10 +180,6 @@ smoothSettings <- list(
     label = "linear_predictor",
     settings = createModelBasedSettings()
   ),
-  loess = createHteSettings(
-    settings = SmoothHte::createLoessSettings(),
-    label = "loess"
-  ),
   rcs3 = createHteSettings(
     settings = SmoothHte::createRcsSettings(),
     label = "rcs_3_knots"
@@ -173,14 +192,12 @@ smoothSettings <- list(
     settings = SmoothHte::createRcsSettings(nKnots = 5),
     label = "rcs_5_knots"
   ),
-  locfit = createHteSettings(
-    settings = SmoothHte::createLocfitSettings(),
-    label = "locfit"
-  ),
   adaptive = createHteSettings(
     settings = createAdaptiveSettings(
       list(
-        nonLinearSettings = SmoothHte::createRcsSettings(),
+        rcs3 = SmoothHte::createRcsSettings(),
+        rcs4 = SmoothHte::createRcsSettings(nKnots = 4),
+        rcs5 = SmoothHte::createRcsSettings(nKnots = 5),
         linearSettings    = SmoothHte::createModelBasedSettings(),
         constantSettings  = SmoothHte::createModelBasedSettings(
           type                 = "treatment",

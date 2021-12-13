@@ -1,27 +1,24 @@
-
-plotResult <- function(scenarios, processed, titles) {
+plotResult <- function(scenarios, processed, titles, metric, limits = c(0, 10)) {
   
   plotList <- list()
-  
   for (i in seq_along(scenarios)) {
-    tmp <- processed %>%
+    tmpList <- list()
+    tmpList$absent <- processed %>%
       dplyr::filter(scenarioId == scenarios[i])
+    tmpList$moderate_positive <- processed %>%
+      dplyr::filter(scenarioId == scenarios[i] + 1)
+    tmpList$strong_positive <- processed %>%
+      dplyr::filter(scenarioId == scenarios[i] + 2)
+    
+    tmpData <- bind_rows(tmpList, .id = "harm")
     
     plot <- createPlot(
-      data = tmp,
+      data = tmpData,
       metric = metric,
       title = titles[i],
-      limits = c(0, 10),
-      pointSize = .5
-    ) +
-      ggplot2::theme(
-        legend.position = "none",
-        axis.title.x    = ggplot2::element_blank(),
-        axis.text.x     = ggplot2::element_text(size = 10, angle = 45, hjust = 1),
-        axis.title.y    = ggplot2::element_blank(),
-        axis.text.y     = ggplot2::element_text(size = 9.5),
-        plot.title      = ggtext::element_markdown(size = 14)
-      )
+      limits = limits,
+      pointSize = .2
+    )
     
     plotList[[i]] <- plot
   }
