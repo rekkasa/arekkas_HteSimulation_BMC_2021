@@ -1,8 +1,26 @@
 #!/usr/bin/env Rscript
 
-# Description: 
-# Output: 
-# Depends: 
+# ===================================================
+# Description:
+#   Generates the calibration plots
+# Input:
+#   - sample size
+#   - auc
+#   - value
+# Output:
+#   - figures/calibration_*.tiff
+# Depends:
+#   - data/processed/analysisIds.csv
+#   - data/processed/calibration.csv
+#   - code/helpers/CreateManuscriptPlots.R
+#   - code/helpers/PlotResult.R
+# ===================================================
+
+args <- commandArgs(trailingOnly = TRUE)
+args_base <- as.character(args[1])
+args_sampleSize <- as.numeric(args[2])
+args_auc <- as.numeric(args[3])
+args_value <- as.character(args[4])
 
 library(tidyverse)
 library(glue)
@@ -12,13 +30,14 @@ source("code/helpers/PlotResult.R")
 
 scenarioIds <- readr::read_csv("data/processed/analysisIds.csv") %>%
   filter(
-    base == "moderate",
-    !(type %in% c("linear-moderate", "quadratic-moderate")),
-    sampleSize == 4250,
-    auc == .75
-  )
+    base == args_base,
+    harm != "negative",
+    !(type %in% c("quadratic-moderate", "linear-moderate")),
+    sampleSize == args_sampleSize,
+    auc == args_auc
+  ) 
+
 metric    <- "calibration"
-value     <- "base"
 
 titles <- scenarioIds %>%
   mutate(
@@ -53,7 +72,6 @@ f <- function(x) x * 100
 processed <- readr::read_csv(
   file = file.path("data/processed", metricFile)
 ) %>% 
-  select(-one_of("locfit")) %>%
   mutate_at(
     c(
       "constant_treatment_effect",
@@ -72,11 +90,12 @@ scenarios <- scenarioIds %>%
   unlist()
 names(scenarios) <- NULL
 
-plotList <- plotResult(scenarios, processed, titles, metric = metric, limits = c(0, 6))
+plotList <- plotResult(scenarios, processed, titles, metric = metric, limits = c(0, 6, 1))
 
-pp <- gridExtra::grid.arrange(
+res <- gridExtra::grid.arrange(
   plotList[[1]] +
     theme(
+      panel.grid.minor = element_blank(),
       plot.title = element_markdown(),
       axis.title = element_blank(),
       legend.direction = "horizontal",
@@ -87,6 +106,7 @@ pp <- gridExtra::grid.arrange(
     ),
   plotList[[2]] +
     theme(
+      panel.grid.minor = element_blank(),
       plot.title = element_markdown(),
       axis.title = element_blank(),
       legend.position = "none",
@@ -94,12 +114,14 @@ pp <- gridExtra::grid.arrange(
     ),
   plotList[[3]] +
     theme(
+      panel.grid.minor = element_blank(),
       plot.title = element_markdown(),
       axis.title = element_blank(),
       legend.position = "none"
     ),
   plotList[[4]] +
     theme(
+      panel.grid.minor = element_blank(),
       axis.title = element_blank(),
       plot.title = element_markdown(),
       legend.position = "none"
@@ -122,14 +144,15 @@ pp <- gridExtra::grid.arrange(
 fileName <- paste0(
   paste(
     metric,
-    value,
+    args_base,
+    args_value,
     sep = "_"
   ),
   ".tiff"
 )
   ggplot2::ggsave(
     file.path("figures", fileName), 
-    plot = pp,
+    plot = res,
     dpi = 1200,
     width = 10, 
     height = 7,

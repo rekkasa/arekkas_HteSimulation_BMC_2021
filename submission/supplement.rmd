@@ -212,18 +212,44 @@ kableExtra::kbl(
 
 # Adaptive model selection frequencies
 
-```{r adaptiveBase, cache=TRUE, echo=FALSE, fig.cap="Adaptive model selection rates for the base case scenario true prediction AUC of 0.75, sample size of 4250", fig.show="hold", out.width = '100%'}
+```{r adaptiveBase, cache=TRUE, echo=FALSE, fig.cap="Model selection frequencies of the adaptive approach based on Akaike's Information Criterion across 500 replications. The scenario with the true constant relative treatment effect (first panel) had a true prediction AUC of 0.75 and sample size of 4,250. ", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_base.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-```{r adaptiveSampleSize, cache=TRUE, echo=FALSE, fig.cap="Adaptive model selection rates for sample size of 17000.", fig.show="hold", out.width = '100%'}
+```{r adaptiveSampleSize, cache=TRUE, echo=FALSE, fig.cap="Model selection frequencies of the adaptive approach based on Akaike's Information Criterion across 500 replications. Sample size is 17,000 rather than 4,250 in Figure \\ref{fig:adaptiveBase}", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-```{r adaptiveAuc, cache=TRUE, echo=FALSE, fig.cap="Adaptive model selection rates for true prediction AUC of 0.85.", fig.show="hold", out.width = '100%'}
+```{r adaptiveAuc, cache=TRUE, echo=FALSE, fig.cap="Model selection frequencies of the adaptive approach based on Akaike's Information Criterion across 500 replications. AUC is 0.85 rather than 0.75 in Figure \\ref{fig:adaptiveBase}", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_auc.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+
+\newpage
+
+# Discrimination and calibration for benefit
+
+```{r discriminationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Sample size", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/discrimination_moderate_sample_size.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+
+
+```{r discriminationAuc, cache=FALSE, echo=FALSE, fig.cap="Auc", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/discrimination_moderate_auc.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+
+```{r calibrationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Calibration Sample size", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_sample_size.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+
+
+```{r calibrationAuc, cache=FALSE, echo=FALSE, fig.cap="Calibration Auc", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
@@ -238,17 +264,17 @@ settings were considered along with the same settings for linear,
 quadratic and non-monotonic deviations from the base case scenario of
 constant relative treatment effects are considered. All results can be found at [https://arekkas.shinyapps.io/simulation_viewer/](https://arekkas.shinyapps.io/simulation_viewer/).
 
-```{r rmseHighBase, cache=TRUE, echo=FALSE, fig.cap="RMSE high effect base", fig.show="hold", out.width = '100%'}
+```{r rmseHighBase, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated super-population of size 500,000. The scenario with true constant relative treatment effect (panel A) had a true prediction AUC of 0.75 and sample size of 4,250. The RMSE is also presented for strong linear (panel B), strong quadratic (panel C), and non-monotonic (panel D) deviations from constant relative treatment effects. Panels on the right side present the true relationship between baseline risk (x-axis) and absolute treatment benefit (y-axis). The 2.5, 25, 75 and 97.5 percentiles of the risk distribution are expressed in the boxplot.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_base.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-```{r rmseHighSampleSize, cache=TRUE, echo=FALSE, fig.cap="RMSE high effect sample size", fig.show="hold", out.width = '100%'}
+```{r rmseHighSampleSize, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replcations calculated in a simulated sample of size 500,000. Sample size is 17,000 rather than 4,250 in Figure \\ref{fig:rmseHighBase}.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-```{r rmseHighAuc, cache=TRUE, echo=FALSE, fig.cap="RMSE high effect auc", fig.show="hold", out.width = '100%'}
+```{r rmseHighAuc, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replcations calculated in a simulated sample of size 500,000. AUC is 0.85 rather than in Figure \\ref{fig:rmseHighBase}.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```

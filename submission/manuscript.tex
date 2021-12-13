@@ -340,25 +340,11 @@ true constant treatment effect settings, but was sensitive to all
 considered deviations, resulting in increased RMSE. Finally, the
 adaptive approach had comparable performance to the best-performing
 method in each scenario. However, in comparison with the best-performing
-approach, its RMSE was more variable across the 1000 replications in the
+approach, its RMSE was more variable across the 500 replications in the
 scenarios with linear and non-monotonic deviations, especially when also
 including moderate or strong treatment-related harms. This is caused by
 wrongly selecting the constant treatment effect model in a substantial
-proportion of the replications (Supplement, Table XX).
-
-In the scenario with a true constant relative treatment effects, the
-adaptive approach selected the constant effect model for the majority of
-the replcations, even in the presence of treatment-related harms (96\%
-of the replications without harms and 88\% with strong harms). With
-strong linear or quadratic deviations and increasing treatment-related
-harms the adaptive approach increasingly favored the linear interaction
-model. With non-monotonic deviations, we observed increasing selection
-frequencies for RCS-3 with increasing treatment harms (from 32\% with no
-harms to 53\% with strong harms), whereas selection frequencies for the
-linear interaction model dropped from 40\% with no harms to 7\% with
-strong harms. Finally, in the case of strong linear and non-monotonic
-deviations selection frequencies of the constant treatment effect model
-remained high despite increasing treatment harms (Supplement, Table XX).
+proportion of the replications (Supplement, Figure S1).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{manuscript_files/figure-latex/rmsebase-1} \caption{RMSE of the considered methods across 500 replications calculated in a simulated super-population of size 500,000. The scenario with true constant relative treatment effect (panel A) had a true prediction AUC of 0.75 and sample size of 4250. The RMSE is also presented for strong linear (panel B), strong quadratic (panel C), and non-monotonic (panel D) from constant relative treatment effects. Panels on the right side present the true relationship between baseline risk (x-axis) and absolute treatment benefit (y-axis). The 2.5, 25, 50, 75, and 97.5 percentiles of the risk distribution are expressed by the boxplot.}\label{fig:rmsebase}
@@ -374,7 +360,7 @@ treatment-related harms) compared to the linear interaction approach
 treatment-related harms. Due to the large sample size, the RMSE of the
 adaptive approach was even more similar to the best-performing method,
 and the constant relative treatment effect model was less often wrongly
-selected (\textbf{\emph{numbers????}}).
+selected (Supplement, Figure S2).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{manuscript_files/figure-latex/rmsesamplesize-1} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. Sample size 17,000 rather than 4250 in Figure \ref{fig:rmsebase}}\label{fig:rmsesamplesize}
@@ -389,7 +375,7 @@ interaction model). As observed in the base case scenario the adaptive
 approach wrongly selected the constant treatment effect model (23\% and
 25\% of the replications in the strong linear and non-monotonic
 deviation scenarios without treatment-related harms, respectively),
-leading to more variability of the RMSE.
+leading to more variability of the RMSE (Supplement, Figure S3).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{manuscript_files/figure-latex/rmseauc-1} \caption{RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250.}\label{fig:rmseauc}

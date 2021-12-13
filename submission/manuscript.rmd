@@ -255,49 +255,27 @@ adaptiveSelections <- readr::read_csv(here::here("data/processed/adaptiveSelecti
 rmseDistribution <- readr::read_csv(here::here("data/processed/rmseDistribution.csv"))
 aucDistribution <- readr::read_csv(here::here("data/processed/discriminationDistribution.csv"))
 ```
+
 The linear interaction model outperformed all RCS methods in terms of
 RMSE in scenarios with true constant relative treatment effect (OR =
 0.8, N = `r 4250` and AUC = 0.75), strong linear and even strong
-quadratic deviations from a constant relative treatment effect
-(Figure \ref{fig:rmsebase}; panels A-C). However, with
-non-monotonic deviations from a constant relative treatment effect,
-the RMSE of the linear interaction model increased substantially, 
-especially in the presence of treatment-related harms (Figure 
-\ref{fig:rmsebase}; panel D). In these scenarios, RCS-3 outperformed all other
-methods in terms of RMSE. The constant treatment effect
-approach had overall best performance under true constant treatment
-effect settings, but was sensitive to all considered deviations,
-resulting in increased RMSE. Finally, the adaptive approach had
-comparable performance to the best-performing method in each
-scenario. However, in comparison with the best-performing approach, its RMSE was
-more variable across the 500 replications in the scenarios with linear and
-non-monotonic deviations, especially when also including moderate or strong
-treatment-related harms. This is caused by wrongly selecting the constant
-treatment effect model in a substantial proportion of the replications
-(Supplement, Figure S3).
-
-In the scenario with a true constant relative treatment effects, the adaptive
-approach selected the constant effect model for the majority of the replcations, even in
-the presence of treatment-related harms
-(`r adaptiveSelections %>% filter(scenarioId == 217) %>% pull(treatment) * 100`\%
-of the replications without harms and 
-`r adaptiveSelections %>% filter(scenarioId == 219) %>% pull(treatment) * 100`\% 
-with strong harms). With strong linear or quadratic deviations and increasing
-treatment-related harms the adaptive approach increasingly favored the linear
-interaction model. With non-monotonic deviations, we observed increasing
-selection frequencies for RCS-3 with increasing treatment harms (from
-`r adaptiveSelections %>% filter(scenarioId == 397) %>% pull(rcs_3) * 100`\%
-with no harms to
-`r adaptiveSelections %>% filter(scenarioId == 399) %>% pull(rcs_3) * 100`\%
-with strong harms), whereas selection frequencies for the linear interaction
-model dropped from
-`r adaptiveSelections %>% filter(scenarioId == 397) %>% pull(risk) * 100`\%
-with no harms to
-`r adaptiveSelections %>% filter(scenarioId == 399) %>% pull(risk) * 100`\%
-with strong harms. Finally, in the case of strong linear and non-monotonic
-deviations selection frequencies of the constant treatment effect model remained
-high despite increasing treatment harms (Supplement, Table XX).
-
+quadratic deviations from a constant relative treatment effect (Figure
+\ref{fig:rmsebase}; panels A-C). However, with non-monotonic
+deviations from a constant relative treatment effect, the RMSE of the
+linear interaction model increased substantially, especially in the
+presence of treatment-related harms (Figure \ref{fig:rmsebase}; panel
+D). In these scenarios, RCS-3 outperformed all other methods in terms
+of RMSE. The constant treatment effect approach had overall best
+performance under true constant treatment effect settings, but was
+sensitive to all considered deviations, resulting in increased
+RMSE. Finally, the adaptive approach had comparable performance to the
+best-performing method in each scenario. However, in comparison with
+the best-performing approach, its RMSE was more variable across the
+500 replications in the scenarios with linear and non-monotonic
+deviations, especially when also including moderate or strong
+treatment-related harms. This is caused by wrongly selecting the
+constant treatment effect model in a substantial proportion of the
+replications (Supplement, Figure S1).
 
 ```{r rmsebase, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated super-population of size 500,000. The scenario with true constant relative treatment effect (panel A) had a true prediction AUC of 0.75 and sample size of 4250. The RMSE is also presented for strong linear (panel B), strong quadratic (panel C), and non-monotonic (panel D) from constant relative treatment effects. Panels on the right side present the true relationship between baseline risk (x-axis) and absolute treatment benefit (y-axis). The 2.5, 25, 50, 75, and 97.5 percentiles of the risk distribution are expressed by the boxplot.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_moderate_base.tiff")))
@@ -319,7 +297,7 @@ respectively), regardless of the strength of treatment-related
 harms. Due to the large sample size, the RMSE of the adaptive approach
 was even more similar to the best-performing method, and the constant
 relative treatment effect model was less often wrongly selected
-(***numbers????***).
+(Supplement, Figure S2).
 
     
 ```{r rmsesamplesize, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. Sample size 17,000 rather than 4250 in Figure \\ref{fig:rmsebase}", fig.show="hold", out.width = '100%'}
@@ -342,7 +320,7 @@ and
 `r adaptiveSelections %>% filter(scenarioId == 405) %>% pull(treatment) * 100`\%
 of the replications in the strong linear and non-monotonic deviation
 scenarios without treatment-related harms, respectively), leading to
-more variability of the RMSE.
+more variability of the RMSE (Supplement, Figure S3).
 
 ```{r rmseauc, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_moderate_auc.tiff")))
@@ -371,7 +349,7 @@ scenarios. ***With increasing sample size... (Suppl Fig...)***
 
 
 ```{r discrimination, cache=TRUE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
-grid::grid.raster(tiff::readTIFF(here("figures/discrimination_base.tiff")))
+grid::grid.raster(tiff::readTIFF(here("figures/discrimination_moderate_base.tiff")))
 # knitr::include_graphics(here::here("figures/discrimination_base.png"))
 ```
 
@@ -391,7 +369,7 @@ The results from all individual scenarios can be explored online at
 [https://arekkas.shinyapps.io/simulation_viewer/](https://arekkas.shinyapps.io/simulation_viewer/).
 
 ```{r calibration, cache=TRUE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
-grid::grid.raster(tiff::readTIFF(here("figures/calibration_base.tiff")))
+grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_base.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 

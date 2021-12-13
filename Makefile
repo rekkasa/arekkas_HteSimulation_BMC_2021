@@ -121,17 +121,44 @@ figures/rmse_high_auc.tiff : code/PlotRmse.R\
 	data/processed/analysisIds.csv
 	$< high 4250 0.85 auc
 
-figures/calibration_base.tiff : code/CalibrationBase.R\
+figures/calibration_moderate_base.tiff : code/CalibrationBase.R\
 	code/helpers/CreateManuscriptPlots.R\
 	code/helpers/PlotResult.R\
 	data/processed/calibration.csv
-	$<
+	$< moderate 4250 0.75 base
 
-figures/discrimination_base.tiff : code/DiscriminationBase.R\
+figures/calibration_moderate_sample_size.tiff : code/CalibrationBase.R\
 	code/helpers/CreateManuscriptPlots.R\
 	code/helpers/PlotResult.R\
-	data/processed/discrimination.csv
-	$<
+	data/processed/calibration.csv
+	$< moderate 17000 0.75 sample_size
+
+figures/calibration_moderate_auc.tiff : code/CalibrationBase.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	data/processed/calibration.csv
+	$< moderate 4250 0.85 auc
+
+figures/discrimination_moderate_base.tiff : code/DiscriminationBase.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	data/processed/discrimination.csv\
+	data/processed/analysisIds.csv
+	$< moderate 4250 0.75 base
+
+figures/discrimination_moderate_sample_size.tiff : code/DiscriminationBase.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	data/processed/discrimination.csv\
+	data/processed/analysisIds.csv
+	$< moderate 17000 0.75 sample_size
+
+figures/discrimination_moderate_auc.tiff : code/DiscriminationBase.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	data/processed/discrimination.csv\
+	data/processed/analysisIds.csv
+	$< moderate 4250 0.85 auc
 
 figures/rmse_n_auc.tiff : code/NPatientsAucPlots.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -215,8 +242,8 @@ submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd
 	figures/rmse_moderate_base.tiff\
 	figures/rmse_moderate_sample_size.tiff\
 	figures/rmse_moderate_auc.tiff\
-	figures/calibration_base.tiff\
-	figures/discrimination_base.tiff\
+	figures/calibration_moderate_base.tiff\
+	figures/discrimination_moderate_base.tiff\
 	figures/gusto.tiff
 	R -e 'rmarkdown::render("submission/manuscript.rmd", output_format = "all")'
 
@@ -227,6 +254,10 @@ submission/supplement.pdf : submission/supplement.rmd\
 	figures/selected_model_adaptive_base.tiff\
 	figures/selected_model_adaptive_sample_size.tiff\
 	figures/selected_model_adaptive_auc.tiff\
+	figures/discrimination_moderate_sample_size.tiff\
+	figures/discrimination_moderate_auc.tiff\
+	figures/calibration_moderate_sample_size.tiff\
+	figures/calibration_moderate_auc.tiff\
 	figures/rmse_high_base.tiff\
 	figures/rmse_high_sample_size.tiff\
 	figures/rmse_high_auc.tiff

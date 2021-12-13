@@ -125,7 +125,7 @@ scenarios <- scenarioIds %>%
 
 names(scenarios) <- NULL
 
-plotList <- plotResult(scenarios, processed, titles, metric = metric)
+plotList <- plotResult(scenarios, processed, titles, metric = metric, limits = c(0, 10, 2.5))
 
 
 # ------------------------------------
@@ -136,6 +136,7 @@ plotList <- plotResult(scenarios, processed, titles, metric = metric)
 gridList <- list(
   plotList[[1]] +
     theme(
+      panel.grid.minor = element_blank(),
       plot.title = element_markdown(size = 9),
       axis.title.x = ggplot2::element_blank(),
       axis.title.y = ggplot2::element_blank(),
@@ -164,6 +165,7 @@ gridList <- list(
     ) +
     theme_bw() +
     theme(
+      panel.grid.minor = element_blank(),
       axis.title.x = element_blank(),
       axis.title.y = element_blank(),
       axis.text.x = element_blank(),
@@ -178,6 +180,7 @@ gridList <- list(
     ),
   plotList[[2]] + 
     theme(
+      panel.grid.minor = element_blank(),
       plot.title = element_markdown(size = 9),
       axis.title = element_blank(),
       axis.text.x = element_blank(),
@@ -207,6 +210,7 @@ gridList <- list(
     ) +
     theme_bw() +
     theme(
+      panel.grid.minor = element_blank(),
       axis.title.x = element_blank(),
       axis.title.y = element_blank(),
       axis.text.x = element_blank(),
@@ -221,6 +225,7 @@ gridList <- list(
     ),
   plotList[[3]] +
     theme(
+      panel.grid.minor = element_blank(),
       plot.title = element_markdown(size = 9),
       axis.title = element_blank(),
       axis.text.x = element_blank(),
@@ -244,6 +249,7 @@ gridList <- list(
     ) +
     theme_bw() +
     theme(
+      panel.grid.minor = element_blank(),
       axis.title.x = element_blank(),
       axis.title.y = element_blank(),
       axis.text.y = element_text(size = 8),
@@ -258,6 +264,7 @@ gridList <- list(
     ),
   plotList[[4]] +
     theme(
+      panel.grid.minor = element_blank(),
       axis.title = element_blank(),
       axis.text.x = element_text(size = 8),
       axis.text.y = element_text(size = 8),
@@ -282,6 +289,7 @@ gridList <- list(
     ) +
     theme_bw() +
     theme(
+      panel.grid.minor = element_blank(),
       axis.title.x = element_blank(),
       axis.text.x = element_text(size = 8),
       axis.text.y = element_text(size = 8),

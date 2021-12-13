@@ -77,7 +77,11 @@ createPlot <- function(
       )
     ) +
     ggplot2::ylab(yAxis) +
-    ggplot2::ylim(limits[1], limits[2]) +
+    ggplot2::scale_y_continuous(
+               breaks = seq(limits[1], limits[2], limits[3]),
+               limits = c(limits[1], limits[2])
+             ) +
+    # ggplot2::ylim(limits[1], limits[2]) +
     ggplot2::theme_bw()
   
   if (!missing(title)) {

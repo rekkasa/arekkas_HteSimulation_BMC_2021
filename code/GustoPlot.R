@@ -162,8 +162,8 @@ plot <- ggplot() +
       "#969A97",
       "#273043",
       "#F15152",
-      "#F4D8CD",
-      "#FFC857"
+      "#FFC857",
+      "#F4D8CD"
     ),
     breaks = c(
       "Constant treatment effect",

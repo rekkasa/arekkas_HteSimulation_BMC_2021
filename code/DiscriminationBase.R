@@ -1,8 +1,27 @@
 #!/usr/bin/env Rscript
 
-# Description: 
-# Output: 
-# Depends: 
+# ===================================================
+# Description:
+#   Generates the discrimination plots
+# Input:
+#   - sample size
+#   - auc
+#   - value
+# Output:
+#   - figures/rmse_*.tiff
+# Depends:
+#   - data/processed/analysisIds.csv
+#   - data/processed/discrimination.csv
+#   - code/helpers/CreateManuscriptPlots.R
+#   - code/helpers/PlotResult.R
+# ===================================================
+
+args <- commandArgs(trailingOnly = TRUE)
+args_base <- as.character(args[1])
+args_sampleSize <- as.numeric(args[2])
+args_auc <- as.numeric(args[3])
+args_value <- as.character(args[4])
+
 
 library(tidyverse)
 library(glue)
@@ -12,13 +31,14 @@ source("code/helpers/PlotResult.R")
 
 scenarioIds <- readr::read_csv("data/processed/analysisIds.csv") %>%
   filter(
-    base == "moderate",
-    !(type %in% c("linear-moderate", "quadratic-moderate")),
-    sampleSize == 4250,
-    auc == .75
-  )
+    base == args_base,
+    harm != "negative",
+    !(type %in% c("quadratic-moderate", "linear-moderate")),
+    sampleSize == args_sampleSize,
+    auc == args_auc
+  ) 
+
 metric <- "discrimination"
-value  <- "base"
 
 titles <- scenarioIds %>%
   mutate(
@@ -57,9 +77,9 @@ scenarios <- scenarioIds %>%
   unlist()
 names(scenarios) <- NULL
 
-plotList <- plotResult(scenarios, processed, titles, metric = metric, limits = c(.5, .57))
+plotList <- plotResult(scenarios, processed, titles, metric = metric, limits = c(.49, .6, .01))
 
-pp <- gridExtra::grid.arrange(
+res <- gridExtra::grid.arrange(
   plotList[[1]] +
     theme(
       plot.title = element_markdown(),
@@ -68,6 +88,7 @@ pp <- gridExtra::grid.arrange(
       legend.position = c(.444, .93),
       legend.text = element_text(size = 7),
       legend.title = element_text(size = 8),
+      panel.grid.minor = element_blank(),
       axis.text.x = element_blank()
     ),
   plotList[[2]] +
@@ -75,18 +96,21 @@ pp <- gridExtra::grid.arrange(
       plot.title = element_markdown(),
       axis.title = element_blank(),
       legend.position = "none",
+      panel.grid.minor = element_blank(),
       axis.text.x = element_blank()
     ),
   plotList[[3]] +
     theme(
       plot.title = element_markdown(),
       axis.title = element_blank(),
+      panel.grid.minor = element_blank(),
       legend.position = "none"
     ),
   plotList[[4]] +
     theme(
       plot.title = element_markdown(),
       axis.title = element_blank(),
+      panel.grid.minor = element_blank(),
       legend.position = "none"
     ),
   heights = c(1, 1.05),
@@ -98,16 +122,17 @@ pp <- gridExtra::grid.arrange(
 fileName <- paste0(
   paste(
     metric,
-    value,
+    args_base,
+    args_value,
     sep = "_"
   ),
   ".tiff"
 )
   ggplot2::ggsave(
     file.path("figures", fileName), 
-    plot = pp,
+    plot = res,
     dpi = 1200,
     width = 10, 
-    height = 7,
+    height = 8,
     compression = "lzw"
   )
