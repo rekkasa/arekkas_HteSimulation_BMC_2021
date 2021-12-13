@@ -107,32 +107,19 @@ For the first part, we consider:
   + $AUC=0.65$
   + $AUC=0.85$
   
-We set the true risk model coefficients to be $\bm{\beta} = \big(-1.63, 0.26,\dots,0.26\big)^t$ for $AUC=0.65$ and $\bm{\beta} = \big(-2.7, 0.82,\dots,0.82\big)^t$ for $AUC=0.85$. In both cases, $\beta_0$ is selected so that an event rate of $20\%$ is maintained in the control arm.  
+We set the true risk model coefficients to be $\bm{\beta} = \big(-1.63, 0.26,\dots,0.26\big)^t$ for $AUC=0.65$ and $\bm{\beta} = \big(-2.7, 0.82,\dots,0.82\big)^t$ for $AUC=0.85$. In both cases, $\beta_0$ is selected so that an event rate of $20\%$ is maintained in the control arm.
 
-For the second part linear and quadratic deviations from the
-assumption of constant relative effect are considered. We also
-consider different intensity levels of these deviations. The settings
-for these deviations are defined in Table \@ref(tab:tab1) and result
-in the effects of Figure \@ref(fig:fig1).
-
-```{r fig1, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '50%'}
-knitr::include_graphics(here::here("figures/deviate_linear_08.png"))
-knitr::include_graphics(here::here("figures/deviate_quadratic_08.png"))
-```
-
-In Figure \@ref(fig:fig2) the absolute benefits observed based on different
-settings are presented. The base-case scenario is also presented as a reference.
-
-```{r fig2, echo=FALSE, fig.cap="Linear and quadratic deviations from the base-case scenario of constant relative effect (OR=0.8)", fig.show="hold", out.width = '50%'}
-knitr::include_graphics(here::here("figures/deviate_linear_absolute_08.png"))
-knitr::include_graphics(here::here("figures/deviate_quadratic_absolute_08.png"))
-```
-
-Finally, we consider 3 additional scenarios of interaction of
-individual covariates with treatment. These scenarios include a 4 weak
-interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82$), 4 strong
-interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$), and 2
-weak and 2 strong interactions (Table \@ref(tab:tab2)).
+For the second part linear, quadratic and non-monotonic deviations
+from the assumption of constant relative effect are considered. We
+also consider different intensity levels of these deviations. Finally,
+constant absolute treatment-related harms are introduced,
+i.e. positive ($0.25\times\text{true average benefit}$), strong
+positive ($0.50\times\text{true average benefit}$) and negative
+($-0.25\times\text{true average benefit}$; i.e. constant absolute
+treatment-related benefit). In case of true absent treatment effects,
+treatment-related harms are set to $1\%, 2\%$ and $-1\%$ for
+positive, strong positive and negative setting, respectively. The
+settings for these deviations are defined in Table \@ref(tab:tab1).
 
 ## Risk modeling
 Merging treatment arms, we develop prediction models including a constant relative treatment effect:
@@ -223,44 +210,45 @@ kableExtra::kbl(
   kableExtra::kable_styling(font_size = 7)
 ```
 
-\newpage
-\begin{landscape}
-```{r adaptiveBase, cache=FALSE, echo=FALSE, fig.cap="Adaptive model selection rates for the base case scenario true prediction AUC of 0.75, sample size of 4250", fig.show="hold", out.width = '100%'}
+# Adaptive model selection frequencies
+
+```{r adaptiveBase, cache=TRUE, echo=FALSE, fig.cap="Adaptive model selection rates for the base case scenario true prediction AUC of 0.75, sample size of 4250", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_base.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
-\end{landscape}
 
-\newpage
-\begin{landscape}
-```{r adaptiveSampleSize, cache=FALSE, echo=FALSE, fig.cap="Adaptive model selection rates for sample size of 17000.", fig.show="hold", out.width = '100%'}
+```{r adaptiveSampleSize, cache=TRUE, echo=FALSE, fig.cap="Adaptive model selection rates for sample size of 17000.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
-\end{landscape}
 
-\newpage
-\begin{landscape}
-```{r adaptiveAuc, cache=FALSE, echo=FALSE, fig.cap="Adaptive model selection rates for true prediction AUC of 0.85.", fig.show="hold", out.width = '100%'}
+```{r adaptiveAuc, cache=TRUE, echo=FALSE, fig.cap="Adaptive model selection rates for true prediction AUC of 0.85.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
-\end{landscape}
 
 \newpage
-```{r rmseHighBase, cache=FALSE, echo=FALSE, fig.cap="RMSE high effect base", fig.show="hold", out.width = '100%'}
+
+# Strong relative treatment effect
+
+Here we present the root mean squared error of the considered methods
+using strong constant relative treatment effect ($\text{OR}=0.5$) as
+the reference. Again, the same sample size and prediction performance
+settings were considered along with the same settings for linear,
+quadratic and non-monotonic deviations from the base case scenario of
+constant relative treatment effects are considered. All results can be found at [https://arekkas.shinyapps.io/simulation_viewer/](https://arekkas.shinyapps.io/simulation_viewer/).
+
+```{r rmseHighBase, cache=TRUE, echo=FALSE, fig.cap="RMSE high effect base", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_base.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-\newpage
-```{r rmseHighSampleSize, cache=FALSE, echo=FALSE, fig.cap="RMSE high effect sample size", fig.show="hold", out.width = '100%'}
+```{r rmseHighSampleSize, cache=TRUE, echo=FALSE, fig.cap="RMSE high effect sample size", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-\newpage
-```{r rmseHighAuc, cache=FALSE, echo=FALSE, fig.cap="RMSE high effect auc", fig.show="hold", out.width = '100%'}
+```{r rmseHighAuc, cache=TRUE, echo=FALSE, fig.cap="RMSE high effect auc", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
