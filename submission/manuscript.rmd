@@ -1,7 +1,7 @@
 ---
 title: |
- Linear interaction of treatment with baseline risk was sufficient for predicting
- individualized benefit
+  An interaction between baseline risk and treatment assignment 
+  generally imporoved treatment effect predictions
 abstract: |
  **Objective**: To compare different risk-based methods predicting
  individualized treatment effects in RCTs. **Study Design and
@@ -30,16 +30,20 @@ author:
     affiliation: 1
   - name: Peter R. Rijnbeek
     affiliation: 1
-  - name: Ewout W. Steyerberg
+  - name: David M. Kent
     affiliation: 2
-  - name: David van Klaveren
+  - name: Ewout W. Steyerberg
     affiliation: 3
+  - name: David van Klaveren
+    affiliation: 4
 address:
   - code: 1
     address: Department of Medical Informatics, Erasmus Medical Center, Rotterdam, The Netherlands
   - code: 2
-    address: Department of Biomedical Data Sciences, Leiden University Medical Center, Leiden, The Netherlands
+    address: Predictive Analytics and Comparative Effectiveness Center, Institute for Clinical Research and Health Policy Studies, Tufts Medical Center, Boston, Massachusetts, USA
   - code: 3
+    address: Department of Biomedical Data Sciences, Leiden University Medical Center, Leiden, The Netherlands
+  - code: 4
     address: Department of Public Health, Erasmus Medical Center, Rotterdam, The Netherlands
 numbersections: true
 linenumbers: false
@@ -329,23 +333,32 @@ grid::grid.raster(tiff::readTIFF(here("figures/rmse_moderate_auc.tiff")))
 
 In comparison with the true approach, dsicrimination for benefit in
 the scenario with a constant relative treatment effect was only
-slightly lower for the linear interaction model, but more
-substantially lower for the non-linear RCS approaches (Figure
+slightly lower for the linear interaction model, but substantially
+lower for the non-linear RCS approaches (Figure
 \ref{fig:discrimination}; panel A). With strong linear or quadratic
 deviations from a constant relative treatment effect, all methods
 discriminated quite similarly (Figure \ref{fig:discrimination}; panels
 B-C). In the scenario with non-monotonic deviations, the constant
 effect model had much lower discriminative ability compared to
-non-linear RCS methods (median AUC of
+all other methods (median AUC of
 `r aucDistribution %>% filter(scenarioId == 397) %>% mutate(across(-one_of("scenarioId"), ~ d(.x))) %>% pull(median_constant)` 
 for the constant effects model,
 `r aucDistribution %>% filter(scenarioId == 397) %>% mutate(across(-one_of("scenarioId"), ~ d(.x))) %>% pull(median_linear)`
 for the linear interaction model and
 `r aucDistribution %>% filter(scenarioId == 397) %>% mutate(across(-one_of("scenarioId"), ~ d(.x))) %>% pull(median_rcs_3)`
-for the best-performing RCS-3; Figure \ref{fig:rmseauc}; panel D).
-With increasing number of RCS knots, we observed decreasing median
-values and increasing variability of the c-for-benefit in all
-scenarios. ***With increasing sample size... (Suppl Fig...)***
+for the best-performing RCS-3; Figure \ref{fig:discrimination}; panel
+D). The adaptive approach was unstable in terms of discrimination for
+benefit, especially in the presence of treamtnt-related harms. With
+increasing number of RCS knots, we observed decreasing median values
+and increasing variability of the c-for-benefit in all scenarios. When
+we increased the sample size to 17,000 we observed similar trends,
+however the performance of all methods was more stable (Supplement,
+Figure S4). Finally, when we increased the true prediction AUC to 0.85
+the adaptive approach in the case of non-monotonic deviations was,
+again, quite unstable, especially with null or moderate
+treatment-related harms (Supplement, Figure S5). In these scenarios,
+the adaptive approach tended to select more often the much inferior
+constant treatment effect method (Supplement, Figure S3)
 
 
 ```{r discrimination, cache=TRUE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.", fig.show="hold", out.width = '100%'}
@@ -362,8 +375,14 @@ worse calibration compared to RCS-3 in case of non-monotonic
 deviations and treatment-related harms (Figure \ref{fig:calibration};
 panel D). The adaptive approach was worse calibrated in scenarios with
 strong linear and non-monotonic deviations compared to the linear
-interaction model and RCS-3. ***With increasing sample size... (Supp
-Fig...)***
+interaction model and RCS-3. When we increased sample size to 17,000
+similar conclusions on calibration for benefit could be drawn. As
+expected, all methods displayed more stable calibration performance
+due to the larger number of patients (Supplement, Figure S6). When we
+increased the true prediction AUC to 0.85, the linear interaction
+model was worse calibrated, on average, than RCS-3 in the case of
+strong quadratic deviations from constant relative treatment effects
+(Supplement, Figure S7).
 
 The results from all individual scenarios can be explored online at
 [https://arekkas.shinyapps.io/simulation_viewer/](https://arekkas.shinyapps.io/simulation_viewer/).

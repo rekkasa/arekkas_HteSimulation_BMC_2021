@@ -231,24 +231,24 @@ grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_auc.tiff"
 
 # Discrimination and calibration for benefit
 
-```{r discriminationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Sample size", fig.show="hold", out.width = '100%'}
+```{r discriminationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/discrimination_moderate_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 
-```{r discriminationAuc, cache=FALSE, echo=FALSE, fig.cap="Auc", fig.show="hold", out.width = '100%'}
+```{r discriminationAuc, cache=FALSE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/discrimination_moderate_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-```{r calibrationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Calibration Sample size", fig.show="hold", out.width = '100%'}
+```{r calibrationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 
-```{r calibrationAuc, cache=FALSE, echo=FALSE, fig.cap="Calibration Auc", fig.show="hold", out.width = '100%'}
+```{r calibrationAuc, cache=FALSE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
