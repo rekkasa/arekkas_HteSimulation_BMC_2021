@@ -3,7 +3,7 @@ title: "Supplementary material"
 output:
     bookdown::pdf_document2: default
 geometry: margin=1.0in
-toc: false
+toc: true
 font-size: 12pt
 header-includes:
   - \usepackage{amssymb}
@@ -231,24 +231,24 @@ grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_auc.tiff"
 
 # Discrimination and calibration for benefit
 
-```{r discriminationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
+```{r discriminationSampleSize, cache=TRUE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/discrimination_moderate_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 
-```{r discriminationAuc, cache=FALSE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
+```{r discriminationAuc, cache=TRUE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/discrimination_moderate_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-```{r calibrationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
+```{r calibrationSampleSize, cache=TRUE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 
-```{r calibrationAuc, cache=FALSE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
+```{r calibrationAuc, cache=TRUE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
@@ -278,3 +278,20 @@ grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_sample_size.tiff")))
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
+
+# Treatment interactions
+
+Here we present the root mean squared error of the considered methods
+when true interactions of the covariates with treatment are
+assumed. We ran our analyses on a limited set of scenarios. More
+specifically, true prediction AUC was set to 0.75 and sample size was
+set to 4,250. The simulation scenarios included 4 weak interactions
+($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.82$), 4 strong interactions
+($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$), and 2 weak and 2
+strong interactions.
+
+```{r rmseInteraction, cache=FALSE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replcations calculated in a simulated sample of size 500,000. AUC is 0.85 rather than in Figure \\ref{fig:rmseHighBase}.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_interaction.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+

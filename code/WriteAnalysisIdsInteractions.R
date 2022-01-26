@@ -3,19 +3,20 @@
 library(tidyverse)
 library(readr)
 
-effect <- c("weak", "strong", "mixed")
-typeOfEffect <- "interaction"
-n <- 4250
-auc <- 75
+base <- "interaction"
+type <- c("weak", "mixed", "strong")
+sampleSize <- 4250
+auc <- .75
+harm <- c("absent", "moderate-positive", "strong-positive", "negative")
 
-table <- tibble(
-  type       = typeOfEffect,
-  effectSize = effect,
-  sampleSize = n,
-  auc        = auc
-) %>%
+table <- expand_grid(base, type, sampleSize, auc, harm) %>%
   mutate(
-    b0 = -2.08,
+    # b0 = -2.08,
+    b0 = case_when(
+      type == "weak" ~ -3.05,
+      type == "mixed" ~ -3.32,
+      TRUE ~ -3.50
+    ),
     b1 = .49,
     b2 = .49,
     b3 = .49,
@@ -26,25 +27,25 @@ table <- tibble(
     b8 = .49,
     g0 = log(.8),
     g1 = case_when(
-      (effect == "weak" | effect == "mixed") ~ -.19,
-      (effect == "strong"                  ) ~ -.49
+      (type == "weak" | type == "mixed"  ) ~ -.19,
+      (type == "strong"                  ) ~ -.49
     ),
     g2 = case_when(
-      (effect == "weak"                      ) ~ -.19,
-      (effect == "mixed" | effect == "strong") ~ -.49
+      (type == "weak"                    ) ~ -.19,
+      (type == "mixed" | type == "strong") ~ -.49
     ),
     g5 = case_when(
-      (effect == "weak" | effect == "mixed") ~ -.19,
-      (effect == "strong"                  ) ~ -.49
+      (type == "weak" | type == "mixed"  ) ~ -.19,
+      (type == "strong"                  ) ~ -.49
     ),
     g6 = case_when(
-      (effect == "weak"                      ) ~ -.19,
-      (effect == "mixed" | effect == "strong") ~ -.49
+      (type == "weak"                    ) ~ -.19,
+      (type == "mixed" | type == "strong") ~ -.49
     ),
-    scenario = 63 + 1:n()
+    averageTrueBenefit = .029,
+    scenario = 648 + 1:n()
   ) %>%
   select(scenario, everything())
 
 # saveRDS(table, "data/processed/analysisIds.rds")
 readr::write_csv(table, "data/processed/analysisIdsInteractions.csv")
-

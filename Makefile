@@ -165,6 +165,14 @@ figures/rmse_n_auc.tiff : code/NPatientsAucPlots.R\
 	data/processed/rmse.csv
 	$<
 
+figures/rmse_interaction.tiff : code/PlotRmseInteractions.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	data/processed/discrimination.csv\
+	data/processed/analysisIdsInteractions.csv
+	$<
+
+
 figures/gusto.tiff : code/GustoPlot.R\
 	data/raw/gusto.rda
 	$<
@@ -233,6 +241,7 @@ extras/outline/outline.pdf : extras/outline/outline.rmd\
 submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd\
 	submission/arxiv.sty\
 	submission/references.bib\
+	data/raw/gusto.rda\
 	data/processed/adaptiveModel.csv\
 	data/processed/gustoPerformanceMetrics.csv\
 	data/processed/adaptiveSelections.csv\
@@ -260,7 +269,8 @@ submission/supplement.pdf : submission/supplement.rmd\
 	figures/calibration_moderate_auc.tiff\
 	figures/rmse_high_base.tiff\
 	figures/rmse_high_sample_size.tiff\
-	figures/rmse_high_auc.tiff
+	figures/rmse_high_auc.tiff\
+	figures/rmse_interaction.tiff
 	# figures/deviate_linear_08.png\
 	# figures/deviate_quadratic_08.png\
 	# figures/deviate_linear_absolute_08.png\
