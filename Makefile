@@ -23,22 +23,6 @@ figures/rmse_constant.png figures/rmse_constant.tiff : code/RmseConstant.R\
 	data/processed/rmse.csv
 	$<
 
-figures/discrimination_interactions.png figures/discrimination_interactions.tiff : code/DiscriminationInteractionPlots.R\
-	code/helpers/CreateManuscriptPlots.R\
-	data/processed/discrimination.csv
-	$<
-
-figures/calibration_interactions.png :code/CalibrationInteractionPlots.R\
-	code/helpers/CreateManuscriptPlots.R\
-	data/processed/discrimination.csv
-	$<
-
-
-figures/rmse_interactions.png figures/rmse_interactions.tiff : code/InteractionPlots.R\
-	code/helpers/CreateManuscriptPlots.R\
-	data/processed/rmse.csv
-	$<
-
 figures/rmse_nl_auc.tiff figures/rmse_nl_auc.png : code/NlAucPlots.R\
 	code/helpers/CreateManuscriptPlots.R\
 	data/processed/rmse.csv
@@ -165,13 +149,26 @@ figures/rmse_n_auc.tiff : code/NPatientsAucPlots.R\
 	data/processed/rmse.csv
 	$<
 
-figures/rmse_interaction.tiff : code/PlotRmseInteractions.R\
+figures/rmse_interaction_positive.tiff : code/PlotRmseInteractions.R\
 	code/helpers/CreateManuscriptPlots.R\
 	code/helpers/PlotResult.R\
-	data/processed/discrimination.csv\
+	data/processed/rmse.csv\
 	data/processed/analysisIdsInteractions.csv
-	$<
+	$< positive
 
+figures/rmse_interaction_negative.tiff : code/PlotRmseInteractions.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIdsInteractions.csv
+	$< negative
+
+figures/rmse_interaction_combined.tiff : code/PlotRmseInteractions.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIdsInteractions.csv
+	$< combined
 
 figures/gusto.tiff : code/GustoPlot.R\
 	data/raw/gusto.rda
@@ -270,7 +267,9 @@ submission/supplement.pdf : submission/supplement.rmd\
 	figures/rmse_high_base.tiff\
 	figures/rmse_high_sample_size.tiff\
 	figures/rmse_high_auc.tiff\
-	figures/rmse_interaction.tiff
+	figures/rmse_interaction_positive.tiff\
+	figures/rmse_interaction_negative.tiff\
+	figures/rmse_interaction_combined.tiff
 	# figures/deviate_linear_08.png\
 	# figures/deviate_quadratic_08.png\
 	# figures/deviate_linear_absolute_08.png\

@@ -23,11 +23,24 @@ library(gridExtra)
 library(grid)
 library(ggside)
 
+args <- commandArgs(trailingOnly = TRUE)
+interactionType <- as.character(args[1])
+
+if (interactionType == "positive") {
+  scenarioLimits <- c(649, 660)
+} else if (interactionType == "negative") {
+  scenarioLimits <- c(661, 672)
+} else {
+  scenarioLimits <- c(673, 676)
+}
+
+
 source("code/helpers/CreateManuscriptPlots.R")     # Geneartes single boxplot
 source("code/helpers/PlotResult.R")                # Generates the boxplot list
 source("code/helpers/Absolute.R")                  # Generates the absolute plots
 
-scenarioIds <- readr::read_csv("data/processed/analysisIdsInteractions.csv")
+scenarioIds <- readr::read_csv("data/processed/analysisIdsInteractions.csv") %>%
+  filter(scenario >= scenarioLimits[1] & scenario <= scenarioLimits[2])
 
 metric    <- "rmse"
 titles <- scenarioIds %>%
@@ -59,7 +72,7 @@ limitsHigh <- .15
 processed <- readr::read_csv(
   file = file.path("data/processed", metricFile)
 ) %>% 
-  filter(scenarioId > 648) %>%
+  filter(scenarioId >= scenarioLimits[1] & scenarioId <= scenarioLimits[2]) %>%
   mutate_at(
     c(
       "constant_treatment_effect",
@@ -82,69 +95,85 @@ names(scenarios) <- NULL
 
 plotList <- plotResult(scenarios, processed, titles, metric = metric, limits = c(0, 10, 2.5))
 
-gridList <- list(
-  plotList[[1]] +
+if (interactionType == "combined") {
+  res <- plotList[[1]] +
     theme(
       panel.grid.minor = element_blank(),
       plot.title = element_markdown(size = 9),
       axis.title.x = ggplot2::element_blank(),
       axis.title.y = ggplot2::element_blank(),
-      axis.text.x = element_blank(),
-      axis.text.y = element_text(size = 8),
-      legend.direction = "horizontal",
-      legend.title = element_text(size = 7.5),
-      legend.text = element_text(size = 7),
-      legend.position = c(.211, .910)
-    ),
-  plotList[[2]] + 
-    theme(
-      panel.grid.minor = element_blank(),
-      plot.title = element_markdown(size = 9),
-      axis.title = element_blank(),
-      axis.text.x = element_blank(),
-      axis.text.y = element_text(size = 8),
-      ggside.line = element_blank(),
-      ggside.rect = element_blank(),
-      ggside.axis.text = element_blank(),
-      ggside.axis.ticks.length = unit(0, "pt"),
-      ggside.panel.scale = .07,
-      legend.position = "none"
-    ),
-  plotList[[3]] +
-    theme(
-      panel.grid.minor = element_blank(),
-      axis.title = element_blank(),
       axis.text.x = element_text(size = 8),
       axis.text.y = element_text(size = 8),
-      legend.position = "none",
-      plot.title = element_markdown(size = 9)
+      legend.title = element_text(size = 7.5),
+      legend.text = element_text(size = 7)
     )
-)
-
-plot <- cowplot::plot_grid(
-  gridList[[1]],
-  gridList[[2]],
-  gridList[[3]],
-  ncol = 1
-)
-
-left.grob <- grid::textGrob(
-    expression(
-      paste(
-        "Root mean squared error (x",
-        10^-2,
-        ")"
+} else {
+  gridList <- list(
+    plotList[[1]] +
+      theme(
+        panel.grid.minor = element_blank(),
+        plot.title = element_markdown(size = 9),
+        axis.title.x = ggplot2::element_blank(),
+        axis.title.y = ggplot2::element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8),
+        legend.direction = "horizontal",
+        legend.title = element_text(size = 7.5),
+        legend.text = element_text(size = 7),
+        legend.position = c(.211, .910)
+      ),
+    plotList[[2]] + 
+      theme(
+        panel.grid.minor = element_blank(),
+        plot.title = element_markdown(size = 9),
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8),
+        ggside.line = element_blank(),
+        ggside.rect = element_blank(),
+        ggside.axis.text = element_blank(),
+        ggside.axis.ticks.length = unit(0, "pt"),
+        ggside.panel.scale = .07,
+        legend.position = "none"
+      ),
+    plotList[[3]] +
+      theme(
+        panel.grid.minor = element_blank(),
+        axis.title = element_blank(),
+        axis.text.x = element_text(size = 8),
+        axis.text.y = element_text(size = 8),
+        legend.position = "none",
+        plot.title = element_markdown(size = 9)
       )
-    ),
-    rot = 90
-)
+  )
+  
+  plot <- cowplot::plot_grid(
+    gridList[[1]],
+    gridList[[2]],
+    gridList[[3]],
+    ncol = 1
+  )
+  
+  left.grob <- grid::textGrob(
+      expression(
+        paste(
+          "Root mean squared error (x",
+          10^-2,
+          ")"
+        )
+      ),
+      rot = 90
+  )
+  
+  res <- grid.arrange(arrangeGrob(plot, left = left.grob))
+}
 
-res <- grid.arrange(arrangeGrob(plot, left = left.grob))
 
 fileName <- paste0(
   paste(
     metric,
     "interaction",
+    interactionType,
     sep = "_"
   ),
   ".tiff"

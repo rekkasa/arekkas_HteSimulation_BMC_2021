@@ -200,10 +200,12 @@ well as many other potential variations of risk-based treatment effect
 
 All risk-based methods assume that a risk prediction model is available to
 assign risk predictions to individual patients. For the simulations we developed
-a prediction model internally, using logistic regression including main effects
-for all baseline covariates and treatment assignment. Risk predictions for
-individual patients were based on treatment assignment to the control arm, that
-is setting treatment assignment to 0.
+a prediction model internally on the entire population, using a logistic
+regression model with main effects for all baseline covariates and treatment
+assignment. Risk predictions for individual patients were derived by setting
+treatment assignment to 0. Another common approach is to derive the prediction
+model solely on the control patients, however this approach has been shown to
+lead to biased benefit predictions [@vanKlaveren2019; @Burke2014; @Abadie2018].
 
 A *stratified HTE method* has been suggested as an alternative to traditional
 subgroup analyses. Patients are stratified into equally-sized risk strata---in
@@ -229,12 +231,13 @@ assumption on the effect of the linear predictor [@Harrell1988]. We considered
 splines with 3 (RCS-3), 4 (RCS-4) and 5 (RCS-5) knots to compare models with
 different levels of flexibility.
 
-Finally, we considered an adaptive approach using Akaike's Information Criterion
-(AIC) for model selection. The candidate models were: a constant treatment
-effect model, a model with a linear interaction with treatment and RCS models
-with 3, 4 and 5 knots. The extra degrees of freedom were 1 (linear interaction),
-2, 3 and 4 (RCS models) for these increasingly complex interactions with the
-treatment effect.
+Finally, we considered an *adaptive approach* using Akaike's Information
+Criterion (AIC) for model selection. More specifically, for the adaptive
+approach we ranked the constant relative treatment effect model, the linear
+interaction model, and the RCS models with 3, 4, and 5 knots based on their AIC
+and selected the one with the lowest value. The extra degrees of freedom were 1
+(linear interaction), 2, 3 and 4 (RCS models) for these increasingly complex
+interactions with the treatment effect.
 
 ## Evaluation metrics
 We evaluated the predictive accuracy of the considered methods by the root mean
@@ -257,6 +260,36 @@ index (ICI) for benefit [@Austin2019]. The observed benefits are regressed on
 the predicted benefits using a locally weighted scatterplot smoother (loess).
 The ICI-for-benefit is the average absolute difference between predicted and
 smooth observed benefit. Values closer to $0$ represent better calibration.
+
+## Empirical illustration
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+load(here::here("data/raw/gusto.rda"))
+gusto <- gusto %>%
+  tibble() %>%
+  filter(!is.na(tpa))
+
+gusto <- gusto %>%
+  tibble() %>%
+  filter(tx != "SK+tPA") %>%
+  rename(
+    "outcome" = "day30",
+    "treatment" = "tpa"
+  )
+
+treatmentArms <- gusto %>%
+  group_by(treatment) %>%
+  summarise(n = n())
+```
+
+We demonstrate the different methods for individualizing treatment benefits
+using data from `r nrow(gusto)` patients with acute myocardial infarction (MI)
+included in the GUSTO-I trial.
+`r treatmentArms %>% filter(treatment == 1) %>% select(n)` 
+patients were randomized to tissue plasminogen activator (tPA) treatment and
+`r treatmentArms %>% filter(treatment == 0) %>% select(n)`
+were randomized to streptokinase. The outcome of interest was 30-day mortality
+(total of `r sum(gusto$outcome)` events), recorded for all patients.
 
 # Results
 
@@ -358,6 +391,7 @@ the c-for-benefit in all scenarios. When we increased the sample size to 17,000
 we observed similar trends, however the performance of all methods was more
 stable (Supplement, Figure S4). Finally, when we increased the true prediction
 AUC to 0.85 the adaptive approach in the case of non-monotonic deviations was,
+
 again, quite unstable, especially with null or moderate treatment-related harms
 (Supplement, Figure S5). In these scenarios, the adaptive approach tended to
 select more often the inferior constant treatment effect method (Supplement,
@@ -393,34 +427,7 @@ grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_base.tiff"))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-## Case study
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-load(here::here("data/raw/gusto.rda"))
-gusto <- gusto %>%
-  tibble() %>%
-  filter(!is.na(tpa))
-
-gusto <- gusto %>%
-  tibble() %>%
-  filter(tx != "SK+tPA") %>%
-  rename(
-    "outcome" = "day30",
-    "treatment" = "tpa"
-  )
-
-treatmentArms <- gusto %>%
-  group_by(treatment) %>%
-  summarise(n = n())
-```
-
-We demonstrate the different methods for individualizing treatment benefits
-using data from `r nrow(gusto)` patients with acute myocardial infarction (MI)
-included in the GUSTO-I trial.
-`r treatmentArms %>% filter(treatment == 1) %>% select(n)` 
-patients were randomized to tissue plasminogen activator (tPA) treatment and
-`r treatmentArms %>% filter(treatment == 0) %>% select(n)`
-were randomized to streptokinase. The outcome of interest was 30-day mortality
-(total of `r sum(gusto$outcome)` events), recorded for all patients.
+## Empirical illustration
 
 In line with previous analyses [@Califf1997; @Steyerberg2000], we fitted a
 logistic regression model with 6 baseline covariates, i.e. age, Killip class,
@@ -481,7 +488,7 @@ indicated by higher RMSE, increased variability of discrimination for benefit
 and worse calibration of benefit predictions. Even with larger sample sizes and
 strong quadratic or non-monotonic deviations from the base case scenario of
 constant relative treatment effects, these more flexible restricted cubic
-splines did not outperform the simpler RCS-3 These approaches may only be
+splines did not outperform the simpler RCS-3. These approaches may only be
 helpful if we expect more extreme patterns of heterogeneous treatment effects
 compared to the quadratic deviations considered here. Considering interactions
 in RCS-3 models as the most complex approach often may be reasonable.
@@ -521,19 +528,28 @@ of baseline risk. A limitation of our study is that we assumed treatment benefit
 to be a function of baseline risk in the majority of the simulation
 scenarios. We also considered constant moderate and strong treatment-related
 harms, applied on the absolute scale to expand the range of scenarios in line
-with previous work (REF!!). Also, we considered a small number of scenarios with
-true treatment-covariate interactions, in which our main conclusions remained
-the same (Supplement, XX). Future simulation studies could explore the effect of
-more extensive deviations from risk-based treatment effects.
+with previous work [@Glasziou1995]. Also, we considered a small number of
+scenarios with true treatment-covariate interactions, in which our main
+conclusions remained the same (Supplement, XX). Future simulation studies could
+explore the effect of more extensive deviations from risk-based treatment
+effects.
 
-Recent years have seen an increased interest in predictive HTE approaches
-focusing on individualized benefit predictions. In our simulations we only
-focused on risk-based methods, using baseline risk as a reference in a two-stage
-approach to individualizing benefit predictions. However, there is a plethora of
-different methods, ranging from treatment effect modeling to tree-based
-approaches available in more recent literature [@Athey2019; @Lu2018;@Wager2018].
-Simulations are also needed to assess relative performance and define the
-settings where these break down or outperform each other.
+In our simulations we only focused on risk-based methods, using baseline risk as
+a reference in a two-stage approach to individualizing benefit
+predictions. However, there is a plethora of different methods, ranging from
+treatment effect modeling to tree-based approaches available in more recent
+literature [@Athey2019; @Lu2018;@Wager2018;@powers2018some]. Many of these
+methods rely on incorporating treatment-covariate interactions in the prediction
+of benefit. An important caveat of such approaches is that they may be prone to
+overfitting, thus exaggerating the magnitude of the predicted benefits. In a
+wide range of simulation settings, a simpler risk modeling approach was
+consistently better calibrated for benefit compared to more complex treatment
+effect modelling approaches [@vanKlaveren2019]. Similarly, when SYNTAX score II,
+a model developed for identifying patients with complex coronary artery disease
+that benefit more from percutaneous coronary intervention or from coronary
+artery bypass grafting was redeveloped using fewer treatment-covariate
+interactions had better external performance compared to its
+predecessor[@farooq2013anatomical; @takahashi2020redevelopment].
 
 In conclusion, the linear interaction approach is a viable option with smaller
 sample sizes and/or moderately performing risk prediction models if we consider
