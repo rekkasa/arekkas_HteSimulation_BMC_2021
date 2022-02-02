@@ -67,7 +67,7 @@ plotAbsoluteBenefit <- function(data, projectDir = NULL, type) {
     fullValidationDataset <- validationDataset %>%
       bind_rows(.id = "harmSetting")
     res <- res +
-      # ggside::ggside(x.pos = "bottom") +
+      ggside::ggside(x.pos = "bottom") +
       ggside::ggside(y.pos = "left")
     if (type == "constant") {
       res <- res +
@@ -78,12 +78,12 @@ plotAbsoluteBenefit <- function(data, projectDir = NULL, type) {
         outlier.shape = NA
       )
     }
-      # ggside::geom_ysideboxplot(
-      #   aes(y = trueBenefit, fill = harmSetting),
-      #   data = fullValidationDataset,
-      #   orientation = "x",
-      #   outlier.shape = NA
-      #   ) +
+      res <- res + ggside::geom_ysideboxplot(
+        aes(y = trueBenefit, fill = harmSetting),
+        data = fullValidationDataset,
+        orientation = "x",
+        outlier.shape = NA
+        )
     res <- res +
       scale_ysidex_continuous() +
       scale_xsidey_continuous() +

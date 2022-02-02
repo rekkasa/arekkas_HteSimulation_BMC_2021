@@ -435,7 +435,7 @@ systolic blood pressure, heart rate, an indicator of previous MI, and the
 location of MI, to predict 30-day mortality risk. A constant effect of treatment
 was included in the model. When deriving risk predictions for individuals we set
 the treatment indicator to 0. More information on model development can be found
-in the supplement.
+in the supplement (Section XX).
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 gustoPerformance <- readr::read_csv(here::here("data/processed/gustoPerformanceMetrics.csv"))
@@ -446,22 +446,25 @@ calibrationPerformance <- gustoPerformance %>%
   select("calibration")
 ```
 
-We used the risk linear predictor to fit the proposed methods under study for
-individualizing absolute benefit predictions. All methods predicted increasing
-benefits for patients with higher baseline risk predictions, but the fitted
-patterns were somewhat different. The adaptive approach selected the model with
-RCS smoothing with 4 knots. However, for very low baseline risk the decreasing
-predicted benefit with increasing risk may be somewhat too flexible. The more
-robust models, such as the linear interaction model and the model with RCS
-smoothing (3 knots), gave very similar benefit predictions. These models
-followed the evolution of the stratified estimates very closely and may
-therefore be preferable for use in clinical practice. The linear interaction
-model had somewhat lower AIC compared to the model with RCS smoothing (3 knots),
-slightly better cross-validated discrimination (c-for-benefit
-`r round(discriminationPerformance[2, ], 3)` vs
-`r round(discriminationPerformance[3, ], 3)`) and quite similar cross-validated
-calibration (ICI-for benefit `r round(calibrationPerformance[2, ], 4)` vs
-`r round(calibrationPerformance[3, ], 4)`).
+We used the risk linear predictor to fit a constant treatment effect model, a
+linear interaction model and a RCS-3 model individualizing absolute benefit
+predictions. RCS-4 and RCS-5 models were excluded. In our simulations these
+methods were always outperformed by the simpler approaches and were often
+overfitted. Finally, an adaptive approach with only the 3 candidate models was
+also applied.
+
+All considered methods provided similar fits, predicting increasing benefits for
+patients with higher baseline risk predictions. All models followed the
+evolution of the stratified estimates very closely. The adaptive approach based
+on AIC selected the constant treatment effect model. The constant treatment
+effect model had somewhat lower AIC compared to the linear interaction model
+slightly worse cross-validated discrimination (c-for-benefit
+`r round(discriminationPerformance[1, ], 3)` vs
+`r round(discriminationPerformance[2, ], 3)`) and better cross-validated
+calibration (ICI-for benefit `r round(calibrationPerformance[1, ], 4)` vs
+`r round(calibrationPerformance[2, ], 4)`). In conclusion, a simpler constant
+treatment effect model is adequate for predicting absolute 30-day mortality
+benefits of treatment with tPA in patients with with acute MI.
 
 
 ```{r gusto, cache=TRUE, echo=FALSE, fig.cap="Individualized absolute benefit predictions based on baseline risk when using a constant treatment effect approach, a linear interaction approach and RCS smoothing using 3,4 and 5 knots. Risk stratified estimates of absolute benefit are presented within quartiles of baseline risk as reference.", fig.show="hold", out.width = '100%'}
@@ -528,11 +531,16 @@ of baseline risk. A limitation of our study is that we assumed treatment benefit
 to be a function of baseline risk in the majority of the simulation
 scenarios. We also considered constant moderate and strong treatment-related
 harms, applied on the absolute scale to expand the range of scenarios in line
-with previous work [@Glasziou1995]. Also, we considered a small number of
-scenarios with true treatment-covariate interactions, in which our main
-conclusions remained the same (Supplement, XX). Future simulation studies could
-explore the effect of more extensive deviations from risk-based treatment
-effects.
+with previous work [@Glasziou1995]. In a limited set of scenarios where we
+assumed the existence of true treatment-covariate interactions, our conclusions
+remained unchanged. Even though the average error rates increased for all the
+considered methods, due to the miss-specification of the outcome model, the
+linear interaction model had the lowest error rates. RCS-3 had very comparable
+performance. The constant treatment effect model often gave biased results,
+espcially in the presence of moderate or strong treatment-related harms. All the
+results of these simulations can be found in Supplement, Section XX. Future
+simulation studies could explore the effect of more extensive deviations from
+risk-based treatment effects.
 
 In our simulations we only focused on risk-based methods, using baseline risk as
 a reference in a two-stage approach to individualizing benefit
@@ -555,10 +563,11 @@ In conclusion, the linear interaction approach is a viable option with smaller
 sample sizes and/or moderately performing risk prediction models if we consider
 a non-constant relative treatment effect plausible. RCS-3 is a better option
 when non-monotonic deviations from a constant relative treatment effect and/or
-substantial treatment-related harms are anticipated. With larger sample size, an
-adaptive approach -- selecting the method with optimal AIC -- can also be
-considered as an automated alternative.
-
+substantial treatment-related harms are anticipated. Increasing the complexity
+of the RCS models by increasing the number of knots does not translate to
+improved benefit prediction. Using AIC for model selection among the constant
+treatment effect, the linear interaction and RCS-3 model is a viable option,
+especially with larger sample size.
 
 \newpage
 # References

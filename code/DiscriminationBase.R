@@ -85,7 +85,7 @@ res <- gridExtra::grid.arrange(
       plot.title = element_markdown(),
       axis.title = element_blank(),
       legend.direction = "horizontal",
-      legend.position = c(.444, .93),
+      legend.position = c(.364, .94),
       legend.text = element_text(size = 7),
       legend.title = element_text(size = 8),
       panel.grid.minor = element_blank(),

@@ -72,8 +72,8 @@ createPlot <- function(
       ),
       labels = c(
         "absent",
-        "moderate positive",
-        "strong positive"
+        "moderate",
+        "strong"
       )
     ) +
     ggplot2::ylab(yAxis) +

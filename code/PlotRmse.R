@@ -145,7 +145,7 @@ gridList <- list(
       legend.direction = "horizontal",
       legend.title = element_text(size = 7.5),
       legend.text = element_text(size = 7),
-      legend.position = c(.333, .87)
+      legend.position = c(.273, .87)
     ),
   absolutePlots$plot[[1]] +
     ggtitle("Simulated absolute benefit in treated patients") +
