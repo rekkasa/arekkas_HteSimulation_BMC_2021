@@ -151,6 +151,7 @@ figures/rmse_n_auc.tiff : code/NPatientsAucPlots.R\
 
 figures/rmse_interaction_positive.tiff : code/PlotRmseInteractions.R\
 	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/Absolute.R\
 	code/helpers/PlotResult.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIdsInteractions.csv
@@ -158,6 +159,7 @@ figures/rmse_interaction_positive.tiff : code/PlotRmseInteractions.R\
 
 figures/rmse_interaction_negative.tiff : code/PlotRmseInteractions.R\
 	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/Absolute.R\
 	code/helpers/PlotResult.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIdsInteractions.csv
@@ -165,6 +167,7 @@ figures/rmse_interaction_negative.tiff : code/PlotRmseInteractions.R\
 
 figures/rmse_interaction_combined.tiff : code/PlotRmseInteractions.R\
 	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/Absolute.R\
 	code/helpers/PlotResult.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIdsInteractions.csv

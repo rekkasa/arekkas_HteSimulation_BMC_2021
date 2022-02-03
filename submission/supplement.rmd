@@ -41,6 +41,7 @@ knit_hooks$set(
 ```
 
 \beginsupplement
+\newpage
 
 # Simulation settings
 For all patients we observe covariates $x_1,\dots,x_8$, of which $4$ are
@@ -53,7 +54,8 @@ x_1,\dots,x_4 \sim N(0, 1)
 x_5,\dots,x_8 \sim B(1, 0.2)
 \end{equation*}
 
-We first, generate the binary outcomes $y$ for the untreated patients ($t_x=0$), based on 
+We first, generate the binary outcomes $y$ for the untreated patients ($t_x=0$),
+based on
 
 \begin{equation} 
 P(y\given \bm{x}, t_x=0) = g(\beta_0 + \beta_1x_1+\dots+\beta_8x_8) = g(lp_0),
@@ -73,15 +75,14 @@ P(y\given\bm{x}, t_x=1) = g(lp_1)
 where $$lp_1 = \gamma_2(lp_0-c)^2+\gamma_1(lp_0-c)+\gamma_0$$
 
 ## Base-case scenario
-The base-case scenario assumes a constant odds ratio of $0.8$ in favor
-of treatment. The simulated datasets are of size $n=4250$, where
-treatment is allocated at random using a 50/50 split (80% power for
-the detection of an unadjusted OR of 0.8, assuming an event rate of
-20% in the untreated arm). Outcome incidence in the untreated
-population is set at $20\%$. For the development of the prediction
-model we use the model defined in \@ref(eq:p0) including a constant
-treatment effect. When doing predictions, $t_x$ is set to $0$. The
-value of the true $\bm{\beta}$ is such that the above prediction model
+The base-case scenario assumes a constant odds ratio of $0.8$ in favor of
+treatment. The simulated datasets are of size $n=4250$, where treatment is
+allocated at random using a 50/50 split (80% power for the detection of an
+unadjusted OR of 0.8, assuming an event rate of 20% in the untreated
+arm). Outcome incidence in the untreated population is set at $20\%$. For the
+development of the prediction model we use the model defined in \@ref(eq:p0)
+including a constant treatment effect. When doing predictions, $t_x$ is set to
+$0$. The value of the true $\bm{\beta}$ is such that the above prediction model
 has an AUC of $0.75$.
 
 
@@ -90,11 +91,10 @@ The previously defined targets are achieved when $\bm{\beta}=(-2.08,
 $\bm{\gamma}=(\log(0.8), 1, 0)^t$.
 
 ## Deviations from base-case
-We deviate from the base-case scenario in two ways. First, we alter
-the overall target settings of sample size, overall treatment effect
-and prediction model AUC. In a second stage, we consider settings that
-violate the assumption of a constant relative treatment effect, using
-a model-based approach.
+We deviate from the base-case scenario in two ways. First, we alter the overall
+target settings of sample size, overall treatment effect and prediction model
+AUC. In a second stage, we consider settings that violate the assumption of a
+constant relative treatment effect, using a model-based approach.
 
 For the first part, we consider:
 
@@ -108,19 +108,22 @@ For the first part, we consider:
   + $AUC=0.65$
   + $AUC=0.85$
   
-We set the true risk model coefficients to be $\bm{\beta} = \big(-1.63, 0.26,\dots,0.26\big)^t$ for $AUC=0.65$ and $\bm{\beta} = \big(-2.7, 0.82,\dots,0.82\big)^t$ for $AUC=0.85$. In both cases, $\beta_0$ is selected so that an event rate of $20\%$ is maintained in the control arm.
+We set the true risk model coefficients to be
+$\bm{\beta} = \big(-1.63,0.26,\dots,0.26\big)^t$ for $AUC=0.65$ and $\bm{\beta} = \big(-2.7,0.82,\dots,0.82\big)^t$ 
+for $AUC=0.85$. In both cases, $\beta_0$ is selected so that an event rate of
+$20\%$ is maintained in the control arm.
 
-For the second part linear, quadratic and non-monotonic deviations
-from the assumption of constant relative effect are considered. We
-also consider different intensity levels of these deviations. Finally,
-constant absolute treatment-related harms are introduced,
-i.e. positive ($0.25\times\text{true average benefit}$), strong
-positive ($0.50\times\text{true average benefit}$) and negative
+For the second part linear, quadratic and non-monotonic deviations from the
+assumption of constant relative effect are considered. We also consider
+different intensity levels of these deviations. Finally, constant absolute
+treatment-related harms are introduced, i.e. positive 
+($0.25\times\text{true average benefit}$),
+strong positive ($0.50\times\text{true average benefit}$) and negative
 ($-0.25\times\text{true average benefit}$; i.e. constant absolute
 treatment-related benefit). In case of true absent treatment effects,
-treatment-related harms are set to $1\%, 2\%$ and $-1\%$ for
-positive, strong positive and negative setting, respectively. The
-settings for these deviations are defined in Table \@ref(tab:tab1).
+treatment-related harms are set to $1\%, 2\%$ and $-1\%$ for positive, strong
+positive and negative setting, respectively. The settings for these deviations
+are defined in Table \@ref(tab:tab1).
 
 ## Risk modeling
 Merging treatment arms, we develop prediction models including a constant relative treatment effect:
@@ -134,37 +137,38 @@ Individualized predictions are derived setting $t_x=0$.
 ## Approaches to individualize benefit predictions
 
 ### Risk stratification
-Derive a prediction model using the same approach as above and divide
-the population in equally sized risk-based subgroups. Estimate
-subgroup-specific absolute benefit from the observed absolute
-differences. Subject-specific benefit predictions are made by
-attributing to individuals their corresponding subgroup-specific
-estimate.
+Derive a prediction model using the same approach as above and divide the
+population in equally sized risk-based subgroups. Estimate subgroup-specific
+absolute benefit from the observed absolute differences. Subject-specific
+benefit predictions are made by attributing to individuals their corresponding
+subgroup-specific estimate.
 
 ### Constant treatment effect
-Assuming a constant relative treatment effect, fit the adjusted model
-in \@ref(eq:risk). Then, an estimate of absolute benefit can be
-derived from$$\hat{f}_{\text{benefit}}(lp\given \bm{x},
-\hat{\bm{\beta}}) = g(lp) - g(lp+\hat{\gamma}) $$
+Assuming a constant relative treatment effect, fit the adjusted model in
+\@ref(eq:risk). Then, an estimate of absolute benefit can be derived
+from
+$$\hat{f}_{\text{benefit}}(lp\given \bm{x}, \hat{\bm{\beta}}) = g(lp) - g(lp+\hat{\gamma}) $$
 
 ### Linear interaction
-The assumption of constant relative treatment effect is relaxed
-modeling a linear interaction of treatment with the risk linear
-predictor: $$E\{y\given \bm{x}, t_x, \hat{\bm{\beta}}\} =
-g\big(lp+(\gamma_0+\gamma_1lp)t_x\big)$$ We predict absolute benefit
-from $$\hat{f}_{\text{benefit}}(lp\given\bm{x}, \hat{\bm{\beta}}) =
-g(lp) - g\big(\gamma_0+(1+\gamma_1)lp\big)$$
+The assumption of constant relative treatment effect is relaxed modeling a
+linear interaction of treatment with the risk linear predictor: $$E\{y\given
+\bm{x}, t_x, \hat{\bm{\beta}}\} = g\big(lp+(\gamma_0+\gamma_1lp)t_x\big)$$ We
+predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp\given\bm{x},
+\hat{\bm{\beta}}) = g(lp) - g\big(\gamma_0+(1+\gamma_1)lp\big)$$
 
 ### Restricted cubic splines
 Finally, we drop the linearity assumption and predict absolute benefit using
-smoothing with restricted cubic splines with 3, 4, and 5 knots. More
+smoothing with restricted cubic splines with $k=3, 4$ and $5$ knots. More
 specifically, we fit the model:
 
 $$P(y=1\given lp, t_x) = g\big(\beta_0+\beta_{t_x}t_x+f_{RCS}(lp) + f_{RCS}(lp)\times t_x\big)$$
 where
-$$f_{RCS}(x)=\alpha_0+\alpha_1h_1(x)+\alpha_2h_2(x)+\dots+\alpha_{k-1}h_{k-1}(x)$$ with
-$$h_{j+1}(x)= (x-t_j)^3-(x-t_{k-1})_+\frac{t_k-t_j}{t_k-t_{k-1}}+(x-t_k)^3_+\frac{t_{k-1}-t_j}{t_k-t_{k-   1}}$$
-and $t_1,\dots,t_k$ are the selected knots. We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp \given \bm{x},\hat{\bm{\beta}})=P(y=1\given lp, t_x=0)-P(y=1\given lp,t_x=1)$$.
+$$f_{RCS}(x)=\alpha_0+\alpha_1h_1(x)+\alpha_2h_2(x)+\dots+\alpha_{k-1}h_{k-1}(x)$$
+with $h_1(x)=x$ and for $j=2,\dots,k-2$
+$$h_{j+1}(x)= (x-t_j)^3-(x-t_{k-1})_+^3 \frac{t_k-t_j}{t_k-t_{k-1}}+(x-t_k)^3_+\frac{t_{k-1}-t_j}{t_k-t_{k-1}}$$
+where 
+$t_1,\dots,t_k$ are the selected knots. We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp \given \bm{x},\hat{\bm{\beta}})=P(y=1\given lp, t_x=0)-P(y=1\given lp,t_x=1)$$.
+
 
 
 ```{r tab1, echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE}
@@ -464,3 +468,32 @@ kableExtra::kbl(
   kableExtra::kable_styling(font_size = 7)
 ```
 
+
+\newpage
+# Plausible scenario settings
+
+In this section we present specific scenarios from our simulation settings
+in which evolution of benefit followed similar patterns to (REF!!). In this case
+patients were stratified into risk quarters based on their true baseline
+risk. Within each risk quarter we constructed boxplots of true benefit.
+
+
+```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/scenario_397.tiff")))
+```
+
+```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/scenario_251.tiff")))
+```
+
+```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/scenario_406.tiff")))
+```
+
+```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/scenario_324.tiff")))
+```
+
+```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/scenario_422.tiff")))
+```

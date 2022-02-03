@@ -35,9 +35,15 @@ if (interactionType == "positive") {
 }
 
 
-source("code/helpers/CreateManuscriptPlots.R")     # Geneartes single boxplot
-source("code/helpers/PlotResult.R")                # Generates the boxplot list
-source("code/helpers/Absolute.R")                  # Generates the absolute plots
+# --------------------------------------
+# Sourcing helper files:
+#   1. Generates single boxplot
+#   2. Generates the boxplot list
+#   3. Generates the absolute plots
+# --------------------------------------
+source("code/helpers/CreateManuscriptPlots.R")     
+source("code/helpers/PlotResult.R")                
+source("code/helpers/Absolute.R")                  
 
 scenarioIds <- readr::read_csv("data/processed/analysisIdsInteractions.csv") %>%
   filter(scenario >= scenarioLimits[1] & scenario <= scenarioLimits[2])
@@ -52,11 +58,15 @@ titles <- scenarioIds %>%
   unlist() %>%
   unique()
 
-titlePrefix <- paste0(
-  "**",
-  LETTERS[1:3],
-  ".**"
-)
+if (interactionType != "combined") {
+  titlePrefix <- paste0(
+    "**",
+    LETTERS[1:3],
+    ".**"
+  )
+} else {
+  titlePrefix <- ""
+}
 
 titles <- paste(
   titlePrefix,
@@ -86,6 +96,26 @@ processed <- readr::read_csv(
     f
   )
 
+# ------------------------------------
+# Create the absolute benefit plots
+# ------------------------------------
+absolutePlots <- scenarioIds %>%
+  filter(harm != "negative") %>%
+  group_by(type) %>%
+  nest() %>%
+  mutate(
+    plot = map2(
+      data,
+      type,
+      ~ plotAbsoluteBenefit(
+      data = .x,
+      projectDir = "~/Documents/Projects/arekkas_HteSimulation_XXXX_2021",
+      type = .y
+      )
+    )
+  )
+
+
 scenarios <- scenarioIds %>%
   filter(harm == "absent") %>%
   select(scenario) %>%
@@ -93,21 +123,22 @@ scenarios <- scenarioIds %>%
 
 names(scenarios) <- NULL
 
-plotList <- plotResult(scenarios, processed, titles, metric = metric, limits = c(0, 10, 2.5))
+plotList <- plotResult(
+  scenarios,
+  processed,
+  titles,
+  metric = metric,
+  limits = c(0, 10, 2.5)
+)
 
 if (interactionType == "combined") {
-  res <- plotList[[1]] +
-    theme(
-      panel.grid.minor = element_blank(),
-      plot.title = element_markdown(size = 9),
-      axis.title.x = ggplot2::element_blank(),
-      axis.title.y = ggplot2::element_blank(),
-      axis.text.x = element_text(size = 8),
-      axis.text.y = element_text(size = 8),
-      legend.title = element_text(size = 7.5),
-      legend.text = element_text(size = 7)
-    )
-} else {
+  plotList <- plotResult(
+    scenarios,
+    processed,
+    titles,
+    metric = metric,
+    limits = c(7.5, 12.5, 1)
+  )
   gridList <- list(
     plotList[[1]] +
       theme(
@@ -115,13 +146,139 @@ if (interactionType == "combined") {
         plot.title = element_markdown(size = 9),
         axis.title.x = ggplot2::element_blank(),
         axis.title.y = ggplot2::element_blank(),
-        axis.text.x = element_blank(),
+        axis.text.x = element_text(size = 8),
         axis.text.y = element_text(size = 8),
         legend.direction = "horizontal",
         legend.title = element_text(size = 7.5),
         legend.text = element_text(size = 7),
-        legend.position = c(.211, .910)
+        legend.position = c(.273, .97)
       ),
+      absolutePlots$plot[[1]] +
+        ggtitle("Simulated absolute benefit in treated patients") +
+        xlim(c(0, .5)) +
+        scale_y_continuous(
+          position = "right",
+          limits = c(-.058, limitsHigh),
+          breaks = seq(-.05, limitsHigh, .05)
+        ) +
+        scale_color_manual(
+          name = "Constant treatment-\n related harm",
+          values = c(
+            "#26547C",
+            "#06D6A0",
+            "#EF476F"
+          )
+        ) +
+        theme_bw() +
+        theme(
+          panel.grid.minor = element_blank(),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text.x = element_text(size = 8),
+          axis.text.y = element_text(size = 8),
+          ggside.line = element_blank(),
+          ggside.rect = element_blank(),
+          ggside.axis.text = element_text(size = 8),
+          ggside.axis.ticks.length = unit(0, "pt"),
+          ggside.panel.scale = .07,
+          plot.title = element_markdown(size = 9),
+          legend.position = "none"
+        )
+  )
+  pp <- cowplot::plot_grid(
+    gridList[[1]],
+    gridList[[2]],
+    ncol = 2,
+    rel_widths = c(1, .5)
+  )
+  left.grob <- grid::textGrob(
+      expression(
+        paste(
+          "Root mean squared error (x",
+          10^-2,
+          ")"
+        )
+      ),
+      rot = 90
+  )
+  
+  right.grob <- grid::textGrob(
+      "Absolute benefit",
+      rot = 270
+  )
+  
+  bottom.left.grob <- grid::textGrob(
+    "Method",
+    just = "center",
+    gp = gpar(fontsize = 10)
+  )
+  
+  bottom.right.grob <- grid::textGrob(
+    "Baseline risk",
+    just = "center",
+    gp = gpar(fontsize = 10)
+  )
+  
+  bottom.grob <- grid.arrange(
+    bottom.left.grob,
+    bottom.right.grob,
+    nrow = 1,
+    widths = c(2, 1)
+  )
+  res <- grid.arrange(
+    arrangeGrob(
+      pp,
+      left = left.grob,
+      right = right.grob,
+      bottom = bottom.grob
+    )
+  )
+} else {
+  gridList <- list(
+  plotList[[1]] +
+    theme(
+      panel.grid.minor = element_blank(),
+      plot.title = element_markdown(size = 9),
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(size = 8),
+      legend.direction = "horizontal",
+      legend.title = element_text(size = 7.5),
+      legend.text = element_text(size = 7),
+      legend.position = c(.273, .87)
+    ),
+    absolutePlots$plot[[1]] +
+      ggtitle("Simulated absolute benefit in treated patients") +
+      xlim(c(0, .5)) +
+      scale_y_continuous(
+        position = "right",
+        limits = c(-.058, limitsHigh),
+        breaks = seq(-.05, limitsHigh, .05)
+    ) +
+    scale_color_manual(
+      name = "Constant treatment-\n related harm",
+      values = c(
+        "#26547C",
+        "#06D6A0",
+        "#EF476F"
+      )
+    ) +
+    theme_bw() +
+    theme(
+      panel.grid.minor = element_blank(),
+      plot.title = element_markdown(size = 9),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(size = 8),
+      ggside.line = element_blank(),
+      ggside.rect = element_blank(),
+      ggside.axis.text = element_blank(),
+      ggside.axis.ticks.length = unit(0, "pt"),
+      ggside.panel.scale = .07,
+      legend.position = "none"
+    ),
     plotList[[2]] + 
       theme(
         panel.grid.minor = element_blank(),
@@ -135,25 +292,88 @@ if (interactionType == "combined") {
         ggside.axis.ticks.length = unit(0, "pt"),
         ggside.panel.scale = .07,
         legend.position = "none"
-      ),
+    ),
+    absolutePlots$plot[[2]] +
+      ggtitle("True absolute benefit in treatment arm") +
+      xlim(c(0, .5)) +
+      scale_y_continuous(
+        position = "right",
+        limits = c(-.058, limitsHigh),
+        breaks = seq(-.05, limitsHigh, .05)
+    ) +
+    scale_color_manual(
+      name = "Constant treatment-\n related harm",
+      values = c(
+        "#26547C",
+        "#06D6A0",
+        "#EF476F"
+      )
+    ) +
+    theme_bw() +
+    theme(
+      panel.grid.minor = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(size = 8),
+      ggside.line = element_blank(),
+      ggside.rect = element_blank(),
+      ggside.axis.text = element_blank(),
+      ggside.axis.ticks.length = unit(0, "pt"),
+      ggside.panel.scale = .07,
+      plot.title = element_markdown(size = 9, color = "white"),
+      legend.position = "none"
+    ),
     plotList[[3]] +
       theme(
         panel.grid.minor = element_blank(),
+        plot.title = element_markdown(size = 9),
         axis.title = element_blank(),
         axis.text.x = element_text(size = 8),
-        axis.text.y = element_text(size = 8),
-        legend.position = "none",
-        plot.title = element_markdown(size = 9)
+        legend.position = "none"
+    ),
+    absolutePlots$plot[[3]] +
+      ggtitle("True absolute benefit in treatment arm") +
+      xlim(c(0, .5)) +
+      scale_y_continuous(
+        position = "right",
+        limits = c(-.058, limitsHigh),
+        breaks = seq(-.05, limitsHigh, .05)
+      ) +
+    scale_color_manual(
+      name = "Constant treatment-\n related harm",
+      values = c(
+        "#26547C",
+        "#06D6A0",
+        "#EF476F"
       )
+    ) +
+    theme_bw() +
+    theme(
+      panel.grid.minor = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      axis.text.y = element_text(size = 8),
+      axis.text.x = element_text(size = 8),
+      ggside.line = element_blank(),
+      ggside.rect = element_blank(),
+      ggside.axis.text = element_blank(),
+      ggside.axis.ticks.length = unit(0, "pt"),
+      ggside.panel.scale = .07,
+      plot.title = element_markdown(size = 9, color = "white"),
+      legend.position = "none"
+    )
   )
-  
-  plot <- cowplot::plot_grid(
+  pp <- cowplot::plot_grid(
     gridList[[1]],
     gridList[[2]],
     gridList[[3]],
-    ncol = 1
+    gridList[[4]],
+    gridList[[5]],
+    gridList[[6]],
+    ncol = 2,
+    rel_widths = c(1, .5)
   )
-  
   left.grob <- grid::textGrob(
       expression(
         paste(
@@ -165,7 +385,37 @@ if (interactionType == "combined") {
       rot = 90
   )
   
-  res <- grid.arrange(arrangeGrob(plot, left = left.grob))
+  right.grob <- grid::textGrob(
+      "Absolute benefit",
+      rot = 270
+  )
+  
+  bottom.left.grob <- grid::textGrob(
+    "Method",
+    just = "center",
+    gp = gpar(fontsize = 10)
+  )
+  
+  bottom.right.grob <- grid::textGrob(
+    "Baseline risk",
+    just = "center",
+    gp = gpar(fontsize = 10)
+  )
+  
+  bottom.grob <- grid.arrange(
+    bottom.left.grob,
+    bottom.right.grob,
+    nrow = 1,
+    widths = c(2, 1)
+  )
+  res <- grid.arrange(
+    arrangeGrob(
+      pp,
+      left = left.grob,
+      right = right.grob,
+      bottom = bottom.grob
+    )
+  )
 }
 
 
