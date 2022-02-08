@@ -125,52 +125,6 @@ treatment-related harms are set to $1\%, 2\%$ and $-1\%$ for positive, strong
 positive and negative setting, respectively. The settings for these deviations
 are defined in Table \@ref(tab:tab1).
 
-## Risk modeling
-Merging treatment arms, we develop prediction models including a constant relative treatment effect:
-
-\begin{equation}
-E\{y\given x,t_x\} = P(y\given x, t_x) = g(\beta_0+\beta_1x_1+\dots+\beta_8x_8+\gamma t_x)
-\end{equation}
-(\#eq:risk)
-Individualized predictions are derived setting $t_x=0$.
-
-## Approaches to individualize benefit predictions
-
-### Risk stratification
-Derive a prediction model using the same approach as above and divide the
-population in equally sized risk-based subgroups. Estimate subgroup-specific
-absolute benefit from the observed absolute differences. Subject-specific
-benefit predictions are made by attributing to individuals their corresponding
-subgroup-specific estimate.
-
-### Constant treatment effect
-Assuming a constant relative treatment effect, fit the adjusted model in
-\@ref(eq:risk). Then, an estimate of absolute benefit can be derived
-from
-$$\hat{f}_{\text{benefit}}(lp\given \bm{x}, \hat{\bm{\beta}}) = g(lp) - g(lp+\hat{\gamma}) $$
-
-### Linear interaction
-The assumption of constant relative treatment effect is relaxed modeling a
-linear interaction of treatment with the risk linear predictor: $$E\{y\given
-\bm{x}, t_x, \hat{\bm{\beta}}\} = g\big(lp+(\gamma_0+\gamma_1lp)t_x\big)$$ We
-predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp\given\bm{x},
-\hat{\bm{\beta}}) = g(lp) - g\big(\gamma_0+(1+\gamma_1)lp\big)$$
-
-### Restricted cubic splines
-Finally, we drop the linearity assumption and predict absolute benefit using
-smoothing with restricted cubic splines with $k=3, 4$ and $5$ knots. More
-specifically, we fit the model:
-
-$$P(y=1\given lp, t_x) = g\big(\beta_0+\beta_{t_x}t_x+f_{RCS}(lp) + f_{RCS}(lp)\times t_x\big)$$
-where
-$$f_{RCS}(x)=\alpha_0+\alpha_1h_1(x)+\alpha_2h_2(x)+\dots+\alpha_{k-1}h_{k-1}(x)$$
-with $h_1(x)=x$ and for $j=2,\dots,k-2$
-$$h_{j+1}(x)= (x-t_j)^3-(x-t_{k-1})_+^3 \frac{t_k-t_j}{t_k-t_{k-1}}+(x-t_k)^3_+\frac{t_{k-1}-t_j}{t_k-t_{k-1}}$$
-where 
-$t_1,\dots,t_k$ are the selected knots. We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp \given \bm{x},\hat{\bm{\beta}})=P(y=1\given lp, t_x=0)-P(y=1\given lp,t_x=1)$$.
-
-
-
 ```{r tab1, echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE}
 asd <- read_csv(
   here("data/processed/analysisIds.csv")
@@ -214,6 +168,96 @@ kableExtra::kbl(
   ) %>%
   kableExtra::kable_styling(font_size = 7)
 ```
+
+\newpage
+# Plausible scenario settings
+
+In this section we present specific scenarios from our simulation settings
+in which evolution of benefit followed similar patterns to (REF!!). In this case
+patients were stratified into risk quarters based on their true baseline
+risk. Within each risk quarter we constructed boxplots of true benefit.
+
+
+```{r, cache=TRUE, echo=FALSE, fig.cap="Simulation scenarios that closely follow trials. In this case, we see increasing absolute benefits with increasing baseline risk.", fig.show="hold", out.width = '50%'}
+include_graphics(
+  c(
+    here("figures/scenario_251.png"),
+    here("figures/scenario_324.png")
+  )
+)
+```
+
+```{r, cache=TRUE, echo=FALSE, fig.cap="Simulation scenarios that closely follow trials. In this case, we see increasing absolute benefits with increasing baseline risk.", fig.show="hold", out.width = '50%'}
+include_graphics(
+  c(
+    here("figures/scenario_406.png"),
+    here("figures/scenario_422.png")
+  )
+)
+```
+
+# Approaches to individualize benefit predictions
+
+## Risk modeling
+Merging treatment arms, we develop prediction models including a constant relative treatment effect:
+
+\begin{equation}
+P(y=1\given\bm{x}, t_x) = g(\bm{x}^t\bm{\beta} + \gamma t_x)
+\end{equation}
+(\#eq:risk)
+
+The risk linear predictor is then 
+$lp(\bm{x}; \bm{\beta}) = \bm{x}^t\bm{\beta}$. 
+We derive baseline risk predictions for patients by setting $t_x=0$ in
+\@ref(eq:risk). All methods for individualizing benefit predictions are 2-stage
+methods, that start by fitting a model for predicting baseline risk. The
+estimated linear predictor of this model is
+
+\begin{equation*}
+\hat{lp} = lp(\bm{x};\hat{\bm{\beta}}) = \bm{x}^t\hat{\bm{\beta}}
+\end{equation*}
+
+## Risk stratification
+Derive a prediction model using the same approach as above and divide the
+population in equally sized risk-based subgroups. Estimate subgroup-specific
+absolute benefit from the observed absolute differences. Subject-specific
+benefit predictions are made by attributing to individuals their corresponding
+subgroup-specific estimate.
+
+## Constant treatment effect
+Assuming a constant relative treatment effect, fit the adjusted model in
+\@ref(eq:risk). Then, an estimate of absolute benefit can be derived from
+$$\tau(lp;  \hat{\bm{\beta}}, \hat{\gamma}) = g(\hat{lp}) - g(\hat{lp}+\hat{\gamma}) $$
+
+## Linear interaction
+The assumption of constant relative treatment effect is relaxed modeling a
+linear interaction of treatment with the risk linear predictor: 
+
+$$P(y=1\given lp, t_x;\hat{\bm{\beta}}) = g(\delta_0 + \delta_1\hat{lp} +
+\gamma_0t_x + \gamma_1\hat{lp}t_x)$$
+
+Then the predicted absolute benefit is 
+$$\tau(lp;\hat{\bm{\beta}},\bm{\gamma}, \bm{\delta}) = g(\delta_0 +
+\delta_1\hat{lp}) - g\big((\delta_0+\gamma_0) + (\delta_1+\gamma_1)\hat{lp}\big)$$
+
+## Restricted cubic splines
+Finally, we drop the linearity assumption and predict absolute benefit using
+smoothing with restricted cubic splines with $k=3, 4$ and $5$ knots. More
+specifically, we fit the model:
+
+$$P(y=1|lp, t_x;\hat{\bm{\beta}}, \bm{\delta}, f_{RCS}) = g\big(\delta_0 + \gamma
+t_x +f_{RCS}(\hat{lp})\times t_x\big)$$
+where
+$$f_{RCS}(x)=\alpha_0+\alpha_1h_1(x)+\alpha_2h_2(x)+\dots+\alpha_{k-1}h_{k-1}(x)$$
+with $h_1(x)=x$ and for $j=2,\dots,k-2$
+$$h_{j+1}(x)= (x-t_j)^3-(x-t_{k-1})_+^3 \frac{t_k-t_j}{t_k-t_{k-1}}+(x-t_k)^3_+\frac{t_{k-1}-t_j}{t_k-t_{k-1}}$$
+where 
+$t_1,\dots,t_k$ are the selected knots. We predict absolute benefit from 
+$$ \tau(lp; \hat{\bm{\beta}}, \delta_0, f_{RCS}) = P(y=1\given\hat{lp},
+t_x=0) - P(y=1\given \hat{lp}, t_x=1) $$
+
+
+
 
 \newpage
 # Adaptive model selection frequencies
@@ -316,11 +360,11 @@ kableExtra::kbl(
   asd,
   format = "latex",
   escape = FALSE,
-  longtable   = TRUE,
-  align       = "r",
-  booktabs    = TRUE,
-  caption     = "Scenario settings of the entire simulation study.",
-  col.names   = c(
+  longtable = TRUE,
+  align = "r",
+  booktabs = TRUE,
+  caption = "Scenario settings of the treatment-covariate interaction scenarios.",
+  col.names = c(
     "Scenario",
     "Base",
     "N",
@@ -367,6 +411,12 @@ grid::grid.raster(tiff::readTIFF(here("figures/rmse_interaction_combined.tiff"))
 \newpage
 # Empirical illustration
 
+For predicting baseline risk of 30-day mortality we fitted a logistic regression
+model with age, Killip class (*Killip*), systolic blood pressure (*sysbp*),
+pulse rate (*pulse*), prior myocardial infarction (*pmi*), location of
+myocardial infarction (*miloc*) and treatment as the covariates. Baseline
+predictions were made setting treatment to 0.
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 load(here::here("data/raw/gusto.rda"))
 gusto <- gusto %>%
@@ -397,21 +447,21 @@ predictionCoefficients <- predictionCoefficients[c(1, 3:12, 2)]
 ```
 
 
-\begin{equation}
+\begin{equation*}
 P(outcome=1|X=x) = \text{expit}(lp(x)),
 (\#eq:gusto1)
-\end{equation}
+\end{equation*}
 where 
-\begin{equation}
+\begin{equation*}
 \begin{aligned}
 lp(x)=& \beta_0 + \beta_1 \text{age} + \beta_2 I(\text{Killip}=II) + \beta_3I(\text{Killip}=III) +\\
-&\beta_4 I(\text{Killip}=IV) + \beta_5ceil(\text{sysbp}, 120) + \beta_6 \text{pulse}+\\
+&\beta_4 I(\text{Killip}=IV) + \beta_5min(\text{sysbp}, 120) + \beta_6 \text{pulse}+\\
 &\beta_7 max(\text{pulse - 50, 0}) + \beta_8 I(\text{pmi}=yes)+\\
 &\beta_9 I(\text{miloc}=Anterior) + \beta_9 I(\text{miloc}=Other) +\\
 &\gamma\times\text{treatment}
 \end{aligned}
 (\#eq:gusto2)
-\end{equation}
+\end{equation*}
 
 and $expit(x) = \frac{e^x}{1+e^x}$
 
@@ -469,31 +519,3 @@ kableExtra::kbl(
 ```
 
 
-\newpage
-# Plausible scenario settings
-
-In this section we present specific scenarios from our simulation settings
-in which evolution of benefit followed similar patterns to (REF!!). In this case
-patients were stratified into risk quarters based on their true baseline
-risk. Within each risk quarter we constructed boxplots of true benefit.
-
-
-```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
-grid::grid.raster(tiff::readTIFF(here("figures/scenario_397.tiff")))
-```
-
-```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
-grid::grid.raster(tiff::readTIFF(here("figures/scenario_251.tiff")))
-```
-
-```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
-grid::grid.raster(tiff::readTIFF(here("figures/scenario_406.tiff")))
-```
-
-```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
-grid::grid.raster(tiff::readTIFF(here("figures/scenario_324.tiff")))
-```
-
-```{r, cache=TRUE, echo=FALSE, fig.cap="", fig.show="hold", out.width = '100%'}
-grid::grid.raster(tiff::readTIFF(here("figures/scenario_422.tiff")))
-```

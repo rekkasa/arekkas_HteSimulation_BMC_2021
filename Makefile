@@ -272,7 +272,11 @@ submission/supplement.pdf : submission/supplement.rmd\
 	figures/rmse_high_auc.tiff\
 	figures/rmse_interaction_positive.tiff\
 	figures/rmse_interaction_negative.tiff\
-	figures/rmse_interaction_combined.tiff
+	figures/rmse_interaction_combined.tiff\
+	figures/scenario_397.png\
+	figures/scenario_251.png\
+	figures/scenario_406.png\
+	figures/scenario_422.png
 	# figures/deviate_linear_08.png\
 	# figures/deviate_quadratic_08.png\
 	# figures/deviate_linear_absolute_08.png\
