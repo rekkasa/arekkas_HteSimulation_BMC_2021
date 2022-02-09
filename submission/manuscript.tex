@@ -358,7 +358,8 @@ systolic blood pressure, heart rate, an indicator of previous MI, and
 the location of MI, to predict 30-day mortality risk. A constant effect
 of treatment was included in the model. When deriving risk predictions
 for individuals we set the treatment indicator to 0. More information on
-model development can be found in the supplement (Section 6).
+model development can be found in the supplement (Supplement, Section
+8).
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -443,7 +444,7 @@ methods was more stable (Supplement, Figure S6). Finally, when we
 increased the true prediction AUC to 0.85 the adaptive approach in the
 case of non-monotonic deviations was, again, more conservative,
 especially with null or moderate treatment-related harms (Supplement,
-Figure S7).
+Figure S5).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{manuscript_files/figure-latex/discrimination-1} \caption{Discrimination for benefit of the considered methods across 500 replications calculated in a simulated samples of size 4,250. True prediction AUC of 0.75.}\label{fig:discrimination}
@@ -461,11 +462,11 @@ and non-monotonic deviations compared to the linear interaction model
 and RCS-3. When we increased sample size to 17,000 similar conclusions
 on calibration for benefit could be drawn. As expected, all methods
 displayed more stable calibration performance due to the larger number
-of patients (Supplement, Figure S8). When we increased the true
+of patients (Supplement, Figure S6). When we increased the true
 prediction AUC to 0.85, the linear interaction model was worse
 calibrated, on average, than RCS-3 in the case of strong quadratic
 deviations from constant relative treatment effects (Supplement, Figure
-S9).
+S7).
 
 The results from all individual scenarios can be explored online at
 \url{https://arekkas.shinyapps.io/simulation_viewer/}. Additionally, all
@@ -576,7 +577,7 @@ interaction model had the lowest error rates. RCS-3 had very comparable
 performance. The constant treatment effect model often gave biased
 results, espcially in the presence of moderate or strong
 treatment-related harms. All the results of these simulations can be
-found in Supplement, Section 6. Future simulation studies could explore
+found in Supplement, Section 7. Future simulation studies could explore
 the effect of more extensive deviations from risk-based treatment
 effects.
 
