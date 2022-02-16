@@ -1,0 +1,108 @@
+---
+title: |
+ Individualized treatment effect was predicted best by modeling 
+ baseline risk in interaction with treatment assignment
+abstract: |
+author:
+  - name: Alexandros Rekkas
+    affiliation: 1
+  - name: Peter R. Rijnbeek
+    affiliation: 1
+  - name: David M. Kent
+    affiliation: 2
+  - name: Ewout W. Steyerberg
+    affiliation: 3
+  - name: David van Klaveren
+    affiliation: 4
+address:
+  - code: 1
+    address: Department of Medical Informatics, Erasmus Medical Center, Rotterdam, The Netherlands
+  - code: 2
+    address: Predictive Analytics and Comparative Effectiveness Center, Institute for Clinical Research and Health Policy Studies, Tufts Medical Center, Boston, Massachusetts, USA
+  - code: 3
+    address: Department of Biomedical Data Sciences, Leiden University Medical Center, Leiden, The Netherlands
+  - code: 4
+    address: Department of Public Health, Erasmus Medical Center, Rotterdam, The Netherlands
+numbersections: true
+linenumbers: false
+journal: arXiv.org
+keywords:
+  - treatment effect heterogeneity
+  - absolute benefit
+  - prediction models
+output: word_document
+geometry: margin=1.0in
+date: false
+toc: false
+font-size: 11pt
+header-includes:
+  - \renewcommand*\familydefault{\sfdefault}
+  - \usepackage{setspace}
+  - \usepackage{amsmath}
+  - \doublespacing
+  - \usepackage{amssymb}
+  - \usepackage{bm}
+  - \usepackage{caption}
+  - \usepackage{booktabs}
+  - \date{}
+  - \newcommand\given[1][]{\:#1\vert\:}
+editor_options: 
+  chunk_output_type: console
+bibliography: references.bib
+---
+
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(SmoothHte)
+library(rms)
+library(here)
+
+d <- function(x, decimals = 4) {
+  sprintf(paste0("%1.", decimals, "f"), x) 
+}
+
+knit_hooks$set(
+  inline = function(x) {
+    prettyNum(
+      x,
+      big.mark = ",",
+      decimal.mark = ".",
+      preserve.width = "individual"
+    )
+  }
+  )
+set.seed(19910930)
+```
+
+# Abstract
+Our objective was to compare different risk-based methods for optimal prediction
+of individualized treatment effects from RCTs.
+
+We simulated RCT data using diverse assumptions for the average treatment
+effect, a baseline prognostic index of risk (PI), the shape of its interaction
+with treatment (none, linear, quadratic or non-monotonic) and the magnitude of
+treatment-related harms (none or constant independent of the PI). The
+combination of these settings resulted in the definition of 648 simulation
+scenarios. In each sample we predicted absolute benefit using: models with a
+constant relative treatment effect; stratification in quarters of the PI; models
+including a linear interaction of treatment with the PI; models including an
+interaction of treatment with a restricted cubic spline (RCS) transformation of
+the PI; an adaptive approach using Akaike’s Information Criterion. We evaluated
+predictive performance using root mean squared error and measures of
+discrimination and calibration for benefit.
+
+The linear-interaction model and the RCS-interaction model outperformed the
+constant treatment effect model in many simulation scenarios. The RCS-model was
+optimal when quadratic or non-monotonic deviations from a constant treatment
+effect were stronger, and when sample size was larger. Larger sample size also
+supported the adaptive approach. All the simulation results can be explored at
+https://arekkas.shinyapps.io/simulation_viewer/. We also illustrated the
+application of the considered methods in the GUSTO-I trial, which confirmed our
+simulations' findings.
+
+In conclusion, an interaction between baseline risk and treatment assignment
+should be considered to improve treatment effect predictions. Non-linear
+interactions should be considered only in larger sample sizes.

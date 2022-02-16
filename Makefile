@@ -283,6 +283,11 @@ submission/supplement.pdf : submission/supplement.rmd\
 	# figures/deviate_quadratic_absolute_08.png
 	R -e 'rmarkdown::render("submission/supplement.rmd", output_format = "all")'
 
+submission/iscb_2022_abstract.docx : submission/iscb_2022_abstract.rmd\
+	submission/arxiv.sty\
+	submission/references.bib
+	R -e 'rmarkdown::render("submission/iscb_2022_abstract.rmd", output_format = "all")'
+
 .PHONY:
 data : $(EVALFILES)
 restore:
