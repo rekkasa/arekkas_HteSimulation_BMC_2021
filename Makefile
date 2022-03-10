@@ -198,7 +198,8 @@ data/raw/gusto.rda : code/GetGustoData.sh
 data/processed/analysisIds.csv : code/WriteAnalysisIds.R
 	$<
 
-data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibration.csv data/processed/adaptiveModel.csv: code/MergeResults.R
+data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibration.csv data/processed/adaptiveModel.csv: code/MergeResults.R\
+	code/helpers/TmpFiles.R
 	$<
 
 data/processed/adaptiveSelections.csv : code/CreateAdaptiveSelections.R\
