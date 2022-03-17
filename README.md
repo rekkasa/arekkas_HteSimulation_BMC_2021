@@ -1,4 +1,4 @@
-# Continuous risk-based predictive approaches to treatment effect heterogeneity: A simulation study
+# Individualized treatment effect was predicted best by modeling baseline risk in interaction with treatment assignment
 
 ## Summary
 **Objective**: To compare different risk-based methods for optimal prediction
