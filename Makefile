@@ -23,22 +23,6 @@ figures/rmse_constant.png figures/rmse_constant.tiff : code/RmseConstant.R\
 	data/processed/rmse.csv
 	$<
 
-figures/discrimination_interactions.png figures/discrimination_interactions.tiff : code/DiscriminationInteractionPlots.R\
-	code/helpers/CreateManuscriptPlots.R\
-	data/processed/discrimination.csv
-	$<
-
-figures/calibration_interactions.png :code/CalibrationInteractionPlots.R\
-	code/helpers/CreateManuscriptPlots.R\
-	data/processed/discrimination.csv
-	$<
-
-
-figures/rmse_interactions.png figures/rmse_interactions.tiff : code/InteractionPlots.R\
-	code/helpers/CreateManuscriptPlots.R\
-	data/processed/rmse.csv
-	$<
-
 figures/rmse_nl_auc.tiff figures/rmse_nl_auc.png : code/NlAucPlots.R\
 	code/helpers/CreateManuscriptPlots.R\
 	data/processed/rmse.csv
@@ -165,6 +149,30 @@ figures/rmse_n_auc.tiff : code/NPatientsAucPlots.R\
 	data/processed/rmse.csv
 	$<
 
+figures/rmse_interaction_positive.tiff : code/PlotRmseInteractions.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/Absolute.R\
+	code/helpers/PlotResult.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIdsInteractions.csv
+	$< positive
+
+figures/rmse_interaction_negative.tiff : code/PlotRmseInteractions.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/Absolute.R\
+	code/helpers/PlotResult.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIdsInteractions.csv
+	$< negative
+
+figures/rmse_interaction_combined.tiff : code/PlotRmseInteractions.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/Absolute.R\
+	code/helpers/PlotResult.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIdsInteractions.csv
+	$< combined
+
 figures/gusto.tiff : code/GustoPlot.R\
 	data/raw/gusto.rda
 	$<
@@ -190,7 +198,8 @@ data/raw/gusto.rda : code/GetGustoData.sh
 data/processed/analysisIds.csv : code/WriteAnalysisIds.R
 	$<
 
-data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibration.csv data/processed/adaptiveModel.csv: code/MergeResults.R
+data/processed/rmse.csv data/processed/discrimination.csv data/processed/calibration.csv data/processed/adaptiveModel.csv: code/MergeResults.R\
+	code/helpers/TmpFiles.R
 	$<
 
 data/processed/adaptiveSelections.csv : code/CreateAdaptiveSelections.R\
@@ -233,6 +242,7 @@ extras/outline/outline.pdf : extras/outline/outline.rmd\
 submission/manuscript.pdf submission/manuscript.docx : submission/manuscript.rmd\
 	submission/arxiv.sty\
 	submission/references.bib\
+	data/raw/gusto.rda\
 	data/processed/adaptiveModel.csv\
 	data/processed/gustoPerformanceMetrics.csv\
 	data/processed/adaptiveSelections.csv\
@@ -260,12 +270,24 @@ submission/supplement.pdf : submission/supplement.rmd\
 	figures/calibration_moderate_auc.tiff\
 	figures/rmse_high_base.tiff\
 	figures/rmse_high_sample_size.tiff\
-	figures/rmse_high_auc.tiff
+	figures/rmse_high_auc.tiff\
+	figures/rmse_interaction_positive.tiff\
+	figures/rmse_interaction_negative.tiff\
+	figures/rmse_interaction_combined.tiff\
+	figures/scenario_397.png\
+	figures/scenario_251.png\
+	figures/scenario_406.png\
+	figures/scenario_422.png
 	# figures/deviate_linear_08.png\
 	# figures/deviate_quadratic_08.png\
 	# figures/deviate_linear_absolute_08.png\
 	# figures/deviate_quadratic_absolute_08.png
 	R -e 'rmarkdown::render("submission/supplement.rmd", output_format = "all")'
+
+submission/iscb_2022_abstract.docx : submission/iscb_2022_abstract.rmd\
+	submission/arxiv.sty\
+	submission/references.bib
+	R -e 'rmarkdown::render("submission/iscb_2022_abstract.rmd", output_format = "all")'
 
 .PHONY:
 data : $(EVALFILES)

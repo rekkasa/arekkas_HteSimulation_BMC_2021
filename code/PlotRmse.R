@@ -30,9 +30,15 @@ library(gridExtra)
 library(grid)
 library(ggside)
 
-source("code/helpers/CreateManuscriptPlots.R")     # Geneartes single boxplot
-source("code/helpers/PlotResult.R")                # Generates the boxplot list
-source("code/helpers/Absolute.R")                  # Generates the absolute plots
+# --------------------------------------
+# Sourcing helper files:
+#   1. Generates single boxplot
+#   2. Generates the boxplot list
+#   3. Generates the absolute plots
+# --------------------------------------
+source("code/helpers/CreateManuscriptPlots.R") 
+source("code/helpers/PlotResult.R")
+source("code/helpers/Absolute.R")
 
 scenarioIds <- readr::read_csv("data/processed/analysisIds.csv") %>%
   filter(
@@ -145,7 +151,7 @@ gridList <- list(
       legend.direction = "horizontal",
       legend.title = element_text(size = 7.5),
       legend.text = element_text(size = 7),
-      legend.position = c(.333, .87)
+      legend.position = c(.273, .87)
     ),
   absolutePlots$plot[[1]] +
     ggtitle("Simulated absolute benefit in treated patients") +

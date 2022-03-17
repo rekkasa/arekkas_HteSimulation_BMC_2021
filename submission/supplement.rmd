@@ -3,7 +3,7 @@ title: "Supplementary material"
 output:
     bookdown::pdf_document2: default
 geometry: margin=1.0in
-toc: false
+toc: true
 font-size: 12pt
 header-includes:
   - \usepackage{amssymb}
@@ -22,6 +22,7 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(here)
+library(rms)
 
 d <- function(x, decimals = 2) {
   sprintf(paste0("%1.", decimals, "f"), x) 
@@ -40,6 +41,7 @@ knit_hooks$set(
 ```
 
 \beginsupplement
+\newpage
 
 # Simulation settings
 For all patients we observe covariates $x_1,\dots,x_8$, of which $4$ are
@@ -52,7 +54,8 @@ x_1,\dots,x_4 \sim N(0, 1)
 x_5,\dots,x_8 \sim B(1, 0.2)
 \end{equation*}
 
-We first, generate the binary outcomes $y$ for the untreated patients ($t_x=0$), based on 
+We first, generate the binary outcomes $y$ for the untreated patients ($t_x=0$),
+based on
 
 \begin{equation} 
 P(y\given \bm{x}, t_x=0) = g(\beta_0 + \beta_1x_1+\dots+\beta_8x_8) = g(lp_0),
@@ -72,15 +75,14 @@ P(y\given\bm{x}, t_x=1) = g(lp_1)
 where $$lp_1 = \gamma_2(lp_0-c)^2+\gamma_1(lp_0-c)+\gamma_0$$
 
 ## Base-case scenario
-The base-case scenario assumes a constant odds ratio of $0.8$ in favor
-of treatment. The simulated datasets are of size $n=4250$, where
-treatment is allocated at random using a 50/50 split (80% power for
-the detection of an unadjusted OR of 0.8, assuming an event rate of
-20% in the untreated arm). Outcome incidence in the untreated
-population is set at $20\%$. For the development of the prediction
-model we use the model defined in \@ref(eq:p0) including a constant
-treatment effect. When doing predictions, $t_x$ is set to $0$. The
-value of the true $\bm{\beta}$ is such that the above prediction model
+The base-case scenario assumes a constant odds ratio of $0.8$ in favor of
+treatment. The simulated datasets are of size $n=4250$, where treatment is
+allocated at random using a 50/50 split (80% power for the detection of an
+unadjusted OR of 0.8, assuming an event rate of 20% in the untreated
+arm). Outcome incidence in the untreated population is set at $20\%$. For the
+development of the prediction model we use the model defined in \@ref(eq:p0)
+including a constant treatment effect. When doing predictions, $t_x$ is set to
+$0$. The value of the true $\bm{\beta}$ is such that the above prediction model
 has an AUC of $0.75$.
 
 
@@ -89,11 +91,10 @@ The previously defined targets are achieved when $\bm{\beta}=(-2.08,
 $\bm{\gamma}=(\log(0.8), 1, 0)^t$.
 
 ## Deviations from base-case
-We deviate from the base-case scenario in two ways. First, we alter
-the overall target settings of sample size, overall treatment effect
-and prediction model AUC. In a second stage, we consider settings that
-violate the assumption of a constant relative treatment effect, using
-a model-based approach.
+We deviate from the base-case scenario in two ways. First, we alter the overall
+target settings of sample size, overall treatment effect and prediction model
+AUC. In a second stage, we consider settings that violate the assumption of a
+constant relative treatment effect, using a model-based approach.
 
 For the first part, we consider:
 
@@ -107,67 +108,25 @@ For the first part, we consider:
   + $AUC=0.65$
   + $AUC=0.85$
   
-We set the true risk model coefficients to be $\bm{\beta} = \big(-1.63, 0.26,\dots,0.26\big)^t$ for $AUC=0.65$ and $\bm{\beta} = \big(-2.7, 0.82,\dots,0.82\big)^t$ for $AUC=0.85$. In both cases, $\beta_0$ is selected so that an event rate of $20\%$ is maintained in the control arm.
+We set the true risk model coefficients to be
+$\bm{\beta} = \big(-1.63,0.26,\dots,0.26\big)^t$ for $AUC=0.65$ and $\bm{\beta} = \big(-2.7,0.82,\dots,0.82\big)^t$ 
+for $AUC=0.85$. In both cases, $\beta_0$ is selected so that an event rate of
+$20\%$ is maintained in the control arm.
 
-For the second part linear, quadratic and non-monotonic deviations
-from the assumption of constant relative effect are considered. We
-also consider different intensity levels of these deviations. Finally,
-constant absolute treatment-related harms are introduced,
-i.e. positive ($0.25\times\text{true average benefit}$), strong
-positive ($0.50\times\text{true average benefit}$) and negative
+For the second part linear, quadratic and non-monotonic deviations from the
+assumption of constant relative effect are considered. We also consider
+different intensity levels of these deviations. Finally, constant absolute
+treatment-related harms are introduced, i.e. positive 
+($0.25\times\text{true average benefit}$),
+strong positive ($0.50\times\text{true average benefit}$) and negative
 ($-0.25\times\text{true average benefit}$; i.e. constant absolute
 treatment-related benefit). In case of true absent treatment effects,
-treatment-related harms are set to $1\%, 2\%$ and $-1\%$ for
-positive, strong positive and negative setting, respectively. The
-settings for these deviations are defined in Table \@ref(tab:tab1).
-
-## Risk modeling
-Merging treatment arms, we develop prediction models including a constant relative treatment effect:
-
-\begin{equation}
-E\{y\given x,t_x\} = P(y\given x, t_x) = g(\beta_0+\beta_1x_1+\dots+\beta_8x_8+\gamma t_x)
-\end{equation}
-(\#eq:risk)
-Individualized predictions are derived setting $t_x=0$.
-
-## Approaches to individualize benefit predictions
-
-### Risk stratification
-Derive a prediction model using the same approach as above and divide
-the population in equally sized risk-based subgroups. Estimate
-subgroup-specific absolute benefit from the observed absolute
-differences. Subject-specific benefit predictions are made by
-attributing to individuals their corresponding subgroup-specific
-estimate.
-
-### Constant treatment effect
-Assuming a constant relative treatment effect, fit the adjusted model
-in \@ref(eq:risk). Then, an estimate of absolute benefit can be
-derived from$$\hat{f}_{\text{benefit}}(lp\given \bm{x},
-\hat{\bm{\beta}}) = g(lp) - g(lp+\hat{\gamma}) $$
-
-### Linear interaction
-The assumption of constant relative treatment effect is relaxed
-modeling a linear interaction of treatment with the risk linear
-predictor: $$E\{y\given \bm{x}, t_x, \hat{\bm{\beta}}\} =
-g\big(lp+(\gamma_0+\gamma_1lp)t_x\big)$$ We predict absolute benefit
-from $$\hat{f}_{\text{benefit}}(lp\given\bm{x}, \hat{\bm{\beta}}) =
-g(lp) - g\big(\gamma_0+(1+\gamma_1)lp\big)$$
-
-### Restricted cubic splines
-Finally, we drop the linearity assumption and predict absolute benefit using
-smoothing with restricted cubic splines with 3, 4, and 5 knots. More
-specifically, we fit the model:
-
-$$P(y=1\given lp, t_x) = g\big(\beta_0+\beta_{t_x}t_x+f_{RCS}(lp) + f_{RCS}(lp)\times t_x\big)$$
-where
-$$f_{RCS}(x)=\alpha_0+\alpha_1h_1(x)+\alpha_2h_2(x)+\dots+\alpha_{k-1}h_{k-1}(x)$$ with
-$$h_{j+1}(x)= (x-t_j)^3-(x-t_{k-1})_+\frac{t_k-t_j}{t_k-t_{k-1}}+(x-t_k)^3_+\frac{t_{k-1}-t_j}{t_k-t_{k-   1}}$$
-and $t_1,\dots,t_k$ are the selected knots. We predict absolute benefit from $$\hat{f}_{\text{benefit}}(lp \given \bm{x},\hat{\bm{\beta}})=P(y=1\given lp, t_x=0)-P(y=1\given lp,t_x=1)$$.
-
+treatment-related harms are set to $1\%, 2\%$ and $-1\%$ for positive, strong
+positive and negative setting, respectively. The settings for these deviations
+are defined in Table \@ref(tab:tab1).
 
 ```{r tab1, echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE}
- asd <- read_csv(
+asd <- read_csv(
   here("data/processed/analysisIds.csv")
 ) %>%
   select(-"type")
@@ -192,7 +151,7 @@ kableExtra::kbl(
     "After harms"
   ),
   linesep = c('', '', '', '\\addlinespace'),
-  digits      = 2,
+  digits      = 3,
   format.args = list(
     big.mar      = ",",
     decimal.mark = "."
@@ -210,6 +169,97 @@ kableExtra::kbl(
   kableExtra::kable_styling(font_size = 7)
 ```
 
+\newpage
+# Plausible scenario settings
+
+In this section we present specific scenarios from our simulation settings in
+which evolution of benefit followed similar patterns to [@Kent2016]. In this
+case patients were stratified into risk quarters based on their true baseline
+risk. Within each risk quarter we constructed boxplots of true benefit.
+
+
+```{r, cache=TRUE, echo=FALSE, fig.cap="Simulation scenarios that closely follow trials. In this case, we see increasing absolute benefits with increasing baseline risk.", fig.show="hold", out.width = '50%'}
+include_graphics(
+  c(
+    here("figures/scenario_251.png"),
+    here("figures/scenario_324.png")
+  )
+)
+```
+
+```{r, cache=TRUE, echo=FALSE, fig.cap="Simulation scenarios that closely follow trials. In this case, we see increasing absolute benefits with increasing baseline risk up to the third risk quarter. In the fourth risk quarter this trend is interrupted and benefits are diminished.", fig.show="hold", out.width = '50%'}
+include_graphics(
+  c(
+    here("figures/scenario_406.png"),
+    here("figures/scenario_422.png")
+  )
+)
+```
+
+# Approaches to individualize benefit predictions
+
+## Risk modeling
+Merging treatment arms, we develop prediction models including a constant relative treatment effect:
+
+\begin{equation}
+P(y=1\given\bm{x}, t_x) = g(\bm{x}^t\bm{\beta} + \gamma t_x)
+\end{equation}
+(\#eq:risk)
+
+The risk linear predictor is then 
+$lp(\bm{x}; \bm{\beta}) = \bm{x}^t\bm{\beta}$. 
+We derive baseline risk predictions for patients by setting $t_x=0$ in
+\@ref(eq:risk). All methods for individualizing benefit predictions are 2-stage
+methods, that start by fitting a model for predicting baseline risk. The
+estimated linear predictor of this model is
+
+\begin{equation*}
+\hat{lp} = lp(\bm{x};\hat{\bm{\beta}}) = \bm{x}^t\hat{\bm{\beta}}
+\end{equation*}
+
+## Risk stratification
+Derive a prediction model using the same approach as above and divide the
+population in equally sized risk-based subgroups. Estimate subgroup-specific
+absolute benefit from the observed absolute differences. Subject-specific
+benefit predictions are made by attributing to individuals their corresponding
+subgroup-specific estimate.
+
+## Constant treatment effect
+Assuming a constant relative treatment effect, fit the adjusted model in
+\@ref(eq:risk). Then, an estimate of absolute benefit can be derived from
+$$\tau(lp;  \hat{\bm{\beta}}, \hat{\gamma}) = g(\hat{lp}) - g(\hat{lp}+\hat{\gamma}) $$
+
+## Linear interaction
+The assumption of constant relative treatment effect is relaxed modeling a
+linear interaction of treatment with the risk linear predictor: 
+
+$$P(y=1\given lp, t_x;\hat{\bm{\beta}}) = g(\delta_0 + \delta_1\hat{lp} +
+\gamma_0t_x + \gamma_1\hat{lp}t_x)$$
+
+Then the predicted absolute benefit is 
+$$\tau(lp;\hat{\bm{\beta}},\bm{\gamma}, \bm{\delta}) = g(\delta_0 +
+\delta_1\hat{lp}) - g\big((\delta_0+\gamma_0) + (\delta_1+\gamma_1)\hat{lp}\big)$$
+
+## Restricted cubic splines
+Finally, we drop the linearity assumption and predict absolute benefit using
+smoothing with restricted cubic splines with $k=3, 4$ and $5$ knots. More
+specifically, we fit the model:
+
+$$P(y=1|lp, t_x;\hat{\bm{\beta}}, \bm{\delta}, f_{RCS}) = g\big(\delta_0 + \gamma
+t_x +f_{RCS}(\hat{lp})\times t_x\big)$$
+where
+$$f_{RCS}(x)=\alpha_0+\alpha_1h_1(x)+\alpha_2h_2(x)+\dots+\alpha_{k-1}h_{k-1}(x)$$
+with $h_1(x)=x$ and for $j=2,\dots,k-2$
+$$h_{j+1}(x)= (x-t_j)^3-(x-t_{k-1})_+^3 \frac{t_k-t_j}{t_k-t_{k-1}}+(x-t_k)^3_+\frac{t_{k-1}-t_j}{t_k-t_{k-1}}$$
+where 
+$t_1,\dots,t_k$ are the selected knots. We predict absolute benefit from 
+$$ \tau(lp; \hat{\bm{\beta}}, \delta_0, f_{RCS}) = P(y=1\given\hat{lp},
+t_x=0) - P(y=1\given \hat{lp}, t_x=1) $$
+
+
+
+
+\newpage
 # Adaptive model selection frequencies
 
 ```{r adaptiveBase, cache=TRUE, echo=FALSE, fig.cap="Model selection frequencies of the adaptive approach based on Akaike's Information Criterion across 500 replications. The scenario with the true constant relative treatment effect (first panel) had a true prediction AUC of 0.75 and sample size of 4,250. ", fig.show="hold", out.width = '100%'}
@@ -228,41 +278,40 @@ grid::grid.raster(tiff::readTIFF(here("figures/selected_model_adaptive_auc.tiff"
 ```
 
 \newpage
-
 # Discrimination and calibration for benefit
 
-```{r discriminationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
+```{r discriminationSampleSize, cache=TRUE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/discrimination_moderate_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 
-```{r discriminationAuc, cache=FALSE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
+```{r discriminationAuc, cache=TRUE, echo=FALSE, fig.cap="Discrimination for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/discrimination_moderate_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
-```{r calibrationSampleSize, cache=FALSE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
+```{r calibrationSampleSize, cache=TRUE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 17,000", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_sample_size.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 
-```{r calibrationAuc, cache=FALSE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
+```{r calibrationAuc, cache=TRUE, echo=FALSE, fig.cap="Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.85 and sample size of 4,250", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/calibration_moderate_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
 
 \newpage
-
 # Strong relative treatment effect
 
-Here we present the root mean squared error of the considered methods
-using strong constant relative treatment effect ($\text{OR}=0.5$) as
-the reference. Again, the same sample size and prediction performance
-settings were considered along with the same settings for linear,
-quadratic and non-monotonic deviations from the base case scenario of
-constant relative treatment effects are considered. All results can be found at [https://arekkas.shinyapps.io/simulation_viewer/](https://arekkas.shinyapps.io/simulation_viewer/).
+Here we present the root mean squared error of the considered methods using
+strong constant relative treatment effect ($\text{OR}=0.5$) as the
+reference. Again, the same sample size and prediction performance settings were
+considered along with the same settings for linear, quadratic and non-monotonic
+deviations from the base case scenario of constant relative treatment effects
+are considered. All results can be found at
+[https://arekkas.shinyapps.io/simulation_viewer/](https://arekkas.shinyapps.io/simulation_viewer/).
 
 ```{r rmseHighBase, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated super-population of size 500,000. The scenario with true constant relative treatment effect (panel A) had a true prediction AUC of 0.75 and sample size of 4,250. The RMSE is also presented for strong linear (panel B), strong quadratic (panel C), and non-monotonic (panel D) deviations from constant relative treatment effects. Panels on the right side present the true relationship between baseline risk (x-axis) and absolute treatment benefit (y-axis). The 2.5, 25, 75 and 97.5 percentiles of the risk distribution are expressed in the boxplot.", fig.show="hold", out.width = '100%'}
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_base.tiff")))
@@ -278,3 +327,205 @@ grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_sample_size.tiff")))
 grid::grid.raster(tiff::readTIFF(here("figures/rmse_high_auc.tiff")))
 # knitr::include_graphics(here::here("figures/calibration_base.png"))
 ```
+
+\newpage
+# Treatment interactions
+
+We carried out a smaller set of simulations, in which we assumed true
+treatment-covariate interactions. Sample size was set to 4,250 and the AUC of
+the true prediction model was set to 0.75. The following scenarios were
+considered: 1) 4 true weak positive interactions
+($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.83$); 2) 4 strong positive
+interactions ($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=0.61$); 3) 2 weak and 2
+strong positive interactions; 4) 4 weak negative interactions 
+($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=1.17$); 5) 4 strong negative interactions 
+($\text{OR}_{t_x=1} / \text{OR}_{t_x=0}=1.39$); 6) 2 weak and 2 strong negative
+interactions; 7) combined positive and negative strong interactions. We also
+considered constant treatment-related harms applied on the absolute scale to all
+treated patients. The exact settings were: 1) absent treatment-related harms; 2)
+moderate treatment-related harms, defined as 25\% of the average true benefit of the
+scenario without treatment-related harms; 3) strong treatment-related harms
+defined as 50\% of the true average benefit of the scenario without
+treatment-related harms; 4) negative treatment-related harms (benefit), defined
+as an absolute risk reduction for treated patients of 50\% of the true average
+benefit of the scenario without treatment-related harms. The exact settings can
+be found in Table \@ref(tab:tab2).
+
+```{r tab2, echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE}
+asd <- read_csv(
+  here("data/processed/analysisIdsInteractions.csv")
+) %>%
+  select(-"type")
+kableExtra::kbl(
+  asd,
+  format = "latex",
+  escape = FALSE,
+  longtable = TRUE,
+  align = "r",
+  booktabs = TRUE,
+  caption = "Scenario settings of the treatment-covariate interaction scenarios.",
+  col.names = c(
+    "Scenario",
+    "Base",
+    "N",
+    "AUC",
+    "Treatment-related harm",
+    paste0("b", 0:8),
+    "g0", "g1", "g2", "g5", "g6",
+    "Before harms",
+    "After harms"
+  ),
+  linesep = c('', '', '', '\\addlinespace'),
+  digits      = 2,
+  format.args = list(
+    big.mar      = ",",
+    decimal.mark = "."
+  )
+) %>%
+  kableExtra::landscape() %>%
+  kableExtra::add_header_above(
+    c(
+      "Analysis ID"           = 5,
+      "Baseline risk"         = 9,
+      "True treatment effect" = 5,
+      "Benefit"               = 2
+      )
+  ) %>%
+  kableExtra::kable_styling(font_size = 6)
+```
+
+
+```{r rmseInteractionPositive, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000 where treatment-covariate interactions all favoring treatment were considered.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_interaction_positive.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+```{r rmseInteractionNegative, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000 where treatment-covariate interactions all favoring the control were considered.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_interaction_negative.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+```{r rmseInteractionCombined, cache=TRUE, echo=FALSE, fig.cap="RMSE of the considered methods across 500 replications calculated in a simulated sample of size 500,000 where treatment-covariate interactions 2 favoring treatment and 2 favoring the control were considered.", fig.show="hold", out.width = '100%'}
+grid::grid.raster(tiff::readTIFF(here("figures/rmse_interaction_combined.tiff")))
+# knitr::include_graphics(here::here("figures/calibration_base.png"))
+```
+
+\newpage
+# Empirical illustration
+
+For predicting baseline risk of 30-day mortality we fitted a logistic regression
+model with age, Killip class (*Killip*), systolic blood pressure (*sysbp*),
+pulse rate (*pulse*), prior myocardial infarction (*pmi*), location of
+myocardial infarction (*miloc*) and treatment as the covariates. Baseline
+predictions were made setting treatment to 0.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+load(here::here("data/raw/gusto.rda"))
+gusto <- gusto %>%
+  tibble() %>%
+  filter(!is.na(tpa))
+
+gusto <- gusto %>%
+  tibble() %>%
+  filter(tx != "SK+tPA") %>%
+  rename(
+    "outcome" = "day30",
+    "treatment" = "tpa"
+  )
+
+treatmentArms <- gusto %>%
+  group_by(treatment) %>%
+  summarise(n = n())
+
+prediction <- glm(
+   outcome ~ treatment + age + Killip + pmin(sysbp, 120) + lsp(pulse, 50) + pmi + miloc,
+   data = gusto,
+   family = "binomial",
+   maxit = 99
+)
+
+predictionCoefficients <- coef(prediction)
+predictionCoefficients <- predictionCoefficients[c(1, 3:12, 2)]
+```
+
+
+\begin{equation*}
+P(outcome=1|X=x) = \text{expit}(lp(x)),
+(\#eq:gusto1)
+\end{equation*}
+where 
+\begin{equation*}
+\begin{aligned}
+lp(x)=& \beta_0 + \beta_1 \text{age} + \beta_2 I(\text{Killip}=II) + \beta_3I(\text{Killip}=III) +\\
+&\beta_4 I(\text{Killip}=IV) + \beta_5min(\text{sysbp}, 120) + \beta_6 \text{pulse}+\\
+&\beta_7 max(\text{pulse - 50, 0}) + \beta_8 I(\text{pmi}=yes)+\\
+&\beta_9 I(\text{miloc}=Anterior) + \beta_9 I(\text{miloc}=Other) +\\
+&\gamma\times\text{treatment}
+\end{aligned}
+(\#eq:gusto2)
+\end{equation*}
+
+and $expit(x) = \frac{e^x}{1+e^x}$
+
+```{r, echo=FALSE}
+predictionSummary <- summary(prediction)
+# predictionSummaryCoef <- tibble(predictionSummary$coefficients) %>%
+#   rownames_to_column("Variable")
+
+predictionCoefficientsTable <- predictionSummary$coefficients %>%
+  as.data.frame() %>%
+  mutate(
+    rownames = c(
+      "Intercept",
+      "Age",
+      "Killip class = II",
+      "Killip class = III",
+      "Killip class = IV",
+      "Systolic blood pressure",
+      "Pulse rate (1)",
+      "Pulse rate (2)",
+      "Previous MI (yes)",
+      "MI location (Other)",
+      "MI location (Anterior)",
+      "Treatment"
+    )
+  ) %>%
+  rownames_to_column("Variable") %>%
+  select(-Variable) %>%
+  select(rownames, everything())
+  
+colnames(predictionCoefficientsTable) <- c(
+  "Variable",
+  "Estimate",
+  "stderror",
+  "zvalue",
+  "pvalue"
+)
+  
+kableExtra::kbl(
+  predictionCoefficientsTable,
+  format = "latex",
+  escape = FALSE,
+  longtable = TRUE,
+  align = c("l", rep("r", 4)),
+  booktabs = TRUE,
+  caption = "Coefficients of the prediction model for 30-day mortality, based on the data from GUSTO-I trial.",
+  digits = 3,
+  linesep = "",
+  format.args = list(
+    big.mar      = ",",
+    decimal.mark = "."
+  )
+) %>%
+  kableExtra::kable_styling(font_size = 7)
+```
+
+
+
+\newpage
+# References
+\setlength{\parindent}{-0.25in}
+\setlength{\leftskip}{0.25in}
+\noindent
+<div id="refs"></div>
+\setlength{\parindent}{0in}
+\setlength{\leftskip}{0in}
+\noindent

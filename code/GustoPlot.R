@@ -51,18 +51,6 @@ rcs3Model <- fitRcsHte(
   settings = createRcsSettings()
 )
 
-rcs4Model <- fitRcsHte(
-  data     = gusto,
-  settings = createRcsSettings(nKnots = 4)
-)
-
-rcs5Model <- fitRcsHte(
-  data     = gusto,
-  settings = createRcsSettings(nKnots = 5)
-)
-
-
-
 plot <- ggplot() +
   geom_pointrange(
     data = stratified$data,
@@ -83,10 +71,10 @@ plot <- ggplot() +
     aes(
       x     = x, 
       color = label,
-      linetype = label,
-      alpha = .8
+      linetype = label
     ),
     size = .8,
+    alpha = .8,
     fun  = predictBenefitModelBasedHte,
     args = list(
       modelBasedFit = constantModel
@@ -124,66 +112,28 @@ plot <- ggplot() +
       smoothFit = rcs3Model
     )
   ) +
-  stat_function(
-    data = data.frame(
-      x = c(0, maxRisk), 
-      label = "RCS 4 knots"
-    ),
-    aes(
-      x     = x,
-      color = label,
-      linetype = label,
-      alpha = .8
-    ),
-    fun  = predictSmoothBenefit,
-    args = list(
-      smoothFit = rcs4Model
-    )
-  ) +
-  stat_function(
-    data = data.frame(
-      x = c(0, maxRisk), 
-      label = "RCS 5 knots"
-    ),
-    aes(
-      x     = x,
-      color = label,
-      linetype = label,
-      alpha = .8
-    ),
-    fun  = predictSmoothBenefit,
-    args = list(
-      smoothFit = rcs5Model
-    )
-  ) +
   scale_color_manual(
     values = c(
       "#2274A5", 
       "#969A97",
       "#273043",
-      "#F15152",
-      "#FFC857",
-      "#F4D8CD"
+      "#F15152"
     ),
     breaks = c(
       "Constant treatment effect",
       "Stratified",
       "Linear interaction",
-      "RCS 3 knots",
-      "RCS 4 knots",
-      "RCS 5 knots"
+      "RCS 3 knots"
     )
   ) +
   scale_linetype_manual(
-    values = c("dashed", "solid", "solid", "solid", "solid"),
+    values = c("dashed", "solid", "solid"),
     breaks = c(
       "Constant treatment effect",
       "Linear interaction",
-      "RCS 3 knots",
-      "RCS 4 knots",
-      "RCS 5 knots"
+      "RCS 3 knots"
     ),
-    guide = FALSE
+    guide = "none"
   ) +
   xlab("Baseline risk") +
   ylab("Predicted benefit") +
@@ -193,7 +143,7 @@ plot <- ggplot() +
     axis.text.x = ggplot2::element_text(size = 12),
     axis.text.y = ggplot2::element_text(size = 12),
     axis.title = ggplot2::element_text(size = 14),
-    legend.text = element_text(size = 9),
+    legend.text = element_text(size = 10),
     legend.position = c(.17, .85)
   )
   
@@ -205,11 +155,4 @@ plot <- ggplot() +
     height = 5,
     compression = "lzw"
   )
-  
-#   ggplot2::ggsave(
-#     file.path("figures", "gusto.png"), 
-#     plot = plot,
-#     width = 7, 
-#     height = 5
-#   )
   

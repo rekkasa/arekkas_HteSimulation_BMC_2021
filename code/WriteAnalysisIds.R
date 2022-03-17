@@ -149,18 +149,16 @@ expand_grid(base, type, sampleSize, auc, harm) %>%
       base == "high" & auc == .65 ~ .089,
       base == "high" & auc == .85 ~ .069,
     ),
-    averageBenefit = case_when(
-      base == "absent" & harm == "absent" ~ 0,
-      base == "absent" & harm == "moderate-positive" ~ -.01,
-      base == "absent" & harm == "strong-positive" ~ -.02,
-      base == "absent" & harm == "negative" ~ .01,
-      base != "absent" & harm == "absent" ~ averageTrueBenefit,
-      base != "absent" & harm == "moderate-positive" ~ averageTrueBenefit - averageTrueBenefit / 4,
-      base != "absent" & harm == "strong-positive" ~ averageTrueBenefit - averageTrueBenefit / 4,
-      base != "absent" & harm == "moderate-positive" ~ averageTrueBenefit - averageTrueBenefit / 2,
-      base != "absent" & harm == "negative" ~ averageTrueBenefit + averageTrueBenefit / 4,
+    averageObservedBenefit = case_when(
+      harm == "absent" ~ averageTrueBenefit,
+      harm == "moderate-positive" & base == "absent" ~ averageTrueBenefit - .01,
+      harm == "strong-positive" & base == "absent" ~ averageTrueBenefit - .02,
+      harm == "negative" & base == "absent" ~ averageTrueBenefit + .01,
+      harm == "moderate-positive" ~ 3 / 4 * averageTrueBenefit,
+      harm == "strong-positive" ~ averageTrueBenefit / 2,
+      harm == "negative" ~ 5 / 4 * averageTrueBenefit
     )
   ) %>%
   relocate(scenario) %>%
-  write_csv(file = "data/processed/analysisIds.csv")
+  write_csv(path = "data/processed/analysisIds.csv")
 

@@ -30,7 +30,6 @@ analysisIds <- readr::read_csv(
 
 analysisIdsInteractions <- readr::read_csv(
   "data/processed/analysisIdsInteractions.csv",
-  col_types = "icfiidddddddddddddd"
 )
 
 selectedScenario <- as.numeric(
@@ -78,8 +77,15 @@ if (selectedScenario <= 648) {
 } else {
   idSettings <- analysisIdsInteractions %>%
     filter(scenario == selectedScenario)
+  harm <- case_when(
+    idSettings$harm == "moderate-positive" ~ idSettings$averageTrueBenefit / 4, 
+    idSettings$harm == "strong-positive"   ~ idSettings$averageTrueBenefit / 2, 
+    idSettings$harm == "negative"          ~ -idSettings$averageTrueBenefit / 4, 
+    TRUE                                   ~ 0
+  )
   treatmentEffectSettings <- SimulateHte::createTreatmentEffectSettings(
     type = "covariates",
+    harm = harm,
     modelSettings = SimulateHte::createModelSettings(
       constant = idSettings$g0,
       modelMatrix = rbind(
