@@ -136,29 +136,28 @@ Rotterdam, The Netherlands}
     
   \begin{abstract}
   \textbf{Objective}: To compare different risk-based methods for
-  optimal prediction of individualized treatment effects from RCTs.
-  \textbf{Study Design and Setting}: We simulated RCT data using diverse
-  assumptions for the average treatment effect, a baseline prognostic
-  index of risk (PI), the shape of its interaction with treatment (none,
-  linear, quadratic or non-monotonic) and the magnitude of
-  treatment-related harms (none or constant independent of the PI). In
-  each sample we predicted absolute benefit using: models with a
-  constant relative treatment effect; stratification in quarters of the
-  PI; models including a linear interaction of treatment with the PI;
-  models including an interaction of treatment with a restricted cubic
-  spline (RCS) transformation of the PI; an adaptive approach using
-  Akaike's Information Criterion. We evaluated predictive performance
-  using root mean squared error and measures of discrimination and
-  calibration for benefit. \textbf{Results}: The linear-interaction
-  model and the RCS-interaction model outperformed the constant
-  treatment effect model in many simulation scenarios. The RCS-model was
-  optimal when quadratic or non-monotonic deviations from a constant
-  treatment effect were stronger, and when sample size was larger.
-  Larger sample size also supported the adaptive approach. Illustrations
-  in the GUSTO-I trial confirmed these findings. \textbf{Conclusion}: An
-  interaction between baseline risk and treatment assignment should be
-  considered to improve treatment effect predictions. Non-linear
-  interactions should be considered only in larger sample sizes.
+  optimal prediction of individualized treatment effects. \textbf{Study
+  Design and Setting}: We simulated RCT data using diverse assumptions
+  for the average treatment effect, a baseline prognostic index of risk
+  (PI), the shape of its interaction with treatment (none, linear,
+  quadratic or non-monotonic), and the magnitude of treatment-related
+  harms (none or constant independent of the PI). We predicted absolute
+  benefit using: models with a constant relative treatment effect;
+  stratification in quarters of the PI; models including a linear
+  interaction of treatment with the PI; models including an interaction
+  of treatment with a restricted cubic spline (RCS) transformation of
+  the PI; an adaptive approach using Akaike's Information Criterion. We
+  evaluated predictive performance using root mean squared error and
+  measures of discrimination and calibration for benefit.
+  \textbf{Results}: The linear-interaction model and the RCS-interaction
+  displayed robust performance across many simulation scenarios. The
+  RCS-model was optimal when quadratic or non-monotonic deviations from
+  a constant treatment effect were stronger, and when sample size was
+  larger. The adaptive approach required larger sample sizes.
+  Illustrations in the GUSTO-I trial confirmed these findings.
+  \textbf{Conclusion}: An interaction between baseline risk and
+  treatment assignment should be considered to improve treatment effect
+  predictions.
   \end{abstract}
    \begin{keyword} treatment effect heterogeneity absolute
 benefit prediction models\end{keyword}
@@ -191,15 +190,17 @@ Risk-modeling approaches to predictive HTE analyses provide a viable
 option in the absence of well-established treatment effect modifiers
 {[}3,4{]}. In simulations, modeling of effect modifiers, i.e.
 treatment-covariate interactions, often led to miscalibrated predictions
-of benefit, while risk-based methods proved quite robust {[}5{]}. Most
-often, risk-modeling approaches are carried out in two steps: first a
-risk prediction model is developed externally or internally on the
-entire RCT population, ``blinded'' to treatment; then the RCT population
-is stratified using this prediction model to evaluate risk-based
-treatment effect variation {[}6{]}. This two-step approach identified
-substantial absolute treatment effect differences between low-risk and
-high-risk patients in a re-analysis of 32 large trials {[}7{]}. However,
-even though estimates at the risk subgroup level may be accurate, these
+of absolute benefit, while risk-based methods proved quite robust in
+terms of benefit calibration, although provided weaker discrimination of
+benefit in the presence of true effect modifiers {[}5{]}. Most often,
+risk-modeling approaches are carried out in two steps: first a risk
+prediction model is developed externally or internally on the entire RCT
+population, ``blinded'' to treatment; then the RCT population is
+stratified using this prediction model to evaluate risk-based treatment
+effect variation {[}6{]}. This two-step approach identified substantial
+absolute treatment effect differences between low-risk and high-risk
+patients in a re-analysis of 32 large trials {[}7{]}. However, even
+though estimates at the risk subgroup level may be accurate, these
 estimates may need further refinement for individual patients,
 especially for patients with predicted risk at the boundaries of the
 risk intervals. Hence, the risk-stratified approach is useful for
@@ -208,12 +209,12 @@ treatment decisions for individual patients.
 
 To individualize treatment effects, the recent PATH statement suggested
 various risk-based models including a prognostic index of baseline risk
-(PI) and treatment assignment {[}3,4{]}. We aimed to summarize and
-compare different risk-based models for predicting individualized
-treatment effects. We simulated RCT settings to compare the performance
-of these models under different assumptions of the relation between
-baseline risk and treatment. We illustrated the different models by a
-case study of predicting individualized effects of treatments for acute
+(PI) and treatment assignment {[}3,4{]}. In the current simulation
+study, we aim to summarize and compare different risk-based models for
+predicting individualized treatment effects. We simulate different
+relations between baseline risk and treatment effects and also consider
+potential harms of treatment. We illustrate the different models by a
+case study of predicting individualized effects of treatment for acute
 myocardial infarction (MI) in a large randomized controlled trial (RCT).
 
 \hypertarget{methods}{%
@@ -271,11 +272,11 @@ All risk-based methods assume that a risk prediction model is available
 to assign risk predictions to individual patients. For the simulations
 we developed a prediction model internally on the entire population,
 using a logistic regression model with main effects for all baseline
-covariates and treatment assignment. Risk predictions for individual
-patients were derived by setting treatment assignment to 0. Another
-common approach is to derive the prediction model solely on the control
-patients, however this approach has been shown to lead to biased benefit
-predictions {[}5,8,9{]}.
+covariates and treatment assignment. Baseline risk predictions for
+individual patients were derived by setting treatment assignment to 0.
+Another common approach is to derive the prediction model solely on the
+control patients, however this approach has been shown to lead to biased
+benefit predictions {[}5,8,9{]}.
 
 A \emph{stratified HTE method} has been suggested as an alternative to
 traditional subgroup analyses {[}3,4{]}. Patients are stratified into
@@ -343,7 +344,10 @@ all the considered models were fitted. For comparing between models we
 simulated a super-population of size 500,000 for each scenario. We
 calculated RMSE and discrimination and calibration for benefit of the
 models derived in each replication of our simulation settings within
-this super-population. \#\# Empirical illustration
+this super-population.
+
+\hypertarget{empirical-illustration}{%
+\subsection{Empirical illustration}\label{empirical-illustration}}
 
 We demonstrated the different methods for individualizing treatment
 benefits using data from 30,510 patients with acute myocardial
@@ -477,8 +481,8 @@ the code for the simulations can be found at
 \includegraphics[width=1\linewidth]{manuscript_files/figure-latex/calibration-1} \caption{Calibration for benefit of the considered methods across 500 replications calculated in a simulated sample of size 500,000. True prediction AUC of 0.75 and sample size of 4,250.}\label{fig:calibration}
 \end{figure}
 
-\hypertarget{empirical-illustration}{%
-\subsection{Empirical illustration}\label{empirical-illustration}}
+\hypertarget{empirical-illustration-1}{%
+\subsection{Empirical illustration}\label{empirical-illustration-1}}
 
 We used the derived prognostic index to fit a constant treatment effect
 model, a linear interaction model and a RCS-3 model individualizing
@@ -507,11 +511,10 @@ acute MI.
 \section{Discussion}\label{discussion}}
 
 The linear interaction model and the RCS-3 model both displayed very
-good performance under many of the considered simulation scenarios, in
-contrast with the constant relative treatment effect model. The linear
-interaction model was optimal in cases with smaller sample sizes and
-moderately performing baseline risk prediction models, that is, it had
-lower RMSE, was better calibrated for benefit and had better
+good performance under many of the considered simulation scenarios. The
+linear interaction model was optimal in cases with smaller sample sizes
+and moderately performing baseline risk prediction models, that is, it
+had lower RMSE, was better calibrated for benefit and had better
 discrimination for benefit, even in scenarios with strong quadratic
 deviations. In scenarios with true non-monotonic deviations, the linear
 interaction model was outperformed by RCS-3, especially in the presence
@@ -560,26 +563,24 @@ behavior resulted in increased RMSE variability in these scenarios,
 especially in the case of true strong linear or non-monotonic deviations
 from the base case scenario. Therefore, in the case of smaller sample
 sizes the simpler linear interaction model may be a safer choice for
-predicting absolute benefits, if a non-constant treatment effect is
-suspected.
+predicting absolute benefits in the presence of any suspected
+treatment-related harms.
 
-Risk-based approaches to predictive HTE estimate treatment benefit as a
-function of baseline risk. A limitation of our study is that we assumed
-treatment benefit to be a function of baseline risk in the majority of
-the simulation scenarios. We also considered constant moderate and
-strong treatment-related harms, applied on the absolute scale to expand
-the range of scenarios in line with previous work {[}15{]}. In a limited
-set of scenarios where we assumed the existence of true
-treatment-covariate interactions, our conclusions remained unchanged.
-Even though the average error rates increased for all the considered
-methods, due to the miss-specification of the outcome model, the linear
-interaction model had the lowest error rates. RCS-3 had very comparable
-performance. The constant treatment effect model often gave biased
-results, espcially in the presence of moderate or strong
-treatment-related harms. All the results of these simulations can be
-found in Supplement, Section 7. Future simulation studies could explore
-the effect of more extensive deviations from risk-based treatment
-effects.
+A limitation of our study is that we assumed treatment benefit to be a
+function of baseline risk in the majority of the simulation scenarios.
+We also considered constant moderate and strong treatment-related harms,
+applied on the absolute scale to expand the range of scenarios in line
+with previous work {[}15{]}. In a limited set of scenarios where we
+assumed the existence of true treatment-covariate interactions, our
+conclusions remained unchanged. Even though the average error rates
+increased for all the considered methods, due to the miss-specification
+of the outcome model, the linear interaction model had the lowest error
+rates. RCS-3 had very comparable performance. The constant treatment
+effect model often gave biased results, espcially in the presence of
+moderate or strong treatment-related harms. All the results of these
+simulations can be found in Supplement, Section 7. Future simulation
+studies could explore the effect of more extensive deviations from
+risk-based treatment effects.
 
 In our simulations we only focused on risk-based methods, using baseline
 risk as a reference in a two-stage approach to individualizing benefit
@@ -592,11 +593,13 @@ prone to overfitting, thus exaggerating the magnitude of the predicted
 benefits. In a wide range of simulation settings, a simpler risk
 modeling approach was consistently better calibrated for benefit
 compared to more complex treatment effect modelling approaches {[}5{]}.
-Similarly, when SYNTAX score II, a model developed for identifying
-patients with complex coronary artery disease that benefit more from
-percutaneous coronary intervention or from coronary artery bypass
-grafting was redeveloped using fewer treatment-covariate interactions
-had better external performance compared to its predecessor{[}20,21{]}.
+However, whether this remains the case in a range of empirical settings
+still needs to be explored Similarly, when SYNTAX score II, a model
+developed for identifying patients with complex coronary artery disease
+that benefit more from percutaneous coronary intervention or from
+coronary artery bypass grafting was redeveloped using fewer
+treatment-covariate interactions had better external performance
+compared to its predecessor{[}20,21{]}.
 
 In conclusion, the linear interaction approach is a viable option with
 smaller sample sizes and/or moderately performing risk prediction models
