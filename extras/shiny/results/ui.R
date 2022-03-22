@@ -9,9 +9,9 @@ shiny::shinyUI(
       shinydashboard::sidebarMenu(
         id = "menu1",
         shinydashboard::menuItem(
-          tabName = "abstract",
-          text    = "Abstract",
-          icon    = icon("file-alt")
+          tabName = "home",
+          text    = "Home",
+          icon    = icon("home")
         ),
         shinydashboard::menuItem(
           tabName = "settings",
@@ -37,14 +37,24 @@ shiny::shinyUI(
           shiny::uiOutput("typeInput"),
           shiny::uiOutput("toggleNPatients"),
           shiny::uiOutput("togglePredictionPerformance"),
-          shiny::uiOutput("toggleHarmInput")
+          shiny::selectInput(
+            inputId  = "harm",
+            label    = "Constant harm",
+            choices  = c(
+              "absent",
+              "moderate-positive",
+              "strong-positive",
+              "negative"
+            ),
+            selected = "absent"
+          )
         )
       )
     ),
     shinydashboard::dashboardBody(
       shinydashboard::tabItems(
         shinydashboard::tabItem(
-          tabName = "abstract",
+          tabName = "home",
           shiny::includeHTML(
             "html/abstract.html"
           )

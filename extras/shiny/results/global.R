@@ -12,16 +12,15 @@ calibration <- readr::read_csv(
   col_types = readr::cols(.default = "d")
 )
 
-analysisIds <- readr::read_csv(
+analysisIds1 <- readr::read_csv(
   "data/analysisIds.csv"
 ) %>%
   select(scenario, base, type, harm, sampleSize, auc)
 
-# analysisIds2 <- readr::read_csv("data/analysisIdsInteractions.csv") %>%
-#   select(scenario, base, type, sampleSize, auc) %>%
-#   mutate(harm = "absent")
-# 
-# analysisIds <- bind_rows(analysisIds1, analysisIds2)
+analysisIds2 <- readr::read_csv("data/analysisIdsInteractions.csv") %>%
+  select(scenario, base, type, harm, sampleSize, auc)
+
+analysisIds <- bind_rows(analysisIds1, analysisIds2)
 
 
 
@@ -56,11 +55,13 @@ createPlot2 <- function(data) {
     plotly::layout(
       yaxis = list(
         hoverformat = ".3f",
-        title = ""
+        title = "",
+        gridcolor = "ffff"
       ),
       xaxis = list(
-        title = ""
-      )
+          title = ""
+      ),
+      plot_bgcolor = '#e1e9f5'
     )
 }
 

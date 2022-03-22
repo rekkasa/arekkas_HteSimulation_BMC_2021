@@ -26,6 +26,7 @@ abstract: |
 author:
   - name: Alexandros Rekkas
     affiliation: 1
+    correspondingauthor: true
   - name: Peter R. Rijnbeek
     affiliation: 1
   - name: David M. Kent
@@ -104,6 +105,36 @@ set.seed(19910930)
 
 \doublespacing 
 \linenumbers
+
+# What is new? {-}
+* Models including a linear interaction of the prognostic index with treatment
+  were a good option for predicting absolute benefit with smaller sample sizes or
+  moderately performing prediction models.
+* Models including an interaction of treatment with a restricted cubic spline
+  transformation using 3 knots performed better in the presence of true
+  non-monotonic deviations from a constant relative treatment effect or with
+  treatment-related harms.
+* Using an AIC adaptive approach to select among a constant effects model, a
+  linear interaction model, and a model using restricted cubic spline
+  transformations was better suited for larger sample sizes.
+
+# What this adds to what was known? {-}
+* Using a constant relative treatment effect for making risk-based
+  individualized benefit predictions is not always the best approach.
+* Models including linear interaction of treatment with the prognostic index
+  have robust performance across a wide variety of settings.
+* Increasing the flexibility of the transformation of the prognostic index does
+  not improve performance.
+
+# What is the implication and what should change now? {-}
+* Assuming a constant relative treatment effect for all patients may lead to
+  treatment mistargeting.
+* We recommend using a linear interaction of treatment with the prognostic index
+  for making individualized risk-based benefit predictions.
+* With larger sample size, using an adaptive approach based on AIC to explore
+  non-linear interactions of the prognostic index with treatment is a viable
+  option.
+
 
 
 # Introduction
@@ -581,7 +612,4 @@ especially with larger sample size.
 \setlength{\parindent}{0in}
 \setlength{\leftskip}{0in}
 \noindent
-
-
-
 

@@ -278,10 +278,6 @@ submission/supplement.pdf : submission/supplement.rmd\
 	figures/scenario_251.png\
 	figures/scenario_406.png\
 	figures/scenario_422.png
-	# figures/deviate_linear_08.png\
-	# figures/deviate_quadratic_08.png\
-	# figures/deviate_linear_absolute_08.png\
-	# figures/deviate_quadratic_absolute_08.png
 	R -e 'rmarkdown::render("submission/supplement.rmd", output_format = "all")'
 
 submission/iscb_2022_abstract.docx : submission/iscb_2022_abstract.rmd\

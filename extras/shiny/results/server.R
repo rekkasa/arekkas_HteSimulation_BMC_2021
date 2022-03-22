@@ -128,7 +128,10 @@ shiny::shinyServer(
             pull(scenario)
         } else {
           analysisIds %>%
-            filter(effectSize == input$effect) %>%
+            filter(
+              type == input$effect,
+              harm == input$harm
+            ) %>%
             pull(scenario)
         }
       }

@@ -354,8 +354,7 @@ be found in Table \@ref(tab:tab2).
 ```{r tab2, echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE}
 asd <- read_csv(
   here("data/processed/analysisIdsInteractions.csv")
-) %>%
-  select(-"type")
+)
 kableExtra::kbl(
   asd,
   format = "latex",
@@ -367,6 +366,7 @@ kableExtra::kbl(
   col.names = c(
     "Scenario",
     "Base",
+    "Type",
     "N",
     "AUC",
     "Treatment-related harm",

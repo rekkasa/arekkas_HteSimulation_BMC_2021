@@ -6,28 +6,26 @@
 
 <body>
 <h2>Abstract</h2>
-<p><b>Objective:</b> Simulation study to compare different risk-based approaches to
-  estimating individualized treatment effects within the RCT setting. <b>Study Design and Setting:</b>
-  Starting from a base case scenario that assumes a true
-constant treatment effect, we considered a total of 66 scenarios for introducing
-non-constant effects and evaluating methods under different sample sizes and
-baseline risk prediction performance. We compared 7 methods for predicting
-absolute benefit: A constant treatment effect model, a risk stratified approach,
-a model including a linear interaction of the baseline risk linear predictor
-with treatment, 3 restricted cubic spline smoothing models of increasing
-flexibility (3, 4 and 5 knots) and an adaptive model selection method based on
-Akaike's Information Criterion. We evaluated performance using root mean squared
-error, discrimination for benefit and calibration for benefit (i.e., observed
-vs. predicted risk difference in treated vs. untreated). <b>Results:</b> The model
-including a linear interaction of the risk linear predictor with treatment had
-adequate performance that was robust under the majority of the simulation
-scenarios. Methods using restricted cubic spline smoothing required larger
-sample sizes and higher prediction AUC to achieve adequate performance. The
-adaptive approach's performance was comparable to the performance of the best
-model in each scenario. <b>Conclusion:</b> In most cases using a model just
-including a linear interaction of the risk linear predictor with treatment
-adequately predicts absolute benefit.
-</p>
+<b>Objective</b>: To compare different risk-based methods for optimal prediction
+of individualized treatment effects. <b>Study design and seteting</b>: We simulated
+RCT data using diverse assumptions for the average treatment effect, a baseline
+prognostic index of risk (PI), the shape of its interaction with treatment
+(none, linear, quadratic or non-monotonic), and the magnitude of
+treatment-related harms (none or constant independent of the PI). We predicted
+absolute benefit using: models with a constant relative treatment effect;
+stratification in quarters of the PI; models including a linear interaction of
+treatment with the PI; models including an interaction of treatment with a
+restricted cubic spline (RCS) transformation of the PI; an adaptive approach
+using Akaike’s Information Criterion. We evaluated predictive performance using
+root mean squared error and measures of discrimination and calibration for
+benefit. <b>Results</b>: The linear-interaction model and the RCS-interaction
+displayed robust performance across many simulation scenarios. The RCS-model
+was optimal when quadratic or non-monotonic deviations from a constant
+treatment effect were stronger, and when sample size was larger. The adaptive
+approach required larger sample sizes. Illustrations in the GUSTO-I trial
+confirmed these findings. <b>Conclusion</b>: An interaction between baseline risk
+and treatment assignment should be considered to improve treatment effect
+predictions.
 <h2>Useful links</h2>
 
 <ul>
