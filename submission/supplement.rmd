@@ -181,8 +181,8 @@ risk. Within each risk quarter we constructed boxplots of true benefit.
 ```{r, cache=TRUE, echo=FALSE, fig.cap="Simulation scenarios that closely follow trials. In this case, we see increasing absolute benefits with increasing baseline risk.", fig.show="hold", out.width = '50%'}
 include_graphics(
   c(
-    here("figures/scenario_251.png"),
-    here("figures/scenario_324.png")
+    here("figures/scenario_251.tiff"),
+    here("figures/scenario_324.tiff")
   )
 )
 ```
@@ -190,8 +190,8 @@ include_graphics(
 ```{r, cache=TRUE, echo=FALSE, fig.cap="Simulation scenarios that closely follow trials. In this case, we see increasing absolute benefits with increasing baseline risk up to the third risk quarter. In the fourth risk quarter this trend is interrupted and benefits are diminished.", fig.show="hold", out.width = '50%'}
 include_graphics(
   c(
-    here("figures/scenario_406.png"),
-    here("figures/scenario_422.png")
+    here("figures/scenario_406.tiff"),
+    here("figures/scenario_422.tiff")
   )
 )
 ```

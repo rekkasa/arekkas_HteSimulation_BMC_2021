@@ -92,6 +92,7 @@
 \usepackage{booktabs}
 \date{}
 \newcommand\given[1][]{\:#1\vert\:}
+\newcommand{\indep}{\perp \!\!\! \perp}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -280,6 +281,32 @@ myocardial infarction (MI) in a large randomized controlled trial (RCT).
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
 
+\hypertarget{background}{%
+\subsection{Background}\label{background}}
+
+We observe RCT data \((Z, X, Y)\), where for each patient \(Z_i= 0, 1\)
+is the treatment status, \(Y_i = 0, 1\) is the observed outcome and
+\(X_i\) is a set of covariates measured. Let \(\{Y_i(z), z=0, 1\}\)
+denote the unobservable potential outcomes. We observe
+\(Y_i = Z_iY_i(1) + (1 - Z_i)Y_i(0)\). We are interested in predicting
+the conditional average treatment effect (CATE),
+\[\tau(x) = E\{Y(0) - Y(1)|X=x\}\] Assuming that \((Z, X, Y)\) is a
+random sample from the target population and that
+\(\big(Y(0), Y(1)\big)\perp \!\!\! \perp Z|X\), as we are in the RCT
+setting, we can predict CATE from \begin{align*}
+\tau(x) &= E\{Y(0)\:\vert\:X=x\}-E\{Y(1)\:\vert\:X=x\}\\
+&=E\{Y\:\vert\:X=x, Z=0\}-E\{Y\:\vert\:X=x, Z=1\}
+\end{align*}
+
+Based on an estimate of baseline risk \[
+E\{Y\:\vert\:X=x, Z=0\}=g\big(lp(x)\big)
+\] with \(u=lp(x)=\hat{\beta}^tx\) the linear predictor and \(g\) the
+link function, we predict CATE from \[
+\hat{\tau}(x) = g\big(f(u, 0)\big) - g\big(f(u, 1)\big)
+\] where \(f(u,z)\) describes interactions of the baseline risk linear
+predictor with treatment. In the rest of the paper we use the linear
+predictor \(lp(x)\) as the prognostic index (PI) for the outcome \(Y\).
+
 \hypertarget{simulation-scenarios}{%
 \subsection{Simulation scenarios}\label{simulation-scenarios}}
 
@@ -304,10 +331,10 @@ base scenarios. We then simulated linear, quadratic and non-monotonic
 deviations from constant treatment effects using:
 \[lp_1 = \gamma_2(PI-c)^2 + \gamma_1(PI-c) + \gamma_0, \] where \(lp_1\)
 is the true linear predictor in the treatment arm, so that
-\(P(y=1|X, t_x=1) = \text{expit}(lp_1)\). Finally, we simulated
-scenarios where a constant absolute harm is applied across all treated
-patients. In this case we have
-\(P(y=1|X,t_x=1) = \text{expit}(lp_1) + \text{harm}\).
+\(P(y=1|X, Z=1) = \text{expit}(lp_1)\). Finally, we simulated scenarios
+where a constant absolute harm is applied across all treated patients.
+In this case we have
+\(P(y=1|X,Z=1) = \text{expit}(lp_1) + \text{harm}\).
 
 The sample size for the base scenarios was set to 4,250, since this
 sample size provides \(80\%\) power for the detection of a marginal OR
@@ -351,7 +378,7 @@ individualized benefit predictions.
 Second, we considered a model which assumes \emph{constant relative
 treatment effect} (constant odds ratio). Hence, absolute benefit is
 predicted from
-\(\hat{\tau}(\bm{x}) = \text{expit}(PI +\log(\text{OR}))\).
+\(\hat{\tau}(\bm{x}) = \text{expit}(PI) - \text{expit}(PI +\log(\text{OR}))\).
 
 Third, we considered a logistic regression model including treatment,
 the prognostic index, and their linear interaction. Absolute benefit is
