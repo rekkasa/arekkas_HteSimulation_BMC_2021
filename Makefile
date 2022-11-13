@@ -2,13 +2,23 @@ RAW = data/raw
 IDS = $(shell seq 1 648)
 DIR = $(addprefix $(RAW)/scenario_, $(IDS))
 EVALFILES = $(addsuffix /evaluation.rds, $(DIR))
+IDS_SENS = $(shell seq 677 678)
+DIR_SENS = $(addprefix $(RAW)/scenario_, $(IDS_SENS))
+EVALFILES_SENS = $(addsuffix /evaluation.rds, $(DIR_SENS))
 
 print-% :
 	@echo '$*=$($*)'
 
 $(EVALFILES) : code/SimulationScript.R\
 	       data/processed/analysisIds.csv\
-	       data/processed/analysisIdsInteractions.csv
+	       data/processed/analysisIdsInteractions.csv\
+				 data/processed/analysisIdsSensitivity.csv
+	$< $@
+
+$(EVALFILES_SENS) : code/SimulationScript.R\
+	       data/processed/analysisIds.csv\
+	       data/processed/analysisIdsInteractions.csv\
+				 data/processed/analysisIdsSensitivity.csv
 	$< $@
 
 figures/deviate_linear_08.png figures/deviate_quadratic_08.png figures/deviate_linear_absolute_08.png figures/deviate_quadratic_absoltue_08.png : code/PlotDeviations.R\
@@ -39,7 +49,15 @@ figures/rmse_moderate_base.tiff : code/PlotRmse.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< moderate 4250 0.75 base
+	$< moderate 4250 0.75 base 0
+
+figures/rmse_moderate_base_sensitivity.tiff : code/PlotRmse.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< moderate 4250 0.75 base 1
 
 figures/rmse_moderate_sample_size.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -47,7 +65,15 @@ figures/rmse_moderate_sample_size.tiff : code/PlotRmse.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< moderate 17000 0.75 sample_size
+	$< moderate 17000 0.75 sample_size 0
+
+figures/rmse_moderate_sample_size_sensitivity.tiff : code/PlotRmse.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< moderate 17000 0.75 sample_size 1
 
 figures/rmse_moderate_auc.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -55,7 +81,15 @@ figures/rmse_moderate_auc.tiff : code/PlotRmse.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< moderate 4250 0.85 auc
+	$< moderate 4250 0.85 auc 0
+
+figures/rmse_moderate_auc_sensitivity.tiff : code/PlotRmse.R\
+	code/helpers/CreateManuscriptPlots.R\
+	code/helpers/PlotResult.R\
+	code/helpers/Absolute.R\
+	data/processed/rmse.csv\
+	data/processed/analysisIds.csv
+	$< moderate 4250 0.85 auc 1
 
 figures/rmse_absent_base.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -63,7 +97,7 @@ figures/rmse_absent_base.tiff : code/PlotRmse.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< absent 4250 0.75 base
+	$< absent 4250 0.75 base 0
 
 figures/rmse_absent_sample_size.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -71,7 +105,7 @@ figures/rmse_absent_sample_size.tiff : code/PlotRmse.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< absent 17000 0.75 sample_size
+	$< absent 17000 0.75 sample_size 0
 
 figures/rmse_absent_auc.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -79,7 +113,7 @@ figures/rmse_absent_auc.tiff : code/PlotRmse.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< absent 4250 0.85 auc
+	$< absent 4250 0.85 auc 0
 
 figures/rmse_high_base.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -87,7 +121,7 @@ figures/rmse_high_base.tiff : code/PlotRmse.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< high 4250 0.75 base
+	$< high 4250 0.75 base 0
 
 figures/rmse_high_sample_size.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -95,7 +129,7 @@ figures/rmse_high_sample_size.tiff : code/PlotRmse.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< high 17000 0.75 sample_size
+	$< high 17000 0.75 sample_size 0
 
 figures/rmse_high_auc.tiff : code/PlotRmse.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -103,7 +137,7 @@ figures/rmse_high_auc.tiff : code/PlotRmse.R\
 	code/helpers/Absolute.R\
 	data/processed/rmse.csv\
 	data/processed/analysisIds.csv
-	$< high 4250 0.85 auc
+	$< high 4250 0.85 auc 0
 
 figures/calibration_moderate_base.tiff : code/CalibrationBase.R\
 	code/helpers/CreateManuscriptPlots.R\
@@ -274,6 +308,9 @@ submission/supplement.pdf : submission/supplement.rmd\
 	figures/rmse_interaction_positive.tiff\
 	figures/rmse_interaction_negative.tiff\
 	figures/rmse_interaction_combined.tiff\
+	figures/rmse_moderate_base_sensitivity.tiff\
+	figures/rmse_moderate_sample_size_sensitivity.tiff\
+	figures/rmse_moderate_auc_sensitivity.tiff\
 	figures/scenario_397.png\
 	figures/scenario_251.png\
 	figures/scenario_406.png\
@@ -291,3 +328,4 @@ restore:
 	code/Clean.R
 clean:
 	rm -rf data/raw/scenario_* data/processed/*.csv data/raw/gusto.rda figures/*.png figures/*.tiff; code/Clean.R
+sensitivity : $(EVALFILES_SENS)

@@ -22,6 +22,42 @@ confirmed these findings. **Conclusion**: An interaction between baseline risk
 and treatment assignment should be considered to improve treatment effect
 predictions.
 
+## Overview
+
+```
+project
+|- README
+|- LICENSE
+|
+|- code/
+|
+|- data/
+| |- raw/
+| |- processed/
+|
+|- figures/
+|
+|- extras
+| |- vignettes/
+| |- shiny/
+| | |- html/
+| | |- global.R
+| | |- server.R
+| | |- ui.R
+|
+|- submission/
+| |- manuscript.rmd
+| |- manuscript.pdf
+| |- supplement.rmd
+| |- supplement.pdf
+| |- references.bib
+| |- jce.csl
+
+|- renv.lock
+|- Makefile
+```
+
+
 ## Replication
 
 To download the code of the simulation study and explore our results run:

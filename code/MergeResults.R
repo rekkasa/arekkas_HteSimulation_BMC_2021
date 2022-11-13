@@ -3,11 +3,11 @@
 library(tidyverse)
 source("code/helpers/TmpFiles.R")
 
-scenarios <- length(list.files("data/raw", pattern = "scenario"))
+scenarios <- list.files("data/raw", pattern = "scenario", full.names = T)
 if (!dir.exists(".scratch/tmp")) {
   dir.create(".scratch/tmp", recursive = TRUE)
 }
-lapply(1:scenarios, createTmpFiles, scenarioDir = "data/raw/", tmpDir = ".scratch/tmp/")
+lapply(scenarios, createTmpFiles, tmpDir = ".scratch/tmp/")
 lapply(
   c("rmse", "discrimination", "calibration", "concordance", "adaptiveModel"), 
   mergeTmpFiles, 

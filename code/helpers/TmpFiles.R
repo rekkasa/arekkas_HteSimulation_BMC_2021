@@ -1,18 +1,15 @@
 library(tidyverse)
 
-createTmpFiles <- function(scenarioId, scenarioDir, tmpDir) {
+createTmpFiles <- function(scenarioDir, tmpDir) {
   
   evaluation <- readRDS(
     file.path(
       scenarioDir,
-      paste(
-        "scenario",
-        scenarioId,
-        sep = "_"
-      ),
       "evaluation.rds"
     )
   )
+  
+  scenarioId <- as.numeric(str_extract(scenarioDir, "(?<=\\_).*"))
   
   evaluation <- evaluation %>% map(~mutate(., scenarioId = scenarioId))
   

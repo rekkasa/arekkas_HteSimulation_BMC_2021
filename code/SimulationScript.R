@@ -32,11 +32,29 @@ analysisIdsInteractions <- readr::read_csv(
   "data/processed/analysisIdsInteractions.csv",
 )
 
+analysisIdsSensitivity <- readr::read_csv(
+  "data/processed/analysisIdsSensitivity.csv"
+)
+
 selectedScenario <- as.numeric(
   stringr::str_extract(args[1], "[0-9]+")
 )
 
 if (selectedScenario <= 648) {
+  databaseSettings <- SimulateHte::createDatabaseSettings(
+    numberOfObservations = as.numeric(as.character(idSettings$sampleSize)),
+    numberOfCovariates = 8,
+    covariateDistributionSettings = list(
+      SimulateHte::createNormalDistributionSettings(),
+      SimulateHte::createNormalDistributionSettings(),
+      SimulateHte::createNormalDistributionSettings(),
+      SimulateHte::createNormalDistributionSettings(),
+      SimulateHte::createBinomialDistributionSettings(prob = .2),
+      SimulateHte::createBinomialDistributionSettings(prob = .2),
+      SimulateHte::createBinomialDistributionSettings(prob = .2),
+      SimulateHte::createBinomialDistributionSettings(prob = .2)
+    )
+  )
   idSettings <- analysisIds %>%
     filter(scenario == selectedScenario)
   
@@ -74,8 +92,22 @@ if (selectedScenario <= 648) {
       )
     )
   )
-} else {
-  idSettings <- analysisIdsInteractions %>%
+} else if (selectedScenario <= 676) {
+  databaseSettings <- SimulateHte::createDatabaseSettings(
+    numberOfObservations = as.numeric(as.character(idSettings$sampleSize)),
+    numberOfCovariates = 8,
+    covariateDistributionSettings = list(
+      SimulateHte::createNormalDistributionSettings(),
+      SimulateHte::createNormalDistributionSettings(),
+      SimulateHte::createNormalDistributionSettings(),
+      SimulateHte::createNormalDistributionSettings(),
+      SimulateHte::createBinomialDistributionSettings(prob = .2),
+      SimulateHte::createBinomialDistributionSettings(prob = .2),
+      SimulateHte::createBinomialDistributionSettings(prob = .2),
+      SimulateHte::createBinomialDistributionSettings(prob = .2)
+    )
+  )
+  idSettings <- analysisIdsSensitivity %>%
     filter(scenario == selectedScenario)
   harm <- case_when(
     idSettings$harm == "moderate-positive" ~ idSettings$averageTrueBenefit / 4, 
@@ -103,22 +135,88 @@ if (selectedScenario <= 648) {
       coefficients = idSettings %>% select(matches("g[1-9]")) %>% unlist()
     )
   )
+} else {
+  idSettings <- analysisIdsSensitivity %>%
+    filter(scenario == selectedScenario)
+  postProcessing <- function(data) {
+    data %>%
+      dplyr::mutate(
+        x5 = as.numeric(x5 > qnorm(.8)),
+        x6 = as.numeric(x6 > qnorm(.8)),
+        x7 = as.numeric(x7 > qnorm(.8)),
+        x8 = as.numeric(x8 > qnorm(.8))
+      ) %>%
+      return()
+  }
+  
+  p1 <- diag(4)
+  p1[p1 == 0] <- .5
+  p2 <- matrix(.708, nrow = 4, ncol = 4)
+  p3 <- diag(4)
+  p3[p3 == 0] <- .745
+  mat <- rbind(cbind(p1, p2), cbind(p2, p3))
+  
+  databaseSettings <- SimulateHte::createDatabaseSettings(
+    numberOfObservations =  as.numeric(as.character(idSettings$sampleSize)),
+    numberOfCovariates = 8,
+    covariateDistributionSettings = list(
+      SimulateHte::createMultivariateNormalDistributionSettings(
+        mean = rep(0, 8),
+        covariance = mat
+      )
+    )
+  )
+  
+  if (idSettings$base != "absent") {
+    harm <- case_when(
+      idSettings$harm == "moderate-positive" ~ idSettings$averageTrueBenefit / 4, 
+      idSettings$harm == "strong-positive"   ~ idSettings$averageTrueBenefit / 2, 
+      idSettings$harm == "negative"          ~ -idSettings$averageTrueBenefit / 4, 
+      TRUE                                   ~ 0
+    )
+  } else {
+    harm <- case_when(
+      idSettings$harm == "moderate-positive" ~ .01,
+      idSettings$harm == "strong-positive"   ~ .02,
+      idSettings$harm == "negative"          ~ -.01,
+      TRUE                                   ~ 0
+    )
+  }
+  
+  createF1 <- function(c) function(x) x - c
+  createF2 <- function(c) function(x) (x - c)^2
+  treatmentEffectSettings <- SimulateHte::createTreatmentEffectSettings(
+    type = "lp",
+    harm = harm,
+    modelSettings = SimulateHte::createModelSettings(
+      constant = idSettings$g0,
+      modelMatrix = matrix(c(1, 1)),
+      transformationSettings = list(
+        createF1(idSettings$c),
+        createF2(idSettings$c)
+      ),
+      coefficients = c(
+        idSettings$g1,
+        idSettings$g2
+      )
+    )
+  )
 }
 
-databaseSettings <- SimulateHte::createDatabaseSettings(
-  numberOfObservations = as.numeric(as.character(idSettings$sampleSize)),
-  numberOfCovariates = 8,
-  covariateDistributionSettings = list(
-    SimulateHte::createNormalDistributionSettings(),
-    SimulateHte::createNormalDistributionSettings(),
-    SimulateHte::createNormalDistributionSettings(),
-    SimulateHte::createNormalDistributionSettings(),
-    SimulateHte::createBinomialDistributionSettings(prob = .2),
-    SimulateHte::createBinomialDistributionSettings(prob = .2),
-    SimulateHte::createBinomialDistributionSettings(prob = .2),
-    SimulateHte::createBinomialDistributionSettings(prob = .2)
-  )
-)
+# databaseSettings <- SimulateHte::createDatabaseSettings(
+#   numberOfObservations = as.numeric(as.character(idSettings$sampleSize)),
+#   numberOfCovariates = 8,
+#   covariateDistributionSettings = list(
+#     SimulateHte::createNormalDistributionSettings(),
+#     SimulateHte::createNormalDistributionSettings(),
+#     SimulateHte::createNormalDistributionSettings(),
+#     SimulateHte::createNormalDistributionSettings(),
+#     SimulateHte::createBinomialDistributionSettings(prob = .2),
+#     SimulateHte::createBinomialDistributionSettings(prob = .2),
+#     SimulateHte::createBinomialDistributionSettings(prob = .2),
+#     SimulateHte::createBinomialDistributionSettings(prob = .2)
+#   )
+# )
 
 baselineRiskSettings <- SimulateHte::createBaselineRiskSettings(
   type = "binary",
@@ -157,7 +255,7 @@ simulationSettings <- list(
 )
 
 analysisSettings <- SimulationEvaluationHte::createAnalysisSettings(
-  threads        = 46,
+  threads        = 8,
   seed           = 19910930,
   replications   = 500,
   validationSize = 5e5,
